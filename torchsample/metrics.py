@@ -6,30 +6,22 @@ import torch as th
 
 from .utils import th_matrixcorr
 
-from .callbacks import Callback
 
-class MetricContainer(object):
+class MetricsModule(object):
 
 
     def __init__(self, metrics, prefix=''):
-        self.metrics = metrics
-        self.helper = None
-        self.prefix = prefix
+        self._metrics = metrics
+        self._prefix = prefix
 
-    def set_helper(self, helper):
-        self.helper = helper
+    def __call__(self, y_pred, y_true):
+        logs = {self._prefix+metric._name: metric(y_pred, y_true) for metric in self._metrics}
+        return logs
 
     def reset(self):
-        for metric in self.metrics:
+        for metric in self._metrics:
             metric.reset()
 
-    def __call__(self, output_batch, target_batch):
-        logs = {}
-        for metric in self.metrics:
-            logs[self.prefix+metric._name] = self.helper.calculate_loss(output_batch,
-                                                                        target_batch,
-                                                                        metric) 
-        return logs
 
 class Metric(object):
 
@@ -40,25 +32,20 @@ class Metric(object):
         raise NotImplementedError('Custom Metrics must implement this function')
 
 
-class MetricCallback(Callback):
-
-    def __init__(self, container):
-        self.container = container
-    def on_epoch_begin(self, epoch_idx, logs):
-        self.container.reset()
-
 class CategoricalAccuracy(Metric):
 
     def __init__(self, top_k=1):
         self.top_k = top_k
         self.correct_count = 0
         self.total_count = 0
+        self.accuracy = 0
 
-        self._name = 'acc_metric'
+        self._name = 'top_'+str(top_k)+':acc_metric'
 
     def reset(self):
         self.correct_count = 0
         self.total_count = 0
+        self.accuracy = 0
 
     def __call__(self, y_pred, y_true):
         top_k = y_pred.topk(self.top_k,1)[1]
@@ -74,12 +61,14 @@ class BinaryAccuracy(Metric):
     def __init__(self):
         self.correct_count = 0
         self.total_count = 0
+        self.accuracy = 0
 
         self._name = 'acc_metric'
 
     def reset(self):
         self.correct_count = 0
         self.total_count = 0
+        self.accuracy = 0
 
     def __call__(self, y_pred, y_true):
         y_pred_round = y_pred.round().long()
@@ -100,6 +89,7 @@ class ProjectionCorrelation(Metric):
     def reset(self):
         self.corr_sum = 0.
         self.total_count = 0.
+        self.average = 0.
 
     def __call__(self, y_pred, y_true=None):
         """
@@ -116,12 +106,14 @@ class ProjectionAntiCorrelation(Metric):
     def __init__(self):
         self.anticorr_sum = 0.
         self.total_count = 0.
+        self.average = 0.
 
         self._name = 'anticorr_metric'
 
     def reset(self):
         self.anticorr_sum = 0.
         self.total_count = 0.
+        self.average = 0.
 
     def __call__(self, y_pred, y_true=None):
         """
