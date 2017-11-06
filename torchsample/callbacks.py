@@ -14,18 +14,22 @@ import csv
 import time
 from tempfile import NamedTemporaryFile
 import shutil
-import math
+import datetime
+import time
 
 from tqdm import tqdm
 
 import torch as th
 
 
-class CallbackModule(object):
+def _get_current_time():
+    time_s = time.time()
+    return time_s, datetime.datetime.fromtimestamp(time_s).strftime("%B %d, %Y - %I:%M%p")
+
+class CallbackContainer(object):
     """
     Container holding a list of callbacks.
     """
-
     def __init__(self, callbacks=None, queue_length=10):
         callbacks = callbacks or []
         self.callbacks = [c for c in callbacks]
@@ -38,9 +42,10 @@ class CallbackModule(object):
         for callback in self.callbacks:
             callback.set_params(params)
 
-    def set_model(self, model):
+    def set_trainer(self, trainer):
+        self.trainer = trainer
         for callback in self.callbacks:
-            callback.set_model(model)
+            callback.set_trainer(trainer)
 
     def on_epoch_begin(self, epoch, logs=None):
         logs = logs or {}
@@ -64,11 +69,19 @@ class CallbackModule(object):
 
     def on_train_begin(self, logs=None):
         logs = logs or {}
+        time_s, time_date = _get_current_time()
+        logs['start_time'] = time_date
+        logs['start_time_s']: time_s
         for callback in self.callbacks:
             callback.on_train_begin(logs)
 
     def on_train_end(self, logs=None):
         logs = logs or {}
+        time_s, time_date = _get_current_time()
+        logs['final_loss'] = self.trainer.history.epoch_losses[-1],
+        logs['best_loss'] = min(self.trainer.history.epoch_losses),
+        logs['stop_time'] = time_date
+        logs['end_time_s']: time_s
         for callback in self.callbacks:
             callback.on_train_end(logs)
 
@@ -84,8 +97,8 @@ class Callback(object):
     def set_params(self, params):
         self.params = params
 
-    def set_model(self, model):
-        self.model = model
+    def set_trainer(self, model):
+        self.trainer = model
 
     def on_epoch_begin(self, epoch, logs=None):
         pass
@@ -126,21 +139,26 @@ class TQDM(Callback):
         if self.progbar is not None:
             self.progbar.close()
 
+    def on_train_begin(self, logs):
+        self.train_logs = logs
+
     def on_epoch_begin(self, epoch, logs=None):
         try:
-            self.progbar = tqdm(total=logs['nb_batches'],
+            self.progbar = tqdm(total=self.train_logs['num_batches'],
                                 unit=' batches')
             self.progbar.set_description('Epoch %i/%i' % 
-                            (epoch+1, logs['nb_epoch']))
+                            (epoch+1, self.train_logs['num_epoch']))
         except:
             pass
 
     def on_epoch_end(self, epoch, logs=None):
-        log_data = {key: '%.04f' % value for key, value in self.model.history.batch_metrics.items()}
+        log_data = {key: '%.04f' % value for key, value in self.trainer.history.batch_metrics.items()}
         for k, v in logs.items():
             if k.endswith('metric'):
                 log_data[k.split('_metric')[0]] = '%.02f' % v
-        log_data['learn_rates'] = self.model.history.lrs
+            else:
+                 log_data[k] = v
+        log_data['learn_rates'] = self.trainer.history.lrs
         self.progbar.set_postfix(log_data)
         self.progbar.update()
         self.progbar.close()
@@ -149,11 +167,11 @@ class TQDM(Callback):
         self.progbar.update(1)
 
     def on_batch_end(self, batch, logs=None):
-        log_data = {key: '%.04f' % value for key, value in self.model.history.batch_metrics.items()}
+        log_data = {key: '%.04f' % value for key, value in self.trainer.history.batch_metrics.items()}
         for k, v in logs.items():
             if k.endswith('metric'):
                 log_data[k.split('_metric')[0]] = '%.02f' % v
-        log_data['learn_rates'] = self.model.history.lrs
+        log_data['learn_rates'] = self.trainer.history.lrs
         self.progbar.set_postfix(log_data)
 
 
@@ -166,45 +184,59 @@ class History(Callback):
     """
     def __init__(self, model):
         super(History, self).__init__()
-        self.seen = 0.
-        self.model = model
+        self.samples_seen = 0.
+        self.trainer = model
+        self.initial_epoch = -1
+        self.final_epoch = -1
 
     def on_train_begin(self, logs=None):
-        self.losses = []
-        if self.model._has_regularizers:
-            self.regularizer_losses = []
-        if self.model._has_lagrangian_constraints:
-            self.constraint_losses = []
-        if logs['has_validation_data']:
-            self.val_losses = []
+        self.epoch_metrics = {
+            'loss': []
+        }
+        self.batch_size = logs['batch_size']
+        self.has_val_data = logs['has_val_data']
+        self.has_regularizers = logs['has_regularizers']
+        if self.has_val_data:
+            self.epoch_metrics['val_loss'] = []
+        if self.has_regularizers:
+            self.epoch_metrics['reg_loss'] = []
 
     def on_epoch_begin(self, epoch, logs=None):
-        if hasattr(self.model._optimizer, '_optimizer'):        # accounts for meta-optimizers like YellowFin
-            self.lrs = [p['lr'] for p in self.model._optimizer._optimizer.param_groups]
+        if self.initial_epoch == -1:
+            self.initial_epoch = epoch
+        if hasattr(self.trainer._optimizer, '_optimizer'):        # accounts for meta-optimizers like YellowFin
+            self.lrs = [p['lr'] for p in self.trainer._optimizer._optimizer.param_groups]
         else:
-            self.lrs = [p['lr'] for p in self.model._optimizer.param_groups]
+            self.lrs = [p['lr'] for p in self.trainer._optimizer.param_groups]
         self.batch_metrics = {
             'loss': 0.
         }
-        if self.model._has_regularizers:
-            self.batch_metrics['regularizer_loss'] = 0.
-        if self.model._has_lagrangian_constraints:
-            self.batch_metrics['constraint_loss'] = 0.
-        self.seen = 0.
+        if self.has_regularizers:
+            self.batch_metrics['reg_loss'] = 0.
+        self.samples_seen = 0.
 
     def on_epoch_end(self, epoch, logs=None):
-        self.losses.append(logs['loss'])
-        if self.model._has_regularizers:
-            self.regularizer_losses.append(logs['regularizer_loss'])
-        if self.model._has_lagrangian_constraints:
-            self.constraint_losses.append(logs['constraint_loss'])
-        if logs['has_validation_data']:
-            self.val_losses.append(logs['val_loss'])
+        if self.final_epoch < epoch:
+            self.final_epoch = epoch
+        #for k in self.batch_metrics:
+        #    k_log = k.split('_metric')[0]
+        # self.epoch_metrics.update(self.batch_metrics)
+        # TODO
+        pass
 
     def on_batch_end(self, batch, logs=None):
         for k in self.batch_metrics:
-            self.batch_metrics[k] = (self.seen*self.batch_metrics[k] + logs[k]*logs['batch_samples']) / (self.seen+logs['batch_samples'])
-        self.seen += logs['batch_samples']
+            self.batch_metrics[k] = (self.samples_seen*self.batch_metrics[k] + logs[k]*self.batch_size) / (self.samples_seen+self.batch_size)
+        self.samples_seen += self.batch_size
+
+    def __getitem__(self, name):
+        return self.epoch_metrics[name]
+
+    def __repr__(self):
+        return str(self.epoch_metrics)
+
+    def __str__(self):
+        return str(self.epoch_metrics)
 
 
 class ModelCheckpoint(Callback):
@@ -271,16 +303,29 @@ class ModelCheckpoint(Callback):
             self.old_files = []
 
         # mode = 'min' only supported
-        self.best_loss = math.inf
+        self.best_loss = float('inf')
         super(ModelCheckpoint, self).__init__()
 
-    def save_checkpoint(self, state, is_best=False):
-        th.save(state, self.file)
+    def save_checkpoint(self, epoch, file, is_best=False):
+        th.save({
+            'epoch': epoch + 1,
+             #'arch': args.arch,
+            'state_dict': self.trainer.model.state_dict(),
+            #'best_prec1': best_prec1,
+            'optimizer' : self.trainer._optimizer.state_dict(),
+            #'loss':{},
+                #            #'regularizers':{},
+                #            #'constraints':{},
+                #            #'initializers':{},
+                #            #'metrics':{},
+                #            #'val_loss':{}
+            }, file)
         if is_best:
-            shutil.copyfile(self.file, 'model_best.pth.tar')
+            shutil.copyfile(file, 'model_best.pth.tar')
 
     def on_epoch_end(self, epoch, logs=None):
-        file = self.file.format(epoch='%03i'%(epoch+1), 
+
+        file = self.file.format(epoch='%03i'%(epoch+1),
                                 loss='%0.4f'%logs[self.monitor])
         if self.save_best_only:
             current_loss = logs.get(self.monitor)
@@ -293,21 +338,8 @@ class ModelCheckpoint(Callback):
                               (epoch+1, self.best_loss, current_loss, file))
                     self.best_loss = current_loss
                     #if self.save_weights_only:
-                    self.model.save_state_dict(file)
                     #else:
-                    #    self.save_checkpoint({
-                    #            'epoch': epoch + 1,
-                    #            #'arch': args.arch,
-                    #            'state_dict': self.model.state_dict(),
-                    #            #'best_prec1': best_prec1,
-                    #            'optimizer' : self.model.optimizer.state_dict(),
-                    #            #'loss':{},
-                    #            #'regularizers':{},
-                    #            #'constraints':{},
-                    #            #'initializers':{},
-                    #            #'metrics':{},
-                    #            #'val_loss':{}
-                    #        })
+                    self.save_checkpoint(epoch, file)
                     if self.max_save > 0:
                         if len(self.old_files) == self.max_save:
                             try:
@@ -319,7 +351,7 @@ class ModelCheckpoint(Callback):
         else:
             if self.verbose > 0:
                 print('\nEpoch %i: saving model to %s' % (epoch+1, file))
-            self.model.save_state_dict(file)
+            self.save_checkpoint(epoch, file)
             if self.max_save > 0:
                 if len(self.old_files) == self.max_save:
                     try:
@@ -338,7 +370,7 @@ class EarlyStopping(Callback):
     def __init__(self, 
                  monitor='val_loss',
                  min_delta=0,
-                 patience=0):
+                 patience=5):
         """
         EarlyStopping callback to exit the training loop if training or
         validation loss does not improve by a certain amount for a certain
@@ -378,7 +410,7 @@ class EarlyStopping(Callback):
             else:
                 if self.wait >= self.patience:
                     self.stopped_epoch = epoch + 1
-                    self.model._stop_training = True
+                    self.trainer._stop_training = True
                 self.wait += 1
 
     def on_train_end(self, logs):
@@ -387,7 +419,7 @@ class EarlyStopping(Callback):
                 (self.stopped_epoch))
 
 
-class LearningRateScheduler(Callback):
+class LRScheduler(Callback):
     """
     Schedule the learning rate according to some function of the 
     current epoch index, current learning rate, and current train/val loss.
@@ -415,7 +447,7 @@ class LearningRateScheduler(Callback):
             else:
                 self.fractional_bounds = True
         self.schedule = schedule
-        super(LearningRateScheduler, self).__init__()
+        super(LRScheduler, self).__init__()
 
     def schedule_from_dict(self, epoch, logs=None):
         for epoch_bound, learn_rate in self.schedule_dict.items():
@@ -425,19 +457,19 @@ class LearningRateScheduler(Callback):
                     return learn_rate
             # epoch_bound is in units of "cumulative percent of epochs"
             else:
-                if epoch <= epoch_bound*logs['nb_epoch']:
+                if epoch <= epoch_bound*logs['num_epoch']:
                     return learn_rate
         warnings.warn('Check the keys in the schedule dict.. Returning last value')
         return learn_rate
 
     def on_epoch_begin(self, epoch, logs=None):
         # WARNING: Do NOT use this callback with self-adjusting learners like Yellowfin
-        current_lrs = [p['lr'] for p in self.model._optimizer.param_groups]
+        current_lrs = [p['lr'] for p in self.trainer._optimizer.param_groups]
         lr_list = self.schedule(epoch, current_lrs, **logs)
         if not isinstance(lr_list, list):
             lr_list = [lr_list]
 
-        for param_group, lr_change in zip(self.model._optimizer.param_groups, lr_list):
+        for param_group, lr_change in zip(self.trainer._optimizer.param_groups, lr_list):
             param_group['lr'] = lr_change
 
 
@@ -503,7 +535,7 @@ class ReduceLROnPlateau(Callback):
 
     def on_epoch_end(self, epoch, logs=None):
         logs = logs or {}
-        logs['lr'] = [p['lr'] for p in self.model._optimizer.param_groups]
+        logs['lr'] = [p['lr'] for p in self.trainer._optimizer.param_groups]
         current_loss = logs.get(self.monitor)
         if current_loss is None:
             pass
@@ -519,7 +551,7 @@ class ReduceLROnPlateau(Callback):
             # loss didnt improve, and not in cooldown phase
             elif not (self.cooldown_counter > 0):
                 if self.wait >= self.patience:
-                    for p in self.model._optimizer.param_groups:
+                    for p in self.trainer._optimizer.param_groups:
                         old_lr = p['lr']
                         if old_lr > self.min_lr + 1e-4:
                             new_lr = old_lr * self.factor
@@ -531,6 +563,7 @@ class ReduceLROnPlateau(Callback):
                             self.cooldown_counter = self.cooldown
                             self.wait = 0
                 self.wait += 1
+
 
 class CSVLogger(Callback):
     """
@@ -572,7 +605,7 @@ class CSVLogger(Callback):
 
     def on_epoch_end(self, epoch, logs=None):
         logs = logs or {}
-        RK = {'nb_batches', 'nb_epoch'}
+        RK = {'num_batches', 'num_epoch'}
 
         def handle_value(k):
             is_zero_dim_tensor = isinstance(k, th.Tensor) and k.dim() == 0

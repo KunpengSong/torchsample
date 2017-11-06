@@ -1,5 +1,8 @@
 # High-Level Training, Data Augmentation, and Utilities for Pytorch
 
+<b>[v0.1.3](https://github.com/ncullen93/torchsample/releases) JUST RELEASED - contains significant improvements, bug fixes, and additional
+support. Get it from the releases, or pull the master branch.</b>
+
 This package provides a few things:
 - A high-level module for Keras-like training with callbacks, constraints, and regularizers.
 - Comprehensive data augmentation, transforms, sampling, and loading
@@ -7,11 +10,16 @@ This package provides a few things:
 
 Additional datasets and meters have been merged from the [PyTorchNet](https://github.com/pytorch/tnt) project.
 
-## SuperModule
-The `SuperModule` class provides a high-level training interface which abstracts
-away the training loop while providing callbacks, constraints, and regularizers. 
-Most importantly, you lose ZERO flexibility since this model inherits directly
-from `nn.Module`.
+<b>Have any feature requests?</b> Submit an issue! I'll make it happen. Specifically,
+any data augmentation, data loading, or sampling functions.
+
+<b>Want to contribute?</b> Check the [issues page](https://github.com/ncullen93/torchsample/issues)
+ for those tagged with [contributions welcome].
+
+## ModuleTrainer
+The `ModuleTrainer` class provides a high-level training interface which abstracts
+away the training loop while providing callbacks, constraints, initializers, regularizers,
+and more.
 
 Example:
 ```python
@@ -43,7 +51,7 @@ trainer.compile(loss='nll_loss',
 
 trainer.fit(x_train, y_train, 
             val_data=(x_test, y_test),
-            nb_epoch=20, 
+            num_epoch=20,
             batch_size=128,
             verbose=1)
 ```
@@ -117,20 +125,6 @@ Additionally, a number of useful Datasets and Meters are provided.
    - `torchnet.dataset.ResampleDataset`
    - `torchnet.dataset.ShuffleDataset`
    - `torchnet.dataset.TransformDataset`
-   
-
-The datasets are typically used in conjunction with a `torch.utils.data.DataLoader`.
-
-<b>Meters</b>:
-   - `torchnet.APMeter`
-   - `torchnet.AUCMeter`
-   - `torchnet.AverageValueMeter`
-   - `torchnet.ClassErrorMeter`
-   - `torchnet.ConfusionMeter`
-   - `torchnet.mAPMeter`
-   - `torchnet.MovingAverageValueMeter`
-   - `torchnet.MSEMeter`
-   - `torchnet.TimeMeter`
 
 You can also fit directly on a `torch.utils.data.DataLoader` and can have
 a validation set as well :
@@ -145,7 +139,7 @@ train_loader = DataLoader(train_dataset, batch_size=32)
 val_dataset = TensorDataset(x_val, y_val)
 val_loader = DataLoader(val_dataset, batch_size=32)
 
-model.fit_loader(loader, val_loader=val_loader, nb_epoch=100)
+trainer.fit_loader(loader, val_loader=val_loader, num_epoch=100)
 ```
 
 ## Utility Functions
