@@ -6,7 +6,8 @@ class UsefulDataset(ds.Dataset):
     '''
 
     def __init__(self):
-        pass
+        self.num_inputs = 1         # these are hardcoded for the fit module to work
+        self.num_targets = 1        # these are hardcoded for the fit module to work
 
     def __len__(self):
         super().__len__()

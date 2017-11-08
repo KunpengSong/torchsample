@@ -255,55 +255,60 @@ class ModuleTrainer(object):
                                                'has_regularizers': self._has_regularizers,
                                                'has_metrics': self._has_metrics})
 
-            for epoch_idx in range(initial_epoch,num_epoch):
-                epoch_logs = {}
-                callback_container.on_epoch_begin(epoch_idx, epoch_logs)
+            try:
+                for epoch_idx in range(initial_epoch,num_epoch):
+                    epoch_logs = {}
+                    callback_container.on_epoch_begin(epoch_idx, epoch_logs)
 
-                if shuffle:
-                    inputs, targets = fit_helper.shuffle_arrays(inputs, targets)
+                    if shuffle:
+                        inputs, targets = fit_helper.shuffle_arrays(inputs, targets)
 
-                batch_logs = {}
-                for batch_idx in range(num_batches):
-                    callback_container.on_batch_begin(batch_idx, batch_logs)
+                    batch_logs = {}
+                    for batch_idx in range(num_batches):
+                        callback_container.on_batch_begin(batch_idx, batch_logs)
 
-                    input_batch, target_batch = fit_helper.grab_batch(batch_idx, batch_size, inputs, targets)
-                    if len(self.cuda_devices) > 0:
-                        input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
-                    if self._has_transforms:
-                        input_batch, target_batch = fit_helper.apply_transforms(self._transforms, input_batch, target_batch)
+                        input_batch, target_batch = fit_helper.grab_batch(batch_idx, batch_size, inputs, targets)
+                        if len(self.cuda_devices) > 0:
+                            input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
+                        if self._has_transforms:
+                            input_batch, target_batch = fit_helper.apply_transforms(self._transforms, input_batch, target_batch)
 
-                    # ---------------------------------------------
-                    self._optimizer.zero_grad()
-                    output_batch = fit_forward_fn(input_batch)
-                    loss = fit_loss_fn(output_batch, target_batch)
-                    loss.backward()
-                    self._optimizer.step()
-                    # ---------------------------------------------
+                        # ---------------------------------------------
+                        self._optimizer.zero_grad()
+                        output_batch = fit_forward_fn(input_batch)
+                        loss = fit_loss_fn(output_batch, target_batch)
+                        loss.backward()
+                        self._optimizer.step()
+                        # ---------------------------------------------
 
-                    if self._has_regularizers:
-                        batch_logs['reg_loss'] = self.regularizer_container.current_value
-                    if self._has_metrics:
-                        metrics_logs = self.metric_container(output_batch, target_batch)
-                        batch_logs.update(metrics_logs)
+                        if self._has_regularizers:
+                            batch_logs['reg_loss'] = self.regularizer_container.current_value
+                        if self._has_metrics:
+                            metrics_logs = self.metric_container(output_batch, target_batch)
+                            batch_logs.update(metrics_logs)
 
-                    batch_logs['loss'] = loss.data[0]
-                    callback_container.on_batch_end(batch_idx, batch_logs)
+                        batch_logs['loss'] = loss.data[0]
+                        callback_container.on_batch_end(batch_idx, batch_logs)
 
-                if has_val_data:
-                    val_epoch_logs = self.evaluate(val_inputs,
-                                                   val_targets,
-                                                   batch_size=batch_size,
-                                                   verbose=verbose)
-                    epoch_logs.update(val_epoch_logs)
-                    epoch_logs.update(batch_logs)
-                    # TODO how to fix this?
-                    # self.history.batch_metrics.update(val_epoch_logs)
+                    if has_val_data:
+                        val_epoch_logs = self.evaluate(val_inputs,
+                                                       val_targets,
+                                                       batch_size=batch_size,
+                                                       verbose=verbose)
+                        epoch_logs.update(val_epoch_logs)
+                        epoch_logs.update(batch_logs)
+                        # TODO how to fix this?
+                        # self.history.batch_metrics.update(val_epoch_logs)
 
-                callback_container.on_epoch_end(epoch_idx, self.history.epoch_metrics)
+                    callback_container.on_epoch_end(epoch_idx, self.history.epoch_metrics)
 
-                if self._stop_training:
-                    break
+                    if self._stop_training:
+                        break
+            # handles Ctrl-C gracefully
+            except KeyboardInterrupt:
+                print("||  Caught Ctrl-C -- exiting gracefully  || ")
         self.model.train(mode=False)
+        callback_container.on_train_end()
 
     def fit_loader(self,
                    loader,
@@ -357,53 +362,58 @@ class ModuleTrainer(object):
                                                'has_regularizers': self._has_regularizers,
                                                'has_metrics': self._has_metrics})
 
-            for epoch_idx in range(initial_epoch,num_epoch):
-                epoch_logs = {}
-                callback_container.on_epoch_begin(epoch_idx, epoch_logs)
+            try:
+                for epoch_idx in range(initial_epoch,num_epoch):
+                    epoch_logs = {}
+                    callback_container.on_epoch_begin(epoch_idx, epoch_logs)
 
-                batch_logs = {}
-                loader_iter = iter(loader)
-                for batch_idx in range(num_batches):
+                    batch_logs = {}
+                    loader_iter = iter(loader)
+                    for batch_idx in range(num_batches):
 
-                    callback_container.on_batch_begin(batch_idx, batch_logs)
+                        callback_container.on_batch_begin(batch_idx, batch_logs)
 
-                    input_batch, target_batch = fit_helper.grab_batch_from_loader(loader_iter)
-                    if len(self.cuda_devices) > 0:
-                        input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
+                        input_batch, target_batch = fit_helper.grab_batch_from_loader(loader_iter)
+                        if len(self.cuda_devices) > 0:
+                            input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
-                    # ---------------------------------------------
-                    self._optimizer.zero_grad()
-                    output_batch = fit_forward_fn(input_batch)
-                    loss = fit_loss_fn(output_batch, target_batch)
-                    loss.backward()
-                    self._optimizer.step()
-                    # ---------------------------------------------
+                        # ---------------------------------------------
+                        self._optimizer.zero_grad()
+                        output_batch = fit_forward_fn(input_batch)
+                        loss = fit_loss_fn(output_batch, target_batch)
+                        loss.backward()
+                        self._optimizer.step()
+                        # ---------------------------------------------
 
-                    if self._has_regularizers:
-                        batch_logs['reg_loss'] = self.regularizer_container.current_value
-                    if self._has_metrics:
-                        metrics_logs = self.metric_container(output_batch, target_batch)
-                        batch_logs.update(metrics_logs)
+                        if self._has_regularizers:
+                            batch_logs['reg_loss'] = self.regularizer_container.current_value
+                        if self._has_metrics:
+                            metrics_logs = self.metric_container(output_batch, target_batch)
+                            batch_logs.update(metrics_logs)
 
-                    batch_logs['loss'] = loss.data[0]
-                    callback_container.on_batch_end(batch_idx, batch_logs)
+                        batch_logs['loss'] = loss.data[0]
+                        callback_container.on_batch_end(batch_idx, batch_logs)
 
-                epoch_logs.update(self.history.batch_metrics)
-                if has_val_data:
-                    val_epoch_logs = self.evaluate_loader(val_loader, verbose=verbose)
-                    self._in_train_loop = False
-                    #self.history.batch_metrics.update(val_epoch_logs)
-                    #epoch_logs.update(val_epoch_logs)
-                    epoch_logs.update(val_epoch_logs)
-                    epoch_logs.update(batch_logs)
-                    # TODO how to fix this?
-                    # self.history.batch_metrics.update(val_epoch_logs)
+                    epoch_logs.update(self.history.batch_metrics)
+                    if has_val_data:
+                        val_epoch_logs = self.evaluate_loader(val_loader, verbose=verbose)
+                        self._in_train_loop = False
+                        #self.history.batch_metrics.update(val_epoch_logs)
+                        #epoch_logs.update(val_epoch_logs)
+                        epoch_logs.update(val_epoch_logs)
+                        epoch_logs.update(batch_logs)
+                        # TODO how to fix this?
+                        # self.history.batch_metrics.update(val_epoch_logs)
 
-                callback_container.on_epoch_end(epoch_idx, epoch_logs)
+                    callback_container.on_epoch_end(epoch_idx, epoch_logs)
 
-                if self._stop_training:
-                    break
+                    if self._stop_training:
+                        break
+            # handles Ctrl-C gracefully
+            except KeyboardInterrupt:
+                print("||  Caught Ctrl-C -- exiting gracefully  || ")
         self.model.train(mode=False)
+        callback_container.on_train_end()
 
     def predict(self,
                 inputs,
@@ -520,7 +530,6 @@ class ModuleTrainer(object):
 
     def evaluate_loader(self,
                         loader,
-                        cuda_device=-1,
                         verbose=1):
         self.model.train(mode=False)
         num_inputs, num_targets = _parse_num_inputs_and_targets_from_loader(loader)
@@ -542,8 +551,8 @@ class ModuleTrainer(object):
         samples_seen = 0
         for batch_idx in range(num_batches):
             input_batch, target_batch = evaluate_helper.grab_batch_from_loader(loader_iter, volatile=True)
-            if cuda_device >= 0:
-                input_batch, target_batch = evaluate_helper.move_to_cuda(cuda_device, input_batch, target_batch)
+            if len(self.cuda_devices) > 0:
+                input_batch, target_batch = evaluate_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
             self._optimizer.zero_grad()
             output_batch = eval_forward_fn(input_batch)
