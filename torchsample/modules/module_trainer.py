@@ -290,17 +290,15 @@ class ModuleTrainer(object):
                         batch_logs['loss'] = loss.data[0]
                         callback_container.on_batch_end(batch_idx, batch_logs)
 
+                    epoch_logs.update(self.history.batch_metrics)
                     if has_val_data:
-                        val_epoch_logs = self.evaluate(val_inputs,
-                                                       val_targets,
-                                                       batch_size=batch_size,
-                                                       verbose=verbose)
+                        val_epoch_logs = self.evaluate(val_inputs, val_targets, batch_size=batch_size, verbose=verbose)
                         epoch_logs.update(val_epoch_logs)
                         epoch_logs.update(batch_logs)
                         # TODO how to fix this?
                         # self.history.batch_metrics.update(val_epoch_logs)
 
-                    callback_container.on_epoch_end(epoch_idx, self.history.epoch_metrics)
+                    callback_container.on_epoch_end(epoch_idx, epoch_logs)
 
                     if self._stop_training:
                         break
@@ -518,8 +516,8 @@ class ModuleTrainer(object):
             output_batch = eval_forward_fn(input_batch)
             loss = eval_loss_fn(output_batch, target_batch)
 
-            samples_seen += batch_size
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
+            samples_seen += batch_size
 
             if self._has_metrics:
                 metrics_logs = metric_container(output_batch, target_batch)
