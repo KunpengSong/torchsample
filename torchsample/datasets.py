@@ -780,10 +780,7 @@ def _find_classes(dir):
     return classes, class_to_idx
 
 def _is_image_file(filename):
-    IMG_EXTENSIONS = [
-        '.jpg', '.JPG', '.jpeg', '.JPEG',
-        '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP', '.npy'
-    ]
+    from .misc import IMG_EXTENSIONS
     return any(filename.endswith(extension) for extension in IMG_EXTENSIONS)
 
 def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='*',
