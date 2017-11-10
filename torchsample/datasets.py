@@ -124,6 +124,9 @@ class FolderDataset(UsefulDataset):
             this feature off then specify target_index_map=None
         """
 
+        # call the super constructor first, then set our own parameters
+        super().__init__()
+
         if file_loader == 'npy':
             file_loader = npy_loader
         elif file_loader == 'pil':
@@ -161,7 +164,8 @@ class FolderDataset(UsefulDataset):
         if len(self.classes) == 1 and self.class_mode == 'image':          # this is a binary segmentation map
             target_sample = self.file_loader(target_sample, color_space='L')
         else:
-            target_sample = self.file_loader(target_sample)
+            if self.class_mode == 'image':
+                target_sample = self.file_loader(target_sample)
         # load samples into memory
         if self.class_mode == 'image':          # images get special treatment because we have to transform the mask into class values
             input_sample = self.file_loader(input_sample, color_space='rgb')
@@ -174,26 +178,7 @@ class FolderDataset(UsefulDataset):
         else:
             input_sample = self.file_loader(input_sample)       # do generic data read
 
-    # def __getitem__(self, index):
-    #     img_path, mask_path = self.data[index]
-    #     img, mask = Image.open(img_path).convert('RGB'), Image.open(mask_path)
-    #
-    #     mask = np.array(mask)
-    #     mask_copy = mask.copy()
-    #     for k, v in self.target_index_map.items():
-    #         mask_copy[mask == k] = v
-    #     mask = Image.fromarray(mask_copy.astype(np.uint8))
-    #
-    #     if self.co_transform is not None:
-    #         img, mask = self.co_transform(img, mask)
-    #     if self.transform is not None:
-    #         img = self.transform(img)
-    #     if self.target_transform is not None:
-    #         mask = self.target_transform(mask)
-    #
-    #     return img, mask
 
-        
         # apply transforms
         if self.apply_co_transform_first and self.co_transform is not None:
             input_sample, target_sample = self.co_transform(input_sample, target_sample)
@@ -213,7 +198,9 @@ class FolderDataset(UsefulDataset):
         return self.data
 
     def getmeta_data(self):
-        meta = {'transform': self.transform,
+        meta = {'num_inputs': self.num_inputs,         # these are hardcoded for the fit module to work
+                'num_targets': self.num_targets,
+                'transform': self.transform,
                 'target_transform': self.target_transform,
                 'co_transform': self.co_transform,
                 'class_to_idx': self.class_to_idx,
@@ -226,9 +213,6 @@ class FolderDataset(UsefulDataset):
         return meta
 
 class ClonedFolderDataset(FolderDataset):
-    # TODO: Explore to load everything generically
-    #   -  https://stackoverflow.com/questions/19305296/multiple-constructors-in-python-using-inheritance
-
     def __init__(self, data, meta_data, **kwargs):
         """
         Dataset that can be initialized with a dictionary of internal parameters
@@ -255,26 +239,6 @@ class ClonedFolderDataset(FolderDataset):
             setattr(self, key, meta_data[key])
         for key in kwargs:
             setattr(self, key, kwargs[key])
-
-        # self.class_mode = meta_data['class_mode']
-        # self.class_to_idx = meta_data['class_to_idx']
-        # self.transform = meta_data['transform']
-        # self.target_transform = meta_data['target_transform']
-        # self.co_transform = meta_data['co_transform']
-        # self.apply_co_transform_first = meta_data['apply_co_transform_first']
-        # self.file_loader = meta_data['file_loader']
-
-    def __getitem__(self, index):
-        return super().__getitem__(index)
-
-    def __len__(self):
-        return super().__len__()
-
-    def __getdata__(self):
-        return super().__getdata__()
-
-    def __getmeta_data__(self):
-        return super().__getmeta_data__()
 
 
 class BaseDataset(object):

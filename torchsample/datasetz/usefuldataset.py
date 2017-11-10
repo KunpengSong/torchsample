@@ -9,19 +9,15 @@ class UsefulDataset(ds.Dataset):
         self.num_inputs = 1         # these are hardcoded for the fit module to work
         self.num_targets = 1        # these are hardcoded for the fit module to work
 
-    def __len__(self):
-        super().__len__()
-
-    def __getitem__(self, idx):
-        super().__getitem__(idx)
-
     def getdata(self):
         '''
-        Data that the Dataset class operates on. Typically iterable/list of tuple(label,target)
+        Data that the Dataset class operates on. Typically iterable/list of tuple(label,target).
+        Note: This is different than simply calling myDataset.data because some datasets are comprised of multiple other datasets!
+        The dataset returned should be the `combined` dataset!
 
-        :return: iterable
+        :return: iterable - Representation of the entire dataset (combined if necessary from multiple other datasets)
         '''
-        pass
+        raise NotImplementedError
 
     def getmeta_data(self):
         '''
@@ -29,4 +25,4 @@ class UsefulDataset(ds.Dataset):
 
         :return: dict(any)
         '''
-        pass
+        raise NotImplementedError
