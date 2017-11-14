@@ -48,6 +48,7 @@ class FolderDataset(UsefulDataset):
     def __init__(self, 
                  root,
                  class_mode='label',
+                 class_to_idx = None,
                  input_regex='*',
                  rel_target_root='',
                  target_prefix='',
@@ -82,6 +83,9 @@ class FolderDataset(UsefulDataset):
             `image` = return another image as target (determined by optional target_prefix/postfix)\n
                 NOTE: if class_mode == 'image', in addition to input, you must also provide rel_target_root,
                 target_prefix or target_postfix (in any combination).
+
+        :param class_to_idx: dict()\n
+            If specified, the given class_to_idx map will be used. Otherwise one will be derived from the directory structure.
 
         :param input_regex: string (default is any valid image file)\n
             regular expression to find input images\n
@@ -135,8 +139,12 @@ class FolderDataset(UsefulDataset):
 
         root = os.path.expanduser(root)
 
-        classes, class_to_idx = _find_classes(root)
-        data, _ = _finds_inputs_and_targets(root, class_mode=class_mode, class_to_idx=class_to_idx, input_regex=input_regex,
+        if class_to_idx:
+            self.classes = class_to_idx.keys()
+            self.class_to_idx = class_to_idx
+        else:
+            self.classes, self.class_to_idx = _find_classes(root)
+        data, _ = _finds_inputs_and_targets(root, class_mode=class_mode, class_to_idx=self.class_to_idx, input_regex=input_regex,
                                             rel_target_root=rel_target_root, target_prefix=target_prefix, target_postfix=target_postfix,
                                             target_extension=target_extension, exclusion_file=exclusion_file)
 
@@ -147,8 +155,6 @@ class FolderDataset(UsefulDataset):
 
         self.root = os.path.expanduser(root)
         self.data = data
-        self.classes = classes
-        self.class_to_idx = class_to_idx
         self.transform = transform
         self.target_transform = target_transform
         self.co_transform = co_transform
@@ -819,7 +825,11 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
                             path = os.path.join(rootz, fname)
                             inputs.append(path)
                             if class_mode == 'label':
-                                targets.append(class_to_idx[subdir])
+                                target_name = class_to_idx.get(subdir)
+                                if not target_name:
+                                    print("WARN WARN: !!! Label " + subdir + " does NOT have a valid mapping to ID!  Ignoring...")
+                                else:
+                                    targets.append(target_name)
                             elif class_mode == 'image':
                                 name_vs_ext = fname.rsplit('.', 1)
                                 target_fname = os.path.join(root, rel_target_root, subdir, target_prefix + name_vs_ext[0] + target_postfix + '.' + target_extension)
