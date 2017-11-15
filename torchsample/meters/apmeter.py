@@ -1,6 +1,5 @@
 import math
 from . import meter
-import numpy as np
 import torch
 
 

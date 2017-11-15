@@ -4,7 +4,6 @@ ModuleTrainer for high level training on Pytorch models
 from __future__ import print_function
 from __future__ import absolute_import
 
-import warnings
 import functools
 import math
 from collections import OrderedDict
@@ -17,7 +16,7 @@ import torch.backends.cudnn as cudnn
 # local imports
 from ._utils import (_validate_loss_input, _validate_metric_input,
                      _validate_optimizer_input, _validate_initializer_input,
-                     _standardize_user_data, _parse_num_inputs_and_targets,
+                     _parse_num_inputs_and_targets,
                      _is_tuple_or_list, _parse_num_inputs_and_targets_from_loader,
                      _add_regularizer_to_loss_fn)
 

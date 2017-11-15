@@ -1,6 +1,6 @@
 import math
 from .dataset import Dataset
-from .. import transform
+from . import transform
 
 
 class BatchDataset(Dataset):

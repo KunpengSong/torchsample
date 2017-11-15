@@ -5,7 +5,7 @@ from .version import __version__
 
 # from .datasets import *
 # from .samplers import *
-from . import datasetz
+from . import datasets
 from . import samplers
 from . import callbacks
 from . import constraints

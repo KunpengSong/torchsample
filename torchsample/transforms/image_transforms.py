@@ -10,7 +10,7 @@ import random
 
 import torch as th
 
-from ..utils import th_random_choice
+from torchsample.torchsample.utils import th_random_choice
 
 
 def _blend(img1, img2, alpha):

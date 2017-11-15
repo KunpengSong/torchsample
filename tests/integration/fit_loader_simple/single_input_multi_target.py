@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from torchsample.modules import ModuleTrainer
-from torchsample import TensorDataset
+from torchsample.datasets.TensorDataset import TensorDataset
 
 import os
 from torchvision import datasets

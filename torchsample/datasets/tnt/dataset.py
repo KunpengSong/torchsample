@@ -1,4 +1,7 @@
-import torchnet
+from .batchdataset import BatchDataset
+from .transformdataset import TransformDataset
+from .shuffledataset import ShuffleDataset
+from .multipartitiondataset import MultiPartitionDataset
 from torch.utils.data import DataLoader
 
 
@@ -15,16 +18,16 @@ class Dataset(object):
         pass
 
     def batch(self, *args, **kwargs):
-        return torchnet.dataset.BatchDataset(self, *args, **kwargs)
+        return BatchDataset(self, *args, **kwargs)
 
     def transform(self, *args, **kwargs):
-        return torchnet.dataset.TransformDataset(self, *args, **kwargs)
+        return TransformDataset(self, *args, **kwargs)
 
     def shuffle(self, *args, **kwargs):
-        return torchnet.dataset.ShuffleDataset(self, *args, **kwargs)
+        return ShuffleDataset(self, *args, **kwargs)
 
     def parallel(self, *args, **kwargs):
         return DataLoader(self, *args, **kwargs)
 
     def partition(self, *args, **kwargs):
-        return torchnet.dataset.MultiPartitionDataset(self, *args, **kwargs)
+        return MultiPartitionDataset(self, *args, **kwargs)

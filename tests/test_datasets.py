@@ -1,6 +1,6 @@
 import unittest
 import torch
-import torchnet.dataset as dataset
+import torchsample.datasets.tnt.dataset as dataset
 import numpy as np
 import os
 import tempfile

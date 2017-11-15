@@ -1,5 +1,5 @@
 import json
-from gridsearch import GridSearch
+from .gridsearch import GridSearch
 
 my_args = {
     'shape': '+plus+',

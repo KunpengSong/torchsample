@@ -13,7 +13,7 @@ class ListDataset(Dataset):
     If `path` is provided, `elem_list` is assumed to be a list of strings, and
     each element `elem_list[i]` will prefixed by `path/` when fed to `load()`.
 
-    Purpose: many low or medium-scale datasetz can be seen as a list of files
+    Purpose: many low or medium-scale datasets can be seen as a list of files
     (for example representing input samples). For this list of file, a target
     can be often inferred in a simple manner.
 

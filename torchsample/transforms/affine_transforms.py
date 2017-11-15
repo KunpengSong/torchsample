@@ -7,7 +7,7 @@ import math
 import random
 import torch as th
 
-from ..utils import th_affine2d, th_random_choice
+from torchsample.torchsample.utils import th_affine2d, th_random_choice
 
 
 class RandomAffine(object):

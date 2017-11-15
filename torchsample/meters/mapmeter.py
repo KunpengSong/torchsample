@@ -1,8 +1,4 @@
-import math
 from . import meter, APMeter
-import numpy as np
-import torch
-
 
 class mAPMeter(meter.Meter):
     """

@@ -1,7 +1,7 @@
 import unittest
 import math
 import torch
-import torchnet.meter as meter
+import torchsample.meters.meter as meter
 import numpy as np
 
 

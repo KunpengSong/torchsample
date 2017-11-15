@@ -5,8 +5,7 @@ import warnings
 try:
     from inspect import signature
 except:
-    warnings.warn('inspect.signature not available... '
-        'you should upgrade to Python 3.x')
+    warnings.warn('inspect.signature not available... you should upgrade to Python 3.x')
 
 import torch.nn.functional as F
 import torch.optim as optim

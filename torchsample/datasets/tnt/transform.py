@@ -1,7 +1,6 @@
-import torch
 from six import iteritems
-from .utils.table import canmergetensor as canmerge
-from .utils.table import mergetensor as mergetensor
+from .table import canmergetensor as canmerge
+from .table import mergetensor as mergetensor
 
 
 def compose(transforms):
