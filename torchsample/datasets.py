@@ -826,8 +826,9 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
                             inputs.append(path)
                             if class_mode == 'label':
                                 target_name = class_to_idx.get(subdir)
-                                if not target_name:
+                                if target_name is None:
                                     print("WARN WARN: !!! Label " + subdir + " does NOT have a valid mapping to ID!  Ignoring...")
+                                    inputs.pop()   # Also remove last entry from inputs
                                 else:
                                     targets.append(target_name)
                             elif class_mode == 'image':
