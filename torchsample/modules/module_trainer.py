@@ -17,7 +17,7 @@ import torch.backends.cudnn as cudnn
 from ._utils import (_validate_loss_input, _validate_metric_input,
                      _validate_optimizer_input, _validate_initializer_input,
                      _parse_num_inputs_and_targets,
-                     _is_tuple_or_list, _parse_num_inputs_and_targets_from_loader,
+                     is_tuple_or_list, _parse_num_inputs_and_targets_from_loader,
                      _add_regularizer_to_loss_fn)
 
 from ..callbacks import CallbackContainer, History, TQDM
@@ -38,7 +38,8 @@ class ModuleTrainer(object):
         Major Parts
         -----------
         - optimizer(s)
-        - loss(es)
+        - criterion(s)
+        - loss_multipliers (to handle multiple losses)
         - regularizers
         - initializers
         - constraints
@@ -49,6 +50,9 @@ class ModuleTrainer(object):
             raise ValueError('model argument must inherit from torch.nn.Module')
         self.model = model
         self.cuda_devices = cuda_devices
+
+        self._loss_multipliers = None
+        self._named_trainers = dict()       # custom trainers that can be initialized during compilation time
 
         # callbacks
         self._callbacks = []
@@ -73,8 +77,8 @@ class ModuleTrainer(object):
         self._has_transforms = False
 
         # losses
-        self._loss = None
-        self._loss_fn = None
+        self._criterion = None
+        self._criterion_fn = None
 
         # other properties
         self._stop_training = False
@@ -87,12 +91,12 @@ class ModuleTrainer(object):
             if len(cuda_devices) > 1:
                 self.model = th.nn.DataParallel(self.model, device_ids=cuda_devices)
 
-    def set_loss(self, loss):
-        self._loss = loss
-        if _is_tuple_or_list(loss):
-            self._loss_fn = [_validate_loss_input(l) for l in loss]
+    def set_criterion(self, criterion):
+        self._criterion = criterion
+        if is_tuple_or_list(criterion):
+            self._criterion_fn = [_validate_loss_input(l) for l in criterion]
         else:
-            self._loss_fn = _validate_loss_input(loss)
+            self._criterion_fn = _validate_loss_input(criterion)
 
     def set_optimizer(self, optimizer, **kwargs):
         if type(optimizer) is type or isinstance(optimizer, str):
@@ -107,33 +111,33 @@ class ModuleTrainer(object):
             self._optimizer = optimizer
 
     def set_callbacks(self, callbacks):
-        if not _is_tuple_or_list(callbacks):
+        if not is_tuple_or_list(callbacks):
             callbacks = [callbacks]
         self._callbacks = [self.history] + callbacks
 
     def set_regularizers(self, regularizers):
-        regularizers = [regularizers] if not _is_tuple_or_list(regularizers) else regularizers
+        regularizers = [regularizers] if not is_tuple_or_list(regularizers) else regularizers
         self._regularizers = regularizers
         self._has_regularizers = True
 
     def set_initializers(self, initializers):
-        initializers = [initializers] if not _is_tuple_or_list(initializers) else initializers
+        initializers = [initializers] if not is_tuple_or_list(initializers) else initializers
         initializers = [_validate_initializer_input(it) for it in initializers]
         self._initializers = initializers
 
     def set_constraints(self, constraints):
-        constraints = [constraints] if not _is_tuple_or_list(constraints) else constraints
+        constraints = [constraints] if not is_tuple_or_list(constraints) else constraints
         self._has_constraints = True
         self._constraints = constraints
 
     def set_metrics(self, metrics):
-        metrics = [metrics] if not _is_tuple_or_list(metrics) else metrics
+        metrics = [metrics] if not is_tuple_or_list(metrics) else metrics
         metrics = [_validate_metric_input(m) for m in metrics]
         self._has_metrics = True
         self._metrics = metrics
 
     def set_transforms(self, transforms):
-        if not _is_tuple_or_list(transforms):
+        if not is_tuple_or_list(transforms):
             transforms = (transforms, lambda x: x, lambda x,y: (x,y))
         if len(transforms) == 1:
             transforms = (transforms, lambda x: x, lambda x,y: (x,y))
@@ -149,15 +153,32 @@ class ModuleTrainer(object):
 
     def compile(self,
                 optimizer,
-                loss,
+                criterion,
+                loss_multipliers=None,
+                named_helpers = None,
                 callbacks=None,
                 regularizers=None,
                 initializers=None,
                 constraints=None,
                 metrics=None,
                 transforms=None):
+        '''
+        :param optimizer: the optimizer to use for learning
+        :param criterion: the criterion to use for calculating loss
+        :param loss_multipliers: (type: array) A way to provide preset loss multipliers for multi-loss criterions
+        :param named_helpers: (type: dict) A way to provide custom handler for loss calculation and forward pass. In most cases not necessary to override.
+        :param callbacks: Callbacks to use when calling the fit* functions
+        :param regularizers: Regularizers to use when calling the fit* functions
+        :param initializers: Initializers to use when calling the fit* functions
+        :param constraints: Constraints to use when calling the fit* functions
+        :param metrics: Metrics to use when calling the fit* functions
+        :param transforms: Unused at the moment
+
+        :return:
+        '''
         self.set_optimizer(optimizer)
-        self.set_loss(loss)
+        self.set_criterion(criterion)
+        self._loss_multipliers = loss_multipliers
 
         if regularizers is not None:
             self.set_regularizers(regularizers)
@@ -204,6 +225,7 @@ class ModuleTrainer(object):
             num_epoch=100,
             batch_size=32,
             shuffle=False,
+            fit_helper_name=None,
             verbose=1):
         """
         Fit a model on in-memory tensors using ModuleTrainer
@@ -211,7 +233,7 @@ class ModuleTrainer(object):
         self.model.train(True)
         # ----------------------------------------------------------------------
         num_inputs, num_targets = _parse_num_inputs_and_targets(inputs, targets)
-        len_inputs = len(inputs) if not _is_tuple_or_list(inputs) else len(inputs[0])
+        len_inputs = len(inputs) if not is_tuple_or_list(inputs) else len(inputs[0])
 
         if val_data is not None:
             if num_targets == 0:
@@ -227,8 +249,8 @@ class ModuleTrainer(object):
         num_batches = int(math.ceil(len_inputs / batch_size))
         # ----------------------------------------------------------------------
 
-        fit_helper = _get_helper(self, num_inputs, num_targets)
-        fit_loss_fn = fit_helper.get_partial_loss_fn(self._loss_fn)
+        fit_helper = _get_helper(self, num_inputs, num_targets, helper_name=fit_helper_name)
+        fit_loss_fn = fit_helper.get_partial_loss_fn(self._criterion_fn)
         fit_forward_fn = fit_helper.get_partial_forward_fn(self.model)
 
         with TQDM() as pbar:
@@ -283,7 +305,7 @@ class ModuleTrainer(object):
                         if self._has_regularizers:
                             batch_logs['reg_loss'] = self.regularizer_container.current_value
                         if self._has_metrics:
-                            metrics_logs = self.metric_container(output_batch, target_batch)
+                            metrics_logs = self.metric_container(input_batch, output_batch, target_batch, is_val=False)
                             batch_logs.update(metrics_logs)
 
                         batch_logs['loss'] = loss.data[0]
@@ -312,6 +334,7 @@ class ModuleTrainer(object):
                    val_loader=None,
                    initial_epoch=0,
                    num_epoch=100,
+                   fit_helper_name = None,
                    verbose=1):
         """
         Fit a model on in-memory tensors using ModuleTrainer
@@ -332,8 +355,8 @@ class ModuleTrainer(object):
         num_batches = int(math.ceil(len_inputs / batch_size))
         # ----------------------------------------------------------------------
 
-        fit_helper = _get_helper(self, num_inputs, num_targets)
-        fit_loss_fn = fit_helper.get_partial_loss_fn(self._loss_fn)
+        fit_helper = _get_helper(self, num_inputs, num_targets, helper_name=fit_helper_name)
+        fit_loss_fn = fit_helper.get_partial_loss_fn(self._criterion_fn)
         fit_forward_fn = fit_helper.get_partial_forward_fn(self.model)
 
         with TQDM() as pbar:
@@ -342,8 +365,7 @@ class ModuleTrainer(object):
                 tmp_callbacks.append(pbar)
             if self._has_regularizers:
                 tmp_callbacks.append(RegularizerCallback(self.regularizer_container))
-                fit_loss_fn = _add_regularizer_to_loss_fn(fit_loss_fn,
-                                                            self.regularizer_container)
+                fit_loss_fn = _add_regularizer_to_loss_fn(fit_loss_fn, self.regularizer_container)
             if self._has_constraints:
                 tmp_callbacks.append(ConstraintCallback(self.constraint_container))
             if self._has_metrics:
@@ -385,7 +407,7 @@ class ModuleTrainer(object):
                         if self._has_regularizers:
                             batch_logs['reg_loss'] = self.regularizer_container.current_value
                         if self._has_metrics:
-                            metrics_logs = self.metric_container(output_batch, target_batch)
+                            metrics_logs = self.metric_container(input_batch, output_batch, target_batch, is_val=False)
                             batch_logs.update(metrics_logs)
 
                         batch_logs['loss'] = loss.data[0]
@@ -415,15 +437,16 @@ class ModuleTrainer(object):
     def predict(self,
                 inputs,
                 batch_size=32,
+                pred_helper_name=None,
                 verbose=1):
         self.model.train(mode=False)
         # --------------------------------------------------------
         num_inputs, _ = _parse_num_inputs_and_targets(inputs, None)
-        len_inputs = len(inputs) if not _is_tuple_or_list(inputs) else len(inputs[0])
+        len_inputs = len(inputs) if not is_tuple_or_list(inputs) else len(inputs[0])
         num_batches = int(math.ceil(len_inputs / batch_size))
         # --------------------------------------------------------
 
-        predict_helper = _get_helper(self, num_inputs, num_targets=0)
+        predict_helper = _get_helper(self, num_inputs, num_targets=0, helper_name=pred_helper_name)
         pred_forward_fn = predict_helper.get_partial_forward_fn(self.model)
 
         for batch_idx in range(num_batches):
@@ -433,7 +456,7 @@ class ModuleTrainer(object):
             output_batch = pred_forward_fn(input_batch)
 
             if batch_idx == 0:
-                len_outputs = 1 if not _is_tuple_or_list(output_batch) else len(output_batch)
+                len_outputs = 1 if not is_tuple_or_list(output_batch) else len(output_batch)
                 prediction_lists = [[] for _ in range(len_outputs)]
 
             if len_outputs == 1:
@@ -448,6 +471,7 @@ class ModuleTrainer(object):
 
     def predict_loader(self,
                        loader,
+                       pred_helper_name=None,
                        verbose=1):
         self.model.train(mode=False)
         # --------------------------------------------------------
@@ -457,7 +481,7 @@ class ModuleTrainer(object):
         num_batches = int(math.ceil(len_inputs / batch_size))
         # --------------------------------------------------------
 
-        predict_helper = _get_helper(self, num_inputs, num_targets=0)
+        predict_helper = _get_helper(self, num_inputs, num_targets=0, helper_name=pred_helper_name)
         pred_forward_fn = predict_helper.get_partial_forward_fn(self.model)
 
         loader_iter = iter(loader)
@@ -472,7 +496,7 @@ class ModuleTrainer(object):
             output_batch = pred_forward_fn(input_batch)
 
             if batch_idx == 0:
-                len_outputs = 1 if not _is_tuple_or_list(output_batch) else len(output_batch)
+                len_outputs = 1 if not is_tuple_or_list(output_batch) else len(output_batch)
                 prediction_lists = [[] for _ in range(len_outputs)]
 
             if len_outputs == 1:
@@ -489,14 +513,15 @@ class ModuleTrainer(object):
                  inputs,
                  targets=None,
                  batch_size=32,
+                 eval_helper_name=None,
                  verbose=1):
         self.model.train(mode=False)
         num_inputs, num_targets = _parse_num_inputs_and_targets(inputs, targets)
-        len_inputs = len(inputs) if not _is_tuple_or_list(inputs) else len(inputs[0])
+        len_inputs = len(inputs) if not is_tuple_or_list(inputs) else len(inputs[0])
         num_batches = int(math.ceil(len_inputs / batch_size))
 
-        evaluate_helper = _get_helper(self, num_inputs, num_targets)
-        eval_loss_fn = evaluate_helper.get_partial_loss_fn(self._loss_fn)
+        evaluate_helper = _get_helper(self, num_inputs, num_targets, helper_name=eval_helper_name)
+        eval_loss_fn = evaluate_helper.get_partial_loss_fn(self._criterion_fn)
         eval_forward_fn = evaluate_helper.get_partial_forward_fn(self.model)
         eval_logs= {'val_loss': 0.}
 
@@ -519,23 +544,22 @@ class ModuleTrainer(object):
             samples_seen += batch_size
 
             if self._has_metrics:
-                metrics_logs = metric_container(output_batch, target_batch)
+                metrics_logs = metric_container(input_batch, output_batch, target_batch, is_val=True)
                 eval_logs.update(metrics_logs)
 
         self.model.train(mode=True)
         return eval_logs
 
-    def evaluate_loader(self,
-                        loader,
-                        verbose=1):
+    def evaluate_loader(self, loader, eval_helper_name=None, verbose=1):
+
         self.model.train(mode=False)
         num_inputs, num_targets = _parse_num_inputs_and_targets_from_loader(loader)
         batch_size = loader.batch_size
         len_inputs = len(loader.sampler) if loader.sampler else len(loader.dataset)
         num_batches = int(math.ceil(len_inputs / batch_size))
 
-        evaluate_helper = _get_helper(self, num_inputs, num_targets)
-        eval_loss_fn = evaluate_helper.get_partial_loss_fn(self._loss_fn)
+        evaluate_helper = _get_helper(self, num_inputs, num_targets, helper_name=eval_helper_name)
+        eval_loss_fn = evaluate_helper.get_partial_loss_fn(self._criterion_fn)
         eval_forward_fn = evaluate_helper.get_partial_forward_fn(self.model)
         eval_logs= {'val_loss': 0.}
         loader_iter = iter(loader)
@@ -559,7 +583,7 @@ class ModuleTrainer(object):
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
 
             if self._has_metrics:
-                metrics_logs = metric_container(output_batch, target_batch)
+                metrics_logs = metric_container(input_batch, output_batch, target_batch, is_val=True)
                 eval_logs.update(metrics_logs)
 
         self.model.train(mode=True)
@@ -613,41 +637,61 @@ class ModuleTrainer(object):
 
         return summary
 
-def _get_helper(trainer, num_inputs, num_targets):
-    if (num_inputs == 1) and (num_targets == 1):
-        helper = SingleInput_SingleTarget_Helper()
+def _get_helper(trainer, num_inputs, num_targets, helper_name=None):
+    '''
+    :param trainer:
+    :param num_inputs:
+    :param num_targets:
+    :param helper_name: Generally a helper will be determined from number of inputs and targets. However you'll want to provide your own.\n
+    If a helper name is specified then num_inputs and num_targets are ignored.
+    :return:
+    '''
+    if not helper_name:
+        if (num_inputs == 1) and (num_targets == 1):
+            helper = SingleInput_SingleTarget_Helper(trainer._loss_multipliers)
 
-    elif (num_inputs == 1) and (num_targets > 1):
-        # use same loss function for all targets if multiple loss fns not explicitly given
-        if not _is_tuple_or_list(trainer._loss_fn):
-            trainer._loss_fn = [trainer._loss_fn] * num_targets
-        else:
-            if len(trainer._loss_fn) != num_targets:
-                raise ValueError('must give one loss function for every input if you give multiple')
-        helper = SingleInput_MultiTarget_Helper()
+        elif (num_inputs == 1) and (num_targets > 1):
+            # use same loss function for all targets if multiple loss fns not explicitly given
+            if not is_tuple_or_list(trainer._criterion_fn):
+                trainer._criterion_fn = [trainer._criterion_fn] * num_targets
+            else:
+                if len(trainer._criterion_fn) != num_targets:
+                    raise ValueError('must give one loss function for every input if you give multiple')
+            helper = SingleInput_MultiTarget_Helper()
 
-    elif (num_inputs == 1) and (num_targets == 0):
-        helper = SingleInput_NoTarget_Helper()
+        elif (num_inputs == 1) and (num_targets == 0):
+            helper = SingleInput_NoTarget_Helper()
 
-    elif (num_inputs > 1) and (num_targets == 1):
-        helper = MultiInput_SingleTarget_Helper()
+        elif (num_inputs > 1) and (num_targets == 1):
+            helper = MultiInput_SingleTarget_Helper()
 
-    elif (num_inputs > 1) and (num_targets > 1):
-        # use same loss function for all targets if multiple loss fns not explicitly given
-        if not _is_tuple_or_list(trainer._loss_fn):
-            trainer._loss_fn = [trainer._loss_fn] * num_targets
-        else:
-            if len(trainer._loss_fn) != num_targets:
-                raise ValueError('must give one loss function for every input if you give multiple')
-        helper = MultiInput_MultiTarget_Helper()
+        elif (num_inputs > 1) and (num_targets > 1):
+            # use same loss function for all targets if multiple loss fns not explicitly given
+            if not is_tuple_or_list(trainer._criterion_fn):
+                trainer._criterion_fn = [trainer._criterion_fn] * num_targets
+            else:
+                if len(trainer._criterion_fn) != num_targets:
+                    raise ValueError('must give one loss function for every input if you give multiple')
+            helper = MultiInput_MultiTarget_Helper()
 
-    elif (num_inputs > 1) and (num_targets == 0):
-        helper = MultiInput_NoTarget_Helper()
+        elif (num_inputs > 1) and (num_targets == 0):
+            helper = MultiInput_NoTarget_Helper()
+
+    else:
+        helper = trainer.get_named_helpers(helper_name)
 
     return helper
 
-
 class SingleInput_SingleTarget_Helper(object):
+
+    def __init__(self, loss_multipliers=None):
+        '''
+
+        :param loss_multipliers: (type: list) Some networks return multiple losses that are then added together. This optional list\n
+            specifies different weights to apply to corresponding losses before they are summed.
+        '''
+        self.loss_multipliers = loss_multipliers
+
     def move_to_cuda(self, cuda_device, inputs, targets):
         inputs = inputs.cuda(cuda_device)
         targets = targets.cuda(cuda_device)
@@ -674,7 +718,20 @@ class SingleInput_SingleTarget_Helper(object):
     def get_partial_forward_fn(self, model):
         return functools.partial(self.forward_pass, model=model)
     def calculate_loss(self, output_batch, target_batch, loss_fn):
-        return loss_fn(output_batch, target_batch)
+        total_loss = 0.
+        if is_tuple_or_list(output_batch):     # some networks output multiple results (to compute separate losses)
+            if self.loss_multipliers:
+                assert len(output_batch) == len(self.loss_multipliers)
+
+            for i, output in enumerate(output_batch):
+                if self.loss_multipliers:
+                    total_loss += loss_fn(output, target_batch) * self.loss_multipliers[i]
+                else:
+                    total_loss += loss_fn(output, target_batch)
+        else:
+            total_loss = loss_fn(output_batch, target_batch)
+
+        return total_loss
     def get_partial_loss_fn(self, loss_fn):
         return functools.partial(self.calculate_loss, loss_fn=loss_fn)
         #def new_loss_fn(output_batch, target_batch):

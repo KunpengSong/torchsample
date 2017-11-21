@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 import os
-import sys
 
 model_urls = {
     'inception_v4_1': 'http://webia.lip6.fr/~cadene/Downloads/inceptionv4-97ef9c30.pth'

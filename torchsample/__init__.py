@@ -14,3 +14,4 @@ from . import functions
 from . import transforms
 from . import modules
 from . import optimizers
+from . import losses

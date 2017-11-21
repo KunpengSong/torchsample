@@ -65,7 +65,7 @@ constraints = [UnitNorm(frequency=3, unit='batch', module_filter='fc*')]
 initializers = [XavierUniform(bias=False, module_filter='fc*')]
 metrics = [CategoricalAccuracy(top_k=3)]
 
-trainer.compile(loss='nll_loss',
+trainer.compile(criterion='nll_loss',
                 optimizer='adadelta',
                 regularizers=regularizers,
                 constraints=constraints,
