@@ -19,10 +19,6 @@ def _add_regularizer_to_loss_fn(loss_fn,
         return loss_fn(output_batch, target_batch) + regularizer_container.get_value()
     return new_loss_fn
 
-def is_iterable(x):
-    return isinstance(x, (tuple, list))
-def is_tuple_or_list(x):
-    return isinstance(x, (tuple, list))
 
 def _parse_num_inputs_and_targets_from_loader(loader):
     """ NOT IMPLEMENTED """

@@ -16,18 +16,18 @@ import torch.backends.cudnn as cudnn
 # local imports
 from ._utils import (_validate_loss_input, _validate_metric_input,
                      _validate_optimizer_input, _validate_initializer_input,
-                     _parse_num_inputs_and_targets,
-                     is_tuple_or_list, _parse_num_inputs_and_targets_from_loader,
+                     _parse_num_inputs_and_targets, _parse_num_inputs_and_targets_from_loader,
                      _add_regularizer_to_loss_fn)
 
+from ..conditions import ConditionsContainer, CondType
 from ..callbacks import CallbackContainer, History, TQDM
 from ..regularizers import RegularizerContainer, RegularizerCallback
 from ..initializers import InitializerContainer
 from ..constraints import ConstraintContainer, ConstraintCallback
 from ..metrics import MetricContainer, MetricCallback
+from ..misc import ExecType, is_tuple_or_list
 
 from tqdm import tqdm
-
 
 class ModuleTrainer(object):
 
@@ -40,6 +40,9 @@ class ModuleTrainer(object):
         - optimizer(s)
         - criterion(s)
         - loss_multipliers (to handle multiple losses)
+        - named_helpers
+        - preconditions
+        - postconditions
         - regularizers
         - initializers
         - constraints
@@ -51,8 +54,19 @@ class ModuleTrainer(object):
         self.model = model
         self.cuda_devices = cuda_devices
 
+        # custom loss weights
         self._loss_multipliers = None
-        self._named_trainers = dict()       # custom trainers that can be initialized during compilation time
+
+        # custom fit helpers
+        self._named_helpers = dict()       # custom trainers that can be initialized during compilation time
+
+        # preconditions
+        self._preconditions = []
+        self._has_preconditions = False
+
+        # postconditions
+        self._postconditions = []
+        self._has_postconditions = False
 
         # callbacks
         self._callbacks = []
@@ -136,6 +150,16 @@ class ModuleTrainer(object):
         self._has_metrics = True
         self._metrics = metrics
 
+    def set_preconditions(self, conditions):
+        conditions = [conditions] if not is_tuple_or_list(conditions) else conditions
+        self._preconditions = conditions
+        self._has_preconditions = True
+
+    def set_postconditions(self, conditions):
+        conditions = [conditions] if not is_tuple_or_list(conditions) else conditions
+        self._postconditions = conditions
+        self._has_postconditions = True
+
     def set_transforms(self, transforms):
         if not is_tuple_or_list(transforms):
             transforms = (transforms, lambda x: x, lambda x,y: (x,y))
@@ -155,7 +179,9 @@ class ModuleTrainer(object):
                 optimizer,
                 criterion,
                 loss_multipliers=None,
-                named_helpers = None,
+                named_helpers=None,
+                preconditions=None,
+                postconditions=None,
                 callbacks=None,
                 regularizers=None,
                 initializers=None,
@@ -165,20 +191,32 @@ class ModuleTrainer(object):
         '''
         :param optimizer: the optimizer to use for learning
         :param criterion: the criterion to use for calculating loss
-        :param loss_multipliers: (type: array) A way to provide preset loss multipliers for multi-loss criterions
+        :param loss_multipliers: (type: list) A way to provide preset loss multipliers for multi-loss criterions
         :param named_helpers: (type: dict) A way to provide custom handler for loss calculation and forward pass. In most cases not necessary to override.
-        :param callbacks: Callbacks to use when calling the fit* functions
-        :param regularizers: Regularizers to use when calling the fit* functions
-        :param initializers: Initializers to use when calling the fit* functions
-        :param constraints: Constraints to use when calling the fit* functions
-        :param metrics: Metrics to use when calling the fit* functions
-        :param transforms: Unused at the moment
+        :param preconditions: (type: list) Conditions to check for before executing a forward pass (e.g. asserts)
+        :param postconditions: (type: list) Conditions to check for after the forward pass (e.g. asserts, dynamic network modification)
+        :param callbacks: (type: list) Callbacks to use when calling the fit* functions
+        :param regularizers: (type: list) Regularizers to use when calling the fit* functions
+        :param initializers: (type: list) Initializers to use when calling the fit* functions
+        :param constraints: (type: list) Constraints to use when calling the fit* functions
+        :param metrics: (type: list) Metrics to use when calling the fit* functions
+        :param transforms: (type: list) Unused at the moment
 
         :return:
         '''
         self.set_optimizer(optimizer)
         self.set_criterion(criterion)
         self._loss_multipliers = loss_multipliers
+        self._named_helpers = named_helpers
+
+        if preconditions is not None or postconditions is not None:
+            self._conditions_container = ConditionsContainer(exec_type=ExecType.TRAIN)
+            if preconditions is not None:
+                self.set_preconditions(preconditions)
+                self._conditions_container.add_preconditions(self._preconditions)
+            if postconditions is not None:
+                self.set_postconditions(postconditions)
+                self._conditions_container.add_postconditions(self._postconditions)
 
         if regularizers is not None:
             self.set_regularizers(regularizers)
@@ -289,6 +327,11 @@ class ModuleTrainer(object):
                         callback_container.on_batch_begin(batch_idx, batch_logs)
 
                         input_batch, target_batch = fit_helper.grab_batch(batch_idx, batch_size, inputs, targets)
+
+                        if self._has_preconditions:
+                            precond_logs = self._conditions_container(CondType.PRE, epoch_num=epoch_idx, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+                            batch_logs.update(precond_logs)
+
                         if len(self.cuda_devices) > 0:
                             input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
                         if self._has_transforms:
@@ -307,6 +350,9 @@ class ModuleTrainer(object):
                         if self._has_metrics:
                             metrics_logs = self.metric_container(input_batch, output_batch, target_batch, is_val=False)
                             batch_logs.update(metrics_logs)
+                        if self._has_postconditions:
+                            postcond_logs = self._conditions_container(CondType.POST, epoch_idx, batch_idx, self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+                            batch_logs.update(postcond_logs)
 
                         batch_logs['loss'] = loss.data[0]
                         callback_container.on_batch_end(batch_idx, batch_logs)
@@ -393,6 +439,9 @@ class ModuleTrainer(object):
                         callback_container.on_batch_begin(batch_idx, batch_logs)
 
                         input_batch, target_batch = fit_helper.grab_batch_from_loader(loader_iter)
+                        if self._has_preconditions:
+                            precond_logs = self._conditions_container(CondType.PRE, epoch_num=epoch_idx, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+                            batch_logs.update(precond_logs)
                         if len(self.cuda_devices) > 0:
                             input_batch, target_batch = fit_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
@@ -406,6 +455,9 @@ class ModuleTrainer(object):
 
                         if self._has_regularizers:
                             batch_logs['reg_loss'] = self.regularizer_container.current_value
+                        if self._has_postconditions:
+                            cond_logs = self._conditions_container(CondType.POST, epoch_num=epoch_idx, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+                            batch_logs.update(cond_logs)
                         if self._has_metrics:
                             metrics_logs = self.metric_container(input_batch, output_batch, target_batch, is_val=False)
                             batch_logs.update(metrics_logs)
@@ -530,15 +582,28 @@ class ModuleTrainer(object):
             metric_container.set_helper(evaluate_helper)
             metric_container.reset()
 
+        if self._has_preconditions or self._has_postconditions:
+            conditions_container = ConditionsContainer(ExecType.VAL, prefix='val_')
+            if self._has_preconditions:
+                conditions_container.add_preconditions(self._preconditions)
+            if self._has_postconditions:
+                conditions_container.add_postconditions(self._postconditions)
+            conditions_container.reset()
+
         samples_seen = 0
         for batch_idx in range(num_batches):
             input_batch, target_batch = evaluate_helper.grab_batch(batch_idx, batch_size, inputs, targets, volatile=True)
+            cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+            eval_logs.update(cond_logs)
             if len(self.cuda_devices) > 0:
                 input_batch, target_batch = evaluate_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
             self._optimizer.zero_grad()
             output_batch = eval_forward_fn(input_batch)
             loss = eval_loss_fn(output_batch, target_batch)
+
+            cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+            eval_logs.update(cond_logs)
 
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
             samples_seen += batch_size
@@ -569,15 +634,28 @@ class ModuleTrainer(object):
             metric_container.set_helper(evaluate_helper)
             metric_container.reset()
 
+        if self._has_preconditions or self._has_postconditions:
+            conditions_container = ConditionsContainer(ExecType.VAL, prefix='val_')
+            if self._has_preconditions:
+                conditions_container.add_preconditions(self._preconditions)
+            if self._has_postconditions:
+                conditions_container.add_postconditions(self._postconditions)
+            conditions_container.reset()
+
         samples_seen = 0
         for batch_idx in range(num_batches):
             input_batch, target_batch = evaluate_helper.grab_batch_from_loader(loader_iter, volatile=True)
+            cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+            eval_logs.update(cond_logs)
             if len(self.cuda_devices) > 0:
                 input_batch, target_batch = evaluate_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
             self._optimizer.zero_grad()
             output_batch = eval_forward_fn(input_batch)
             loss = eval_loss_fn(output_batch, target_batch)
+
+            cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+            eval_logs.update(cond_logs)
 
             samples_seen += batch_size
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
@@ -642,8 +720,8 @@ def _get_helper(trainer, num_inputs, num_targets, helper_name=None):
     :param trainer:
     :param num_inputs:
     :param num_targets:
-    :param helper_name: Generally a helper will be determined from number of inputs and targets. However you'll want to provide your own.\n
-    If a helper name is specified then num_inputs and num_targets are ignored.
+    :param helper_name: Generally a helper will be determined from number of inputs and targets. However may want to supply your own in some instances.\n
+    If a helper_name is specified then num_inputs and num_targets are ignored.
     :return:
     '''
     if not helper_name:
@@ -678,7 +756,7 @@ def _get_helper(trainer, num_inputs, num_targets, helper_name=None):
             helper = MultiInput_NoTarget_Helper()
 
     else:
-        helper = trainer.get_named_helpers(helper_name)
+        helper = trainer._named_helpers.get(helper_name)
 
     return helper
 

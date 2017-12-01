@@ -1,8 +1,21 @@
+from enum import Enum, auto
+
+class ExecType(Enum):
+    TRAIN = auto()
+    VAL = auto()
+
 # from https://github.com/pytorch/vision/blob/master/torchvision/datasets/folder.py
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
     '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP',
 ]
+
+
+def is_iterable(x):
+    return isinstance(x, (tuple, list))
+def is_tuple_or_list(x):
+    return isinstance(x, (tuple, list))
+
 
 def time_left_str(seconds):
     # seconds = 370000.0
