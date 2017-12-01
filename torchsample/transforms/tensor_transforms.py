@@ -58,7 +58,7 @@ class ToTensor(object):
         for idx, _input in enumerate(inputs):
             _input = th.from_numpy(_input)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class ToVariable(object):
@@ -70,7 +70,7 @@ class ToVariable(object):
         for idx, _input in enumerate(inputs):
             _input = Variable(_input)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class ToCuda(object):
@@ -93,7 +93,7 @@ class ToCuda(object):
         for idx, _input in enumerate(inputs):
             _input = _input.cuda(self.device)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class ToFile(object):
@@ -158,7 +158,7 @@ class ChannelsLast(object):
         for idx, _input in enumerate(inputs):
             _input = _input.permute(*plist)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 HWC = ChannelsLast
 DHWC = ChannelsLast
@@ -193,7 +193,7 @@ class ChannelsFirst(object):
         for idx, _input in enumerate(inputs):
             _input = _input.permute(*plist)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 CHW = ChannelsFirst
 CDHW = ChannelsFirst
@@ -256,7 +256,7 @@ class TypeCast(object):
         for idx, _input in enumerate(inputs):
             _input = _input.type(dtypes[idx])
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class AddChannel(object):
@@ -282,7 +282,7 @@ class AddChannel(object):
         for idx, _input in enumerate(inputs):
             _input = _input.unsqueeze(self.axis)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 ExpandAxis = AddChannel
 Unsqueeze = AddChannel
@@ -308,7 +308,7 @@ class Transpose(object):
         for idx, _input in enumerate(inputs):
             _input = th.transpose(_input, self.dim1, self.dim2)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class RangeNormalize(object):
@@ -375,7 +375,7 @@ class RangeNormalize(object):
             b = self.max_val- a * _max_val
             _input = _input.mul(a).add(b)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class StdNormalize(object):
@@ -387,7 +387,7 @@ class StdNormalize(object):
         for idx, _input in enumerate(inputs):
             _input = _input.sub(_input.mean()).div(_input.std())
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class Slice2D(object):
@@ -457,7 +457,7 @@ class RandomCrop(object):
         for idx, _input in enumerate(inputs):
             _input = _input[:, h_idx:(h_idx+self.size[0]),w_idx:(w_idx+self.size[1])]
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
 
 class SpecialCrop(object):
@@ -548,6 +548,31 @@ class Pad(object):
             return th.from_numpy(x)
 
 
+class PadNumpy(object):
+
+    def __init__(self, size):
+        """
+        Pads a Numpy image to the given size
+        Return a Numpy image / image pair
+        Arguments
+        ---------
+        size : tuple or list
+            size of crop
+        """
+        self.size = size
+
+    def __call__(self, x, y=None):
+        shape_diffs = [int(np.ceil((i_s - d_s))) for d_s,i_s in zip(x.shape,self.size)]
+        shape_diffs = np.maximum(shape_diffs,0)
+        pad_sizes = [(int(np.ceil(s/2.)),int(np.floor(s/2.))) for s in shape_diffs]
+        x = np.pad(x, pad_sizes, mode='constant')
+        if y is not None:
+            y = np.pad(y, pad_sizes, mode='constant')
+            return x, y
+        else:
+            return x
+
+
 class RandomFlip(object):
 
     def __init__(self, h=True, v=False, p=0.5):
@@ -611,5 +636,5 @@ class RandomOrder(object):
         for idx, _input in enumerate(inputs):
             _input = _input.index_select(0, order)
             outputs.append(_input)
-        return outputs if idx > 1 else outputs[0]
+        return outputs if idx >= 1 else outputs[0]
 
