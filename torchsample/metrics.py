@@ -90,9 +90,9 @@ class CategoricalAccuracySingleInput(CategoricalAccuracy):
 
     def __call__(self, inputs, y_pred, y_true, is_val=False):
         if is_iterable(y_pred):
-            return super().__call__(y_pred[0], y_true, is_val=False)
+            return super().__call__(y_pred[0], inputs, y_true, is_val=False)
         else:
-            return super().__call__(y_pred, y_true, is_val=False)
+            return super().__call__(y_pred, inputs, y_true, is_val=False)
 
 
 class BinaryAccuracy(Metric):
