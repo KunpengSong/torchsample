@@ -589,12 +589,15 @@ class ModuleTrainer(object):
             if self._has_postconditions:
                 conditions_container.add_postconditions(self._postconditions)
             conditions_container.reset()
+        else:
+            conditions_container = None
 
         samples_seen = 0
         for batch_idx in range(num_batches):
             input_batch, target_batch = evaluate_helper.grab_batch(batch_idx, batch_size, inputs, targets, volatile=True)
-            cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
-            eval_logs.update(cond_logs)
+            if conditions_container:
+                cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+                eval_logs.update(cond_logs)
             if len(self.cuda_devices) > 0:
                 input_batch, target_batch = evaluate_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
@@ -602,8 +605,9 @@ class ModuleTrainer(object):
             output_batch = eval_forward_fn(input_batch)
             loss = eval_loss_fn(output_batch, target_batch)
 
-            cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
-            eval_logs.update(cond_logs)
+            if conditions_container:
+                cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+                eval_logs.update(cond_logs)
 
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
             samples_seen += batch_size
@@ -641,12 +645,15 @@ class ModuleTrainer(object):
             if self._has_postconditions:
                 conditions_container.add_postconditions(self._postconditions)
             conditions_container.reset()
+        else:
+            conditions_container = None
 
         samples_seen = 0
         for batch_idx in range(num_batches):
             input_batch, target_batch = evaluate_helper.grab_batch_from_loader(loader_iter, volatile=True)
-            cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
-            eval_logs.update(cond_logs)
+            if conditions_container:
+                cond_logs = conditions_container(CondType.PRE, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
+                eval_logs.update(cond_logs)
             if len(self.cuda_devices) > 0:
                 input_batch, target_batch = evaluate_helper.move_to_cuda(self.cuda_devices[0], input_batch, target_batch)
 
@@ -654,8 +661,9 @@ class ModuleTrainer(object):
             output_batch = eval_forward_fn(input_batch)
             loss = eval_loss_fn(output_batch, target_batch)
 
-            cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
-            eval_logs.update(cond_logs)
+            if conditions_container:
+                cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
+                eval_logs.update(cond_logs)
 
             samples_seen += batch_size
             eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.data[0]*batch_size) / (samples_seen+batch_size)
