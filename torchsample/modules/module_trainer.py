@@ -101,9 +101,9 @@ class ModuleTrainer(object):
             # turn on the cudnn autotuner that selects efficient algorithms
             cudnn.benchmark = True
             # Handle multiple GPUs. Single gpu gets normal treatment while multi-GPU must be wrapped in DataParallel
-            self.model.cuda(device_id=cuda_devices[0])
             if len(cuda_devices) > 1:
                 self.model = th.nn.DataParallel(self.model, device_ids=cuda_devices)
+            self.model = self.model.cuda(device=cuda_devices[0])
 
     def set_criterion(self, criterion):
         self._criterion = criterion

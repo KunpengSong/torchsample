@@ -1,11 +1,9 @@
-# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/bninception.py
+# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/bninception.py
 # Pretrained: Yes
 
 import torch
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
-import os
-import sys
 
 __all__ = ['BNInception', 'bninception']
 
@@ -13,7 +11,7 @@ pretrained_settings = {
     'bninception': {
         'imagenet': {
             # Was ported using python2 (may trigger warning)
-            'url': 'http://webia.lip6.fr/~cadene/Downloads/pretrained-models.pytorch/bn_inception-9f5701afb96c8044.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/bn_inception-239d2248.pth',
             # 'url': 'http://yjxiong.me/others/bn_inception-9f5701afb96c8044.pth',
             'input_space': 'BGR',
             'input_size': [3, 224, 224],
@@ -250,7 +248,7 @@ class BNInception(nn.Module):
         self.inception_5b_pool_proj_bn = nn.BatchNorm2d(128, eps=1e-05, momentum=0.9, affine=True)
         self.inception_5b_relu_pool_proj = nn.ReLU (inplace)
         self.global_pool = nn.AvgPool2d (7, stride=1, padding=0, ceil_mode=True, count_include_pad=True)
-        self.fc = nn.Linear (1024, 1000)
+        self.last_linear = nn.Linear (1024, 1000)
 
     def features(self, input):
         conv1_7x7_s2_out = self.conv1_7x7_s2(input)
@@ -482,22 +480,23 @@ class BNInception(nn.Module):
         inception_5b_pool_proj_bn_out = self.inception_5b_pool_proj_bn(inception_5b_pool_proj_out)
         inception_5b_relu_pool_proj_out = self.inception_5b_relu_pool_proj(inception_5b_pool_proj_bn_out)
         inception_5b_output_out = torch.cat([inception_5b_1x1_bn_out,inception_5b_3x3_bn_out,inception_5b_double_3x3_2_bn_out,inception_5b_pool_proj_bn_out], 1)
-        global_pool_out = self.global_pool(inception_5b_output_out)
-        return global_pool_out
+        return inception_5b_output_out
 
-    def classif(self, features):
-        fc_out = self.fc(features.view(features.size(0), -1))
-        return fc_out
+    def logits(self, features):
+        x = self.global_pool(features)
+        x = x.view(x.size(0), -1)
+        x = self.last_linear(x)
+        return x
 
     def forward(self, input):
-        features_out = self.features(input)
-        classif_out = self.classif(features_out)
-        return classif_out
+        x = self.features(input)
+        x = self.logits(x)
+        return x
 
 def bninception(num_classes=1000, pretrained='imagenet'):
     r"""BNInception model architecture from <https://arxiv.org/pdf/1502.03167.pdf>`_ paper.
     """
-    model = BNInception(num_classes=1000)
+    model = BNInception(num_classes=num_classes)
     if pretrained is not None:
         settings = pretrained_settings['bninception'][pretrained]
         assert num_classes == settings['num_classes'], \

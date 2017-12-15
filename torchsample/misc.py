@@ -1,4 +1,7 @@
 from enum import Enum, auto
+import random
+import numpy as np
+import torch
 
 class ExecType(Enum):
     TRAIN = auto()
@@ -18,6 +21,12 @@ def is_tuple_or_list(x):
 
 
 def time_left_str(seconds):
+    '''
+    Produces a human-readable string in hh:mm:ss format
+    :param seconds:
+
+    :return:
+    '''
     # seconds = 370000.0
     m, s = divmod(int(seconds), 60)
     h, m = divmod(m, 60)
@@ -31,3 +40,20 @@ def time_left_str(seconds):
     else:
         thetime = "Projected time remaining:  |  {:02d}s".format(seconds)
     return thetime
+
+
+def initialize_random(seed, init_cuda=True):
+    '''
+    Initializes random seed for all aspects of training: python, numpy, torch, cuda
+
+    :param seed:
+    :param init_cuda: whether to init cuda seed
+    :return:
+    '''
+    ## Initialize random seed for repeatability ##
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if init_cuda:
+        torch.cuda.manual_seed_all(seed)
+    ## END ##

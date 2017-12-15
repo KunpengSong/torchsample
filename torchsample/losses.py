@@ -2,7 +2,7 @@
 # Sources:  https://github.com/bermanmaxim/jaccardSegment/blob/master/losses.py (?)
 #           https://github.com/doodledood/carvana-image-masking-challenge/blob/master/losses.py (MIT)
 #           https://github.com/atlab/attorch/blob/master/attorch/losses.py (MIT)
-#           https://github.com/EKami/carvana-challenge (?)
+#           https://github.com/EKami/carvana-challenge (MIT)
 #           https://github.com/DingKe/pytorch_workplace (MIT)
 
 from __future__ import print_function, division
@@ -591,3 +591,37 @@ class BCEWithLogitsViewLoss(nn.BCEWithLogitsLoss):
         Simply passes along input.view(-1), target.view(-1)
         '''
         return super().forward(input.view(-1), target.view(-1))
+
+# ===================== #
+# Source: https://discuss.pytorch.org/t/one-hot-encoding-with-autograd-dice-loss/9781/5
+# For calculating dice loss on images where multiple classes are present at the same time
+def multi_class_dice_loss(output, target, weights=None, ignore_index=None):
+    # output : NxCxHxW Variable of float tensor
+    # target :  NxHxW long tensor
+    # weights : C float tensor
+    # ignore_index : int value to ignore from loss
+    smooth = 1.
+    loss = 0.
+
+    output = output.exp()
+    encoded_target = output.data.clone().zero_()
+    if ignore_index is not None:
+        mask = target == ignore_index
+        target = target.clone()
+        target[mask] = 0
+        encoded_target.scatter_(1, target.unsqueeze(1), 1)
+        mask = mask.unsqueeze(1).expand_as(encoded_target)
+        encoded_target[mask] = 0
+    else:
+        encoded_target.scatter_(1, target.unsqueeze(1), 1)
+    encoded_target = Variable(encoded_target)
+
+    if weights is None:
+        weights = Variable(torch.ones(output.size(1)).type_as(output.data))
+
+    intersection = output * encoded_target
+    numerator = 2 * intersection.sum(3).sum(2).sum(0) + smooth
+    denominator = (output + encoded_target).sum(3).sum(2).sum(0) + smooth
+    loss_per_channel = weights * (1 - (numerator / denominator))
+
+    return loss_per_channel.sum() / output.size(1)
