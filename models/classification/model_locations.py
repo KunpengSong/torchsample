@@ -4,10 +4,16 @@ model_urls = {
     'densenet169': 'https://download.pytorch.org/models/densenet169-6f0f7f60.pth',
     'densenet201': 'https://download.pytorch.org/models/densenet201-4c113574.pth',
     'densenet161': 'https://download.pytorch.org/models/densenet161-17b70270.pth',
+
+    'dpn68': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn68-66bebafa7.pth',
+    'dpn68b-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn68b_extra-84854c156.pth',
+    'dpn92-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn92_extra-b040e4a9b.pth',
+    'dpn98': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn98-5b90dec4d.pth',
+    'dpn107-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn107_extra-1ac7121e2.pth',
+    'dpn131': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn131-71dfe43e0.pth',
     #truncated _google to match module name
     'inception_v3': 'https://download.pytorch.org/models/inception_v3_google-1a9a5a14.pth',
-    'inception_v4_1': 'http://webia.lip6.fr/~cadene/Downloads/inceptionv4-97ef9c30.pth',
-    'inception_v4_2': 'https://s3.amazonaws.com/pytorch/models/inceptionv4-58153ba9.pth',
+    'inceptionv4': 'http://data.lip6.fr/cadene/pretrainedmodels/inceptionv4-8e4777a0.pth',
     'bninception': 'http://data.lip6.fr/cadene/pretrainedmodels/bn_inception-239d2248.pth',
     'inceptionresnetv2': 'http://data.lip6.fr/cadene/pretrainedmodels/inceptionresnetv2-520b38e4.pth',
     'nasnetalarge': 'http://data.lip6.fr/cadene/pretrainedmodels/nasnetalarge-a1897284.pth',
@@ -25,5 +31,5 @@ model_urls = {
     'vgg13': 'https://download.pytorch.org/models/vgg13-c768596a.pth',
     'vgg16': 'https://download.pytorch.org/models/vgg16-397923af.pth',
     'vgg19': 'https://download.pytorch.org/models/vgg19-dcbb9e9d.pth',
-    'wideresnet152': 'https://s3.amazonaws.com/pytorch/h5models/wide-resnet-50-2-export.hkl'
+    'wideresnet50': 'https://s3.amazonaws.com/pytorch/h5models/wide-resnet-50-2-export.hkl'
 }
