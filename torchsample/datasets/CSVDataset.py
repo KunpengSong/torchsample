@@ -8,8 +8,8 @@ class CSVDataset(BaseDataset):
 
     def __init__(self,
                  csv,
-                 input_cols=[0],
-                 target_cols=[1],
+                 input_cols=None,
+                 target_cols=None,
                  input_transform=None,
                  target_transform=None,
                  co_transform=None):
@@ -23,13 +23,13 @@ class CSVDataset(BaseDataset):
             if string, should be a path to a .csv file which
             can be loaded as a pandas dataframe
 
-        input_cols : int/list of ints, or string/list of strings
-            which columns to use as input arrays.
+        input_cols : list of ints, or list of strings
+            which column(s) to use as input arrays.
             If int(s), should be column indicies
             If str(s), should be column names
 
-        target_cols : int/list of ints, or string/list of strings
-            which columns to use as input arrays.
+        target_cols : list of ints, or list of strings
+            which column(s) to use as input arrays.
             If int(s), should be column indicies
             If str(s), should be column names
 
@@ -43,20 +43,22 @@ class CSVDataset(BaseDataset):
             transform(s) to apply to both inputs and targets simultaneously
             during runtime loading
         """
+        assert(input_cols is not None)
+
         self.input_cols = _process_cols_argument(input_cols)
         self.target_cols = _process_cols_argument(target_cols)
 
         self.df = _process_csv_argument(csv)
 
-        self.inputs = _select_dataframe_columns(self.df, input_cols)
+        self.inputs = _select_dataframe_columns(self.df, self.input_cols)
         self.num_inputs = self.inputs.shape[1]
         self.input_return_processor = _return_first_element_of_list if self.num_inputs==1 else _pass_through
 
-        if target_cols is None:
+        if self.target_cols is None:
             self.num_targets = 0
             self.has_target = False
         else:
-            self.targets = _select_dataframe_columns(self.df, target_cols)
+            self.targets = _select_dataframe_columns(self.df, self.target_cols)
             self.num_targets = self.targets.shape[1]
             self.target_return_processor = _return_first_element_of_list if self.num_targets==1 else _pass_through
             self.has_target = True
