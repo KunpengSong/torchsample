@@ -12,7 +12,8 @@ class CSVDataset(BaseDataset):
                  target_cols=None,
                  input_transform=None,
                  target_transform=None,
-                 co_transform=None):
+                 co_transform=None,
+                 apply_transforms_individually=False):
         """
         Initialize a Dataset from a CSV file/dataframe. This does NOT
         actually load the data into memory if the CSV contains filepaths.
@@ -42,11 +43,16 @@ class CSVDataset(BaseDataset):
         co_transform : class which implements a __call__ method
             transform(s) to apply to both inputs and targets simultaneously
             during runtime loading
+
+        apply_transforms_individually : Whether to apply transforms to individual inputs
+            or to an input row as a whole (default: False)
         """
         assert(input_cols is not None)
 
         self.input_cols = _process_cols_argument(input_cols)
         self.target_cols = _process_cols_argument(target_cols)
+
+        self.do_individual_transforms = apply_transforms_individually
 
         self.df = _process_csv_argument(csv)
 
@@ -67,21 +73,46 @@ class CSVDataset(BaseDataset):
         self.input_loader = default_file_reader
         self.target_loader = default_file_reader
 
-        self.input_transform = _process_transform_argument(input_transform, self.num_inputs)
+        # The more common use-case would be to apply the transform to the row as a whole, but we support
+        # applying transform to individual elements as well (with a flag)
+        if self.do_individual_transforms:
+            self.input_transform = _process_transform_argument(input_transform, self.num_inputs)
+        else:
+            self.input_transform = _process_transform_argument(input_transform, 1)
+
         if self.has_target:
-            self.target_transform = _process_transform_argument(target_transform, self.num_targets)
-            self.co_transform = _process_co_transform_argument(co_transform, self.num_inputs, self.num_targets)
+            if self.do_individual_transforms:
+                self.target_transform = _process_transform_argument(target_transform, self.num_targets)
+                self.co_transform = _process_co_transform_argument(co_transform, self.num_inputs, self.num_targets)
+            else:
+                self.target_transform = _process_transform_argument(target_transform, 1)
+                self.co_transform = _process_co_transform_argument(co_transform, 1, 1)
 
     def __getitem__(self, index):
         """
         Index the dataset and return the input + target
         """
-        input_sample = [self.input_transform[i](self.input_loader(self.inputs[index, i])) for i in range(self.num_inputs)]
+
+        # input_sample = list()
+        # for i in range(self.num_inputs):
+        #     input_sample.append(self.input_transform[i](self.input_loader(self.inputs[index, i])))
+
+        # input_sample
+        if self.do_individual_transforms:
+            input_sample = [self.input_transform[i](self.input_loader(self.inputs[index, i])) for i in range(self.num_inputs)]
+        else:
+            input_sample = self.input_transform[0](self.inputs[index])
 
         if self.has_target:
-            target_sample = [self.target_transform[i](self.target_loader(self.targets[index, i])) for i in range(self.num_targets)]
-            for i in range(self.min_inputs_or_targets):
-                input_sample[i], input_sample[i] = self.co_transform[i](input_sample[i], target_sample[i])
+            if self.do_individual_transforms:
+                target_sample = [self.target_transform[i](self.target_loader(self.targets[index, i])) for i in range(self.num_targets)]
+                for i in range(self.min_inputs_or_targets):
+                    input_sample[i], target_sample[i] = self.co_transform[i](input_sample[i], target_sample[i])
+            else:
+                target_sample = self.target_transform[0](self.targets[index])
+                input_sample, target_sample = self.co_transform[0](input_sample, target_sample)
+
+
 
             return self.input_return_processor(input_sample), self.target_return_processor(target_sample)
         else:

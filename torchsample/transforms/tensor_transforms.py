@@ -128,6 +128,27 @@ class ToFile(object):
         return inputs
 
 
+class ToNumpyType(object):
+    '''
+    Converts an object to a specific numpy type (with the idea to be passed to ToTensor() next)
+    '''
+
+    def __init__(self, type):
+        '''
+        Convert input to a given numpy.type
+
+        :param type:  one of [numpy.double, numpy.float, numpy.int64, numpy.int32, and numpy.uint8]
+        '''
+
+        self.type = type
+
+    def __call__(self, input):
+        if isinstance(input, list):     # handle a simple list
+            return np.array(input, dtype=self.type)
+        else:                           # handle ndarray (that is of a different type than desired)
+            return input.astype(self.type)
+
+
 class ChannelsLast(object):
     """
     Transposes a tensor so that the channel dim is last
