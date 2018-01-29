@@ -1,3 +1,5 @@
+# Source: https://github.com/moskomule/senet.pytorch (License: MIT)
+
 from .se_module import SELayer
 from torch import nn
 from torchvision.models.inception import Inception3

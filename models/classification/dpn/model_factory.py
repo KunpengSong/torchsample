@@ -1,9 +1,12 @@
+# Source: https://github.com/rwightman/pytorch-dpn-pretrained (License: Apache 2.0)
+# Pretrained: Yes
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import math
-# from  import dpn68, dpn68b, dpn92, dpn98, dpn131, dpn107
+from .dualpath import dpn68, dpn68b, dpn92, dpn98, dpn131, dpn107
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from torchvision.models.densenet import densenet121, densenet169, densenet161, densenet201
 from torchvision.models.inception import inception_v3
@@ -12,57 +15,49 @@ from PIL import Image
 
 
 def create_model(model_name, num_classes=1000, pretrained=False, **kwargs):
-    return None
-    # if 'test_time_pool' in kwargs:
-    #     test_time_pool = kwargs.pop('test_time_pool')
-    # else:
-    #     test_time_pool = True
-    # if 'extra' in kwargs:
-    #     extra = kwargs.pop('extra')
-    # else:
-    #     extra = True
-    # if model_name == 'dpn68':
-    #     model = dpn68(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
-    # elif model_name == 'dpn68b':
-    #     model = dpn68b(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
-    # elif model_name == 'dpn92':
-    #     model = dpn92(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, extra=extra)
-    # elif model_name == 'dpn98':
-    #     model = dpn98(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
-    # elif model_name == 'dpn131':
-    #     model = dpn131(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
-    # elif model_name == 'dpn107':
-    #     model = dpn107(
-    #         num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
-    # elif model_name == 'resnet18':
-    #     model = resnet18(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'resnet34':
-    #     model = resnet34(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'resnet50':
-    #     model = resnet50(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'resnet101':
-    #     model = resnet101(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'resnet152':
-    #     model = resnet152(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'densenet121':
-    #     model = densenet121(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'densenet161':
-    #     model = densenet161(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'densenet169':
-    #     model = densenet169(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'densenet201':
-    #     model = densenet201(num_classes=num_classes, pretrained=pretrained, **kwargs)
-    # elif model_name == 'inception_v3':
-    #     model = inception_v3(
-    #         num_classes=num_classes, pretrained=pretrained, transform_input=False, **kwargs)
-    # else:
-    #     assert False, "Unknown model architecture (%s)" % model_name
-    # return model
+    if 'test_time_pool' in kwargs:
+        test_time_pool = kwargs.pop('test_time_pool')
+    else:
+        test_time_pool = True
+    if 'extra' in kwargs:
+        extra = kwargs.pop('extra')
+    else:
+        extra = True
+    if model_name == 'dpn68':
+        model = dpn68(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'dpn68b':
+        model = dpn68b(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'dpn92':
+        model = dpn92(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, extra=extra)
+    elif model_name == 'dpn98':
+        model = dpn98(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'dpn131':
+        model = dpn131(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'dpn107':
+        model = dpn107(num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'resnet18':
+        model = resnet18(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'resnet34':
+        model = resnet34(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'resnet50':
+        model = resnet50(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'resnet101':
+        model = resnet101(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'resnet152':
+        model = resnet152(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'densenet121':
+        model = densenet121(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'densenet161':
+        model = densenet161(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'densenet169':
+        model = densenet169(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'densenet201':
+        model = densenet201(num_classes=num_classes, pretrained=pretrained, **kwargs)
+    elif model_name == 'inception_v3':
+        model = inception_v3(num_classes=num_classes, pretrained=pretrained, transform_input=False, **kwargs)
+    else:
+        assert False, "Unknown model architecture (%s)" % model_name
+    return model
 
 
 class LeNormalize(object):
@@ -105,5 +100,4 @@ def get_transforms_eval(model_name, img_size=224, crop_pct=None):
     return transforms.Compose([
         transforms.Scale(scale_size, Image.BICUBIC),
         transforms.CenterCrop(img_size),
-        transforms.ToTensor(),
-        normalize])
+        transforms.ToTensor(),normalize])

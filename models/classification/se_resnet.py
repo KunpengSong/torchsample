@@ -1,3 +1,4 @@
+# Source: https://github.com/moskomule/senet.pytorch (License: MIT)
 import math
 
 import torch.nn as nn

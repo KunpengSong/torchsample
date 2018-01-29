@@ -3,4 +3,5 @@ pandas
 pillow
 six
 torch
+torchvision
 tqdm

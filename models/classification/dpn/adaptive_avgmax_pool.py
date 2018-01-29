@@ -1,3 +1,6 @@
+# Source: https://github.com/rwightman/pytorch-dpn-pretrained (License: Apache 2.0)
+# Pretrained: Yes
+
 """ PyTorch selectable adaptive pooling
 Adaptive pooling with the ability to select the type of pooling from:
     * 'avg' - Average pooling
