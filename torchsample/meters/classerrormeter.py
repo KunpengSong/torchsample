@@ -25,12 +25,9 @@ class ClassErrorMeter(meter.Meter):
         if np.ndim(output) == 1:
             output = output[np.newaxis]
         else:
-            assert np.ndim(output) == 2, \
-                    'wrong output size (1D or 2D expected)'
-            assert np.ndim(target) == 1, \
-                    'target and output do not match'
-        assert target.shape[0] == output.shape[0], \
-            'target and output do not match'
+            assert np.ndim(output) == 2, 'wrong output size (1D or 2D expected)'
+            assert np.ndim(target) == 1, 'target and output do not match'
+        assert target.shape[0] == output.shape[0], 'target and output do not match'
         topk = self.topk
         maxk = int(topk[-1])  # seems like Python3 wants int and not np.int64
         no = output.shape[0]
@@ -44,10 +41,13 @@ class ClassErrorMeter(meter.Meter):
 
     def value(self, k=-1):
         if k != -1:
-            assert k in self.sum.keys(), \
-                   'invalid k (this k was not provided at construction time)'
+            assert k in self.sum.keys(), 'invalid k (this k was not provided at construction time)'
             if self.accuracy:
-                return (1. - float(self.sum[k]) / self.n) * 100.0
+                acc_rate = float(self.sum[k]) / self.n
+                if acc_rate == 1.0:
+                    return 100.0
+                else:
+                    return (1. - acc_rate) * 100.0
             else:
                 return float(self.sum[k]) / self.n * 100.0
         else:
