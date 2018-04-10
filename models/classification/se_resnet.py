@@ -1,4 +1,5 @@
 # Source: https://github.com/moskomule/senet.pytorch (License: MIT)
+# Pretrained: Only 100 ep (may not be very accurate)
 
 import torch.nn as nn
 from torchvision.models import ResNet

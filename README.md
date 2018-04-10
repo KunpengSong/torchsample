@@ -1,20 +1,15 @@
 # High-Level Training, Data Augmentation, and Utilities for Pytorch
 
-<b>[v0.1.3](https://github.com/ncullen93/torchsample/releases) JUST RELEASED - contains significant improvements, bug fixes, and additional
-support. Get it from the releases, or pull the master branch.</b>
+This is a highly extended port of the excellent [Torchsample](https://github.com/ncullen93/torchsample) library originally published by @ncullen93.
 
-This package provides a few things:
-- A high-level module for Keras-like training with callbacks, constraints, and regularizers.
-- Comprehensive data augmentation, transforms, sampling, and loading
-- Utility tensor and variable functions so you don't need numpy as often
 
-Additional datasets and meters have been merged from the [PyTorchNet](https://github.com/pytorch/tnt) project.
-
-<b>Have any feature requests?</b> Submit an issue! I'll make it happen. Specifically,
-any data augmentation, data loading, or sampling functions.
-
-<b>Want to contribute?</b> Check the [issues page](https://github.com/ncullen93/torchsample/issues)
- for those tagged with [contributions welcome].
+This package aims to provide a *batteries included* framework for training neural networks. Among other things it includes:
+- State of the art normalization, activation functions and optimizers (not available in the standard Pytorch library)
+- A high-level module for training with callbacks, constraints, metrics, conditions and regularizers.
+- Dozens of popular object classification and semantic segmentation models.
+- Comprehensive data loading, augmentation, transforms, and sampling
+- Utility tensor and variable functions
+- Useful meters
 
 ## ModuleTrainer
 The `ModuleTrainer` class provides a high-level training interface which abstracts
@@ -109,23 +104,6 @@ regularizers = [L1Regularizer(scale=1e-4, module_filter='*conv*')]
 model.set_regularizers(regularizers)
 ```
 
-Additionally, a number of useful Datasets and Meters are provided.
-
-<b>Datasets</b>:
-   - `torchvision.datasets.ImageFolder` (requires torchvision)
-   - `torchsample.CSVDataset` (not implemented)
-   - `torchsample.FolderDataset`
-   - `torchsample.TensorDataset`
-   - `torchsample.datasetz.UsefulDataset`
-   - `torchsample.datasetz.ClonedFolderDataset`
-   - `torchsample.MultiTensorDataset`
-   - `torchnet.dataset.BatchDataset`
-   - `torchnet.dataset.ListDataset`
-   - `torchnet.dataset.MultiPartitionDataset`
-   - `torchnet.dataset.ResampleDataset`
-   - `torchnet.dataset.ShuffleDataset`
-   - `torchnet.dataset.TransformDataset`
-
 You can also fit directly on a `torch.utils.data.DataLoader` and can have
 a validation set as well :
 
@@ -195,14 +173,59 @@ We also provide a class for stringing multiple affine transformations together s
 ### Datasets and Sampling
 We provide the following datasets which provide general structure and iterators for sampling from and using transforms on in-memory or out-of-memory data:
 
-- `TensorDataset()` 
+- `ClonedDataset`
+- `CSVDataset`
+- `FolderDataset`
+- `TensorDataset`
+- `tnt.BatchDataset`
+- `tnt.ListDataset`
+- `tnt.MultiPartitionDataset`
+- `tnt.ResampleDataset`
+- `tnt.ShuffleDataset`
+- `tnt.TransformDataset`
 
-- `FolderDataset()` 
+## Image Classification Models (most are pretrained!)
+- All standard models from Pytorch (VGG,
+- BatchNorm Inception
+- Dual-Path Networks
+- Inception v4
+- InceptionResnet v2
+- NasNet and NasNet Mobile ([Learning Transferable Architectures for Scalable Image Recognition](https://arxiv.org/abs/1707.07012))
+- Pyramid Resnet
+- ResNext
+- SE Inception
+- WideResnet
+- XCeption
 
 
-## Acknowledgements
+## Image Segmentation Models
+1. Vanilla FCN: FCN32, FCN16, FCN8, in the versions of VGG, ResNet and DenseNet respectively
+([Fully convolutional networks for semantic segmentation](http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Long_Fully_Convolutional_Networks_2015_CVPR_paper.pdf))
+2. U-Net ([U-net: Convolutional networks for biomedical image segmentation](https://arxiv.org/pdf/1505.04597))
+3. SegNet ([Segnet: A deep convolutional encoder-decoder architecture for image segmentation](https://arxiv.org/pdf/1511.00561))
+4. PSPNet ([Pyramid scene parsing network](https://arxiv.org/pdf/1612.01105))
+5. GCN ([Large Kernel Matters](https://arxiv.org/pdf/1703.02719))
+6. DUC, HDC ([understanding convolution for semantic segmentation](https://arxiv.org/pdf/1702.08502.pdf))
+7. Tiramisu ([The One Hundred Layers Tiramisu: Fully Convolutional DenseNets for Semantic Segmentation](https://arxiv.org/pdf/1611.09326))
+8. Feature Pyramid Networks + Retina FPN ([Feature Pyramid Networks for Object Detection](https://arxiv.org/abs/1612.03144))
+9. Deeplab v2 ([DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs](https://arxiv.org/abs/1606.00915))
+10. Deeplab v3 ([Rethinking Atrous Convolution for Semantic Image Segmentation](https://arxiv.org/abs/1706.05587))
+11. RefineNet ([RefineNet](https://arxiv.org/abs/1611.06612))
+12. FusionNet ([FusionNet in Tensorflow by Hyungjoo Andrew Cho](https://github.com/NySunShine/fusion-net))
+13. ENet ([ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation](https://arxiv.org/abs/1606.02147))
+14. LinkNet ([Link-Net](https://codeac29.github.io/projects/linknet/))
+15. FRRN ([Full Resolution Residual Networks for Semantic Segmentation in Street Scenes](https://arxiv.org/abs/1611.08323))
+16. Additional variations of many of the above
+
+## Acknowledgements and References
 Thank you to the following people and contributors:
+- @ncullen93
+- @cadene
 - All Keras contributors
 - @deallynomore
 - @recastrodiaz
 
+Thank you to the following projects from which I shamelessly collated code and models
+- [PyTorchNet](https://github.com/pytorch/tnt)
+- [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)
+- [pspnet-pytorch[(https://github.com/Lextal/pspnet-pytorch)

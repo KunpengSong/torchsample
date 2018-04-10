@@ -613,6 +613,47 @@ class Shear(object):
             return outputs if idx >= 1 else outputs[0]
 
 
+class RandomSquareZoom(object):
+
+    def __init__(self,
+                 zoom_range,
+                 interp='bilinear',
+                 lazy=False):
+        """
+        Randomly zoom in and/or out on an image
+        Arguments
+        ---------
+        zoom_range : tuple or list with 2 values, both between (0, infinity)
+            lower and upper bounds on percent zoom.
+            Anything less than 1.0 will zoom in on the image,
+            anything greater than 1.0 will zoom out on the image.
+            e.g. (0.7, 1.0) will only zoom in,
+                 (1.0, 1.4) will only zoom out,
+                 (0.7, 1.4) will randomly zoom in or out
+        interp : string in {'bilinear', 'nearest'} or list of strings
+            type of interpolation to use. You can provide a different
+            type of interpolation for each input, e.g. if you have two
+            inputs then you can say `interp=['bilinear','nearest']
+        lazy    : boolean
+            if false, perform the transform on the tensor and return the tensor
+            if true, only create the affine transform matrix and return that
+        """
+        if not isinstance(zoom_range, list) and not isinstance(zoom_range, tuple):
+            raise ValueError('zoom_range must be tuple or list with 2 values')
+        self.zoom_range = zoom_range
+        self.interp = interp
+        self.lazy = lazy
+
+    def __call__(self, *inputs):
+        zx = random.uniform(self.zoom_range[0], self.zoom_range[1])
+        zy = zx
+        if self.lazy:
+            return Zoom([zx, zy], lazy=True)(inputs[0])
+        else:
+            outputs = Zoom([zx, zy],
+                           interp=self.interp)(*inputs)
+        return outputs
+
 class RandomZoom(object):
 
     def __init__(self, 
