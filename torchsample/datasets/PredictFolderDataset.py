@@ -6,12 +6,7 @@ from .UsefulDataset import UsefulDataset
 from .data_utils import npy_loader, pil_loader, _find_classes, _finds_inputs_and_targets
 
 class PredictFolderDataset(UsefulDataset):
-    def __init__(self,
-                 root,
-                 input_regex='*',
-                 input_transform=None,
-                 input_loader='pil',
-                 exclusion_file=None):
+    def __init__(self, root, input_regex='*', input_transform=None, input_loader='pil',  exclusion_file=None):
         """
         Dataset class for loading out-of-memory data that is more geared toward prediction data loading (where ground truth is not available). \n
 
@@ -83,6 +78,6 @@ class PredictFolderDataset(UsefulDataset):
         meta = {'num_inputs': self.num_inputs,  # these are hardcoded for the fit module to work
                 'num_targets': self.num_targets,
                 'input_transform': self.input_transform,
-                'file_loader': self.file_loader
+                'default_loader': self.file_loader
                 }
         return meta

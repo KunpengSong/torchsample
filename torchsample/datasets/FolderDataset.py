@@ -19,7 +19,8 @@ class FolderDataset(UsefulDataset):
                  target_transform=None,
                  co_transform=None,
                  apply_co_transform_first=True,
-                 file_loader='pil',
+                 default_loader='pil',
+                 target_loader=None,
                  exclusion_file=None,
                  target_index_map={255: 1}):
         """
@@ -74,8 +75,12 @@ class FolderDataset(UsefulDataset):
         :param apply_co_transform_first: bool\n
             whether to apply the co-transform before or after individual transforms (default: True = before)
 
-        :param file_loader: string in `{'npy', 'pil'} or callable  (default: pil)\n
-            defines how to load samples from file\n
+        :param default_loader: string in `{'npy', 'pil'} or function  (default: pil)\n
+            defines how to load samples from file. Will be applied to both input and target unless a separate target_loader is defined.\n
+            if a function is provided, it should take in a file path as input and return the loaded sample.
+
+        param target_loader: string in `{'npy', 'pil'} or function  (default: pil)\n
+            defines how to load target samples from file\n
             if a function is provided, it should take in a file path as input and return the loaded sample.
 
         :param exclusion_file: string\n
@@ -86,17 +91,23 @@ class FolderDataset(UsefulDataset):
             a dictionary that maps pixel values in the image to classes to be recognized.\n
             Used in conjunction with 'image' class_mode to produce a label for semantic segmentation
             For semantic segmentation this is required so the default is a binary mask. However, if you want to turn off
-            this feature off then specify target_index_map=None
+            this feature then specify target_index_map=None
         """
 
         # call the super constructor first, then set our own parameters
         super().__init__()
 
-        if file_loader == 'npy':
-            file_loader = npy_loader
-        elif file_loader == 'pil':
-            file_loader = pil_loader
-        self.file_loader = file_loader
+        if default_loader == 'npy':
+            default_loader = npy_loader
+        elif default_loader == 'pil':
+            default_loader = pil_loader
+        self.default_loader = default_loader
+
+        if self.target_loader is not None:          # separate loading for targets (e.g. for black/white masks)
+            self.target_loader = target_loader
+        else:
+            self.target_loader = default_loader
+
 
         root = os.path.expanduser(root)
 
@@ -128,14 +139,19 @@ class FolderDataset(UsefulDataset):
         # get paths
         input_sample, target_sample = self.data[index]
 
-        if len(self.classes) == 1 and self.class_mode == 'image':  # this is a binary segmentation map
-            target_sample = self.file_loader(target_sample, color_space='L')
-        else:
-            if self.class_mode == 'image':
-                target_sample = self.file_loader(target_sample)
+        target_sample = self.target_loader(target_sample)
+
+        ## DELETEME
+        # if len(self.classes) == 1 and self.class_mode == 'image':  # this is a binary segmentation map
+        #     target_sample = self.default_loader(target_sample, color_space='L')
+        # else:
+        #     if self.class_mode == 'image':
+        #         target_sample = self.default_loader(target_sample)
+        ## END DELETEME
+
         # load samples into memory
         if self.class_mode == 'image':  # images get special treatment because we have to transform the mask into class values
-            input_sample = self.file_loader(input_sample, color_space='rgb')
+            input_sample = self.default_loader(input_sample, color_space='rgb')
             # if we're dealing with image masks, we need to change the underlying pixels
             if self.target_index_map:
                 target_sample = np.array(target_sample)  # convert to np
@@ -143,7 +159,7 @@ class FolderDataset(UsefulDataset):
                     target_sample[target_sample == k] = v  # replace pixels with class values
                 target_sample = Image.fromarray(target_sample.astype(np.float32))  # convert back to image
         else:
-            input_sample = self.file_loader(input_sample)  # do generic data read
+            input_sample = self.default_loader(input_sample)  # do generic data read
 
         # apply transforms
         if self.apply_co_transform_first and self.co_transform is not None:
@@ -172,7 +188,8 @@ class FolderDataset(UsefulDataset):
                 'class_to_idx': self.class_to_idx,
                 'class_mode': self.class_mode,
                 'classes': self.classes,
-                'file_loader': self.file_loader,
+                'default_loader': self.default_loader,
+                'target_loader': self.target_loader,
                 'apply_co_transform_first': self.apply_co_transform_first,
                 'target_index_map': self.target_index_map
                 }
