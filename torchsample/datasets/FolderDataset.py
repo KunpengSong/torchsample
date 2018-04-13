@@ -110,9 +110,9 @@ class FolderDataset(UsefulDataset):
                                             target_extension=target_extension, exclusion_file=exclusion_file)
 
         if len(data) == 0:
-            raise (RuntimeError('Found 0 images in subfolders of: %s' % root))
+            raise (RuntimeError('Found 0 data items in subfolders of: %s' % root))
         else:
-            print('Found %i images' % len(data))
+            print('Found %i data items' % len(data))
 
         self.root = os.path.expanduser(root)
         self.data = data

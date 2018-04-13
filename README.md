@@ -60,7 +60,7 @@ Torchsample provides a wide range of <b>callbacks</b>, generally mimicking the i
 found in `Keras`:
 
 - `EarlyStopping`
-- `ModelCheckpoint`
+- `SimpleModelCheckpoint`
 - `LearningRateScheduler`
 - `ReduceLROnPlateau`
 - `CSVLogger`

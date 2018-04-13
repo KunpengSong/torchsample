@@ -1,3 +1,4 @@
+from .averagemeter import AverageMeter
 from .averagevaluemeter import AverageValueMeter
 from .classerrormeter import ClassErrorMeter
 from .confusionmeter import ConfusionMeter

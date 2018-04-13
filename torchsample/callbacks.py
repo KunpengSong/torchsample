@@ -251,7 +251,7 @@ class History(Callback):
         return str(self.epoch_metrics)
 
 
-class ModelCheckpoint(Callback):
+class SimpleModelCheckpoint(Callback):
     """
     Model Checkpoint to save model weights during training
 
@@ -316,7 +316,7 @@ class ModelCheckpoint(Callback):
 
         # mode = 'min' only supported
         self.best_loss = float('inf')
-        super(ModelCheckpoint, self).__init__()
+        super(SimpleModelCheckpoint, self).__init__()
 
     def save_checkpoint(self, epoch, file, is_best=False):
         th.save({

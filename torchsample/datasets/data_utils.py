@@ -108,8 +108,8 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
 
     :param root: string\n
         root dir to scan
-    :param class_mode: string in `{'label', 'image'}`\n
-        whether to return a label or an image as target
+    :param class_mode: string in `{'label', 'image', 'path'}`\n
+        whether to return a label, an image or a path (of the input) as target
     :param class_to_idx: list\n
         classes to map to indices
     :param input_regex: string (default: *)\n
@@ -131,8 +131,8 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
 
     :return: partition1 (list of (input, target)), partition2 (list of (input, target))
     """
-    if class_mode is not 'image' and class_mode is not 'label':
-        raise ValueError('class_mode must be one of: label, image')
+    if class_mode is not 'image' and class_mode is not 'label' and class_mode is not 'path':
+        raise ValueError('class_mode must be one of: label, image, path')
 
     if class_mode == 'image' and rel_target_root == '' and target_prefix == '' and target_postfix == '':
             raise ValueError('must provide either rel_target_root or a value for target prefix/postfix when class_mode is set to: image')
@@ -171,7 +171,9 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
                         if not os.path.join(subdir,fname) in exclusion_list:        # exclude any undesired files
                             path = os.path.join(rootz, fname)
                             inputs.append(path)
-                            if class_mode == 'label':
+                            if class_mode == 'path':
+                                targets.append(path)
+                            elif class_mode == 'label':
                                 target_name = class_to_idx.get(subdir)
                                 if target_name is None:
                                     print("WARN WARN: !!! Label " + subdir + " does NOT have a valid mapping to ID!  Ignoring...")

@@ -98,7 +98,7 @@ class ToCuda(object):
 
 class ToFile(object):
     """
-    Saves an image to file. Useful as a pass-through ransform
+    Saves an image to file. Useful as a pass-through transform
     when wanting to observe how augmentation affects the data
 
     NOTE: Only supports saving to Numpy currently
