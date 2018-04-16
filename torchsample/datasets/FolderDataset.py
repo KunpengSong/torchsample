@@ -8,6 +8,7 @@ from .data_utils import npy_loader, pil_loader, _find_classes, _finds_inputs_and
 # convenience loaders one can use (in order not to reinvent the wheel)
 rgb_image_loader = lambda path: Image.open(path).convert('RGB')   # a loader for images that require RGB color space
 bw_image_loader = lambda path: Image.open(path).convert('L')      # a loader for images that require B/W color space
+identity_x = lambda x: x
 
 class FolderDataset(UsefulDataset):
     def __init__(self,
@@ -26,9 +27,12 @@ class FolderDataset(UsefulDataset):
                  default_loader='pil',
                  target_loader=None,
                  exclusion_file=None,
-                 target_index_map={255: 1}):
+                 target_index_map=None):
         """
-        Dataset class for loading out-of-memory data.\n
+        Dataset class for loading out-of-memory data. First, the relevant directory structures are traversed to find all necessary files.\n
+        Then provided loader(s) is/(are) invoked on inputs and targets.\n
+        Finally provided transforms are applied with optional way to specify the order of individual and co-transforms.\n
+
         The rel_target_root parameter is used for image segmentation cases
             Typically the structure will look like the following\n
             |- root (aka training images)\n
@@ -43,12 +47,13 @@ class FolderDataset(UsefulDataset):
         :param root: string\n
             path to main directory\n
 
-        :param class_mode: string in `{'label', 'image'}`\n
+        :param class_mode: string in `{'label', 'image', 'path'}`\n
             type of target sample to look for and return\n
             `label` = return class folder as target\n
             `image` = return another image as target (determined by optional target_prefix/postfix)\n
                 NOTE: if class_mode == 'image', in addition to input, you must also provide rel_target_root,
                 target_prefix or target_postfix (in any combination).
+            `path` = determines paths for inputs and targets and applies the respective loaders to the path
 
         :param class_to_idx: dict()\n
             If specified, the given class_to_idx map will be used. Otherwise one will be derived from the directory structure.
