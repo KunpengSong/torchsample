@@ -5,6 +5,10 @@ from PIL import Image
 from .UsefulDataset import UsefulDataset
 from .data_utils import npy_loader, pil_loader, _find_classes, _finds_inputs_and_targets
 
+# convenience loaders one can use (in order not to reinvent the wheel)
+rgb_image_loader = lambda path: Image.open(path).convert('RGB')   # a loader for images that require RGB color space
+bw_image_loader = lambda path: Image.open(path).convert('L')      # a loader for images that require B/W color space
+
 class FolderDataset(UsefulDataset):
     def __init__(self,
                  root,
