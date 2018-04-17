@@ -25,9 +25,6 @@ class PredictFolderDataset(FolderDataset):
         :param input_transform: torch transform\n
             transform to apply to each input before returning
 
-        :param input_transform: torch transform\n
-            transform to apply to each target before returning
-
         :param input_loader: callable (default: identity)\n
             defines how to load input samples from file\n
             if a function is provided, it should take in a file path as input and return the loaded sample. Identity simply returns the input.

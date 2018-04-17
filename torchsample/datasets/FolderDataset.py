@@ -129,6 +129,9 @@ class FolderDataset(UsefulDataset):
                                             rel_target_root=rel_target_root, target_prefix=target_prefix, target_postfix=target_postfix,
                                             target_extension=target_extension, exclusion_file=exclusion_file)
 
+        import pdb
+        pdb.set_trace()
+
         if len(data) == 0:
             raise (RuntimeError('Found 0 data items in subfolders of: %s' % root))
         else:
@@ -145,6 +148,8 @@ class FolderDataset(UsefulDataset):
         self.class_mode = class_mode
 
     def __getitem__(self, index):
+        import pdb
+        pdb.set_trace()
         # get paths
         input_sample, target_sample = self.data[index]
 
