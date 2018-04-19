@@ -129,9 +129,6 @@ class FolderDataset(UsefulDataset):
                                             rel_target_root=rel_target_root, target_prefix=target_prefix, target_postfix=target_postfix,
                                             target_extension=target_extension, exclusion_file=exclusion_file)
 
-        # import pdb
-        # pdb.set_trace()
-
         if len(data) == 0:
             raise (RuntimeError('Found 0 data items in subfolders of: %s' % root))
         else:
