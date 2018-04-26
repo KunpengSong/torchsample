@@ -1,4 +1,4 @@
-# Source: https://github.com/saeedizadi/binseg_pytoch
+# Source: https://github.com/saeedizadi/binseg_pytoch (Apache-2.0)
 
 import torch.nn as nn
 import torch.nn.init as init

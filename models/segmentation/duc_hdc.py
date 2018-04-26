@@ -1,3 +1,5 @@
+# Source: https://github.com/zijundeng/pytorch-semantic-segmentation/tree/master/models (MIT)
+
 import torch
 from torch import nn
 from torchvision import models

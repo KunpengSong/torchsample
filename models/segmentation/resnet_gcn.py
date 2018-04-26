@@ -1,5 +1,5 @@
 # Another implementation of GCN
-# Source: https://github.com/saeedizadi/binseg_pytoch/tree/master/models
+# Source: https://github.com/saeedizadi/binseg_pytoch/tree/master/models (Apache-2.0)
 
 import torch.nn as nn
 import torch.nn.init as init

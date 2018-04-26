@@ -1,4 +1,5 @@
 # Source: https://github.com/fyu/drn/blob/master/drn.py (BSD 3-Clause)
+# Pretrained: yes
 
 import torch.nn as nn
 import math

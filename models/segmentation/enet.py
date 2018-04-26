@@ -1,4 +1,4 @@
-# Source: https://github.com/davidtvs/PyTorch-ENet
+# Source: https://github.com/davidtvs/PyTorch-ENet (MIT)
 
 import torch.nn as nn
 import torch

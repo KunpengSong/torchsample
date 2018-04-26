@@ -1,8 +1,11 @@
 # Source: https://github.com/meetshah1995/pytorch-semseg (MIT)
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import functools
+
+# from ptsemseg.models.utils import *
 
 frrn_specs_dic = {
     'A':
@@ -30,6 +33,156 @@ frrn_specs_dic = {
                         [2, 192, 4],
                         [2, 96, 2]],
         }, }
+
+
+def bootstrapped_cross_entropy2d(input, target, K, weight=None, size_average=True):
+    batch_size = input.size()[0]
+
+    def _bootstrap_xentropy_single(input, target, K, weight=None, size_average=True):
+        n, c, h, w = input.size()
+        log_p = F.log_softmax(input, dim=1)
+        log_p = log_p.transpose(1, 2).transpose(2, 3).contiguous().view(-1, c)
+        log_p = log_p[target.view(n * h * w, 1).repeat(1, c) >= 0]
+        log_p = log_p.view(-1, c)
+
+        mask = target >= 0
+        target = target[mask]
+        loss = F.nll_loss(log_p, target, weight=weight, ignore_index=250,
+                          reduce=False, size_average=False)
+        topk_loss, _ = loss.topk(K)
+        reduced_topk_loss = topk_loss.sum() / K
+
+        return reduced_topk_loss
+
+    loss = 0.0
+    # Bootstrap from each image not entire batch
+    for i in range(batch_size):
+        loss += _bootstrap_xentropy_single(input=torch.unsqueeze(input[i], 0),
+                                           target=torch.unsqueeze(target[i], 0),
+                                           K=K,
+                                           weight=weight,
+                                           size_average=size_average)
+
+
+    return loss / float(batch_size)
+
+
+class conv2DBatchNorm(nn.Module):
+    def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True, dilation=1, with_bn=True):
+        super(conv2DBatchNorm, self).__init__()
+
+        if dilation > 1:
+            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                 padding=padding, stride=stride, bias=bias, dilation=dilation)
+
+        else:
+            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                 padding=padding, stride=stride, bias=bias, dilation=1)
+
+
+        if with_bn:
+            self.cb_unit = nn.Sequential(conv_mod,
+                                         nn.BatchNorm2d(int(n_filters)),)
+        else:
+            self.cb_unit = nn.Sequential(conv_mod,)
+
+    def forward(self, inputs):
+        outputs = self.cb_unit(inputs)
+        return outputs
+
+
+class deconv2DBatchNorm(nn.Module):
+    def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True):
+        super(deconv2DBatchNorm, self).__init__()
+
+        self.dcb_unit = nn.Sequential(nn.ConvTranspose2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                               padding=padding, stride=stride, bias=bias),
+                                 nn.BatchNorm2d(int(n_filters)),)
+
+    def forward(self, inputs):
+        outputs = self.dcb_unit(inputs)
+        return outputs
+
+class conv2DBatchNormRelu(nn.Module):
+    def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True, dilation=1, with_bn=True):
+        super(conv2DBatchNormRelu, self).__init__()
+
+        if dilation > 1:
+            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                 padding=padding, stride=stride, bias=bias, dilation=dilation)
+
+        else:
+            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                 padding=padding, stride=stride, bias=bias, dilation=1)
+
+        if with_bn:
+            self.cbr_unit = nn.Sequential(conv_mod,
+                                          nn.BatchNorm2d(int(n_filters)),
+                                          nn.ReLU(inplace=True),)
+        else:
+            self.cbr_unit = nn.Sequential(conv_mod,
+                                          nn.ReLU(inplace=True),)
+
+    def forward(self, inputs):
+        outputs = self.cbr_unit(inputs)
+        return outputs
+
+
+class deconv2DBatchNormRelu(nn.Module):
+    def __init__(self, in_channels, n_filters, k_size, stride, padding, bias=True):
+        super(deconv2DBatchNormRelu, self).__init__()
+
+        self.dcbr_unit = nn.Sequential(nn.ConvTranspose2d(int(in_channels), int(n_filters), kernel_size=k_size,
+                                                padding=padding, stride=stride, bias=bias),
+                                 nn.BatchNorm2d(int(n_filters)),
+                                 nn.ReLU(inplace=True),)
+
+    def forward(self, inputs):
+        outputs = self.dcbr_unit(inputs)
+        return outputs
+
+
+class RU(nn.Module):
+    """
+    Residual Unit for FRRN
+    """
+    def __init__(self, channels, kernel_size=3, strides=1):
+        super(RU, self).__init__()
+
+        self.conv1 = conv2DBatchNormRelu(channels, channels, k_size=kernel_size, stride=strides, padding=1)
+        self.conv2 = conv2DBatchNorm(channels, channels, k_size=kernel_size, stride=strides, padding=1)
+
+    def forward(self, x):
+        incoming = x
+        x = self.conv1(x)
+        x = self.conv2(x)
+        return x + incoming
+
+class FRRU(nn.Module):
+    """
+    Full Resolution Residual Unit for FRRN
+    """
+    def __init__(self, prev_channels, out_channels, scale):
+        super(FRRU, self).__init__()
+        self.scale = scale
+        self.prev_channels = prev_channels
+        self.out_channels = out_channels
+
+        self.conv1 = conv2DBatchNormRelu(prev_channels + 32, out_channels, k_size=3, stride=1, padding=1)
+        self.conv2 = conv2DBatchNormRelu(out_channels, out_channels, k_size=3, stride=1, padding=1)
+        self.conv_res = nn.Conv2d(out_channels, 32, kernel_size=1, stride=1, padding=0)
+
+    def forward(self, y, z):
+        x = torch.cat([y, nn.MaxPool2d(self.scale, self.scale)(z)], dim=1)
+        y_prime = self.conv1(x)
+        y_prime = self.conv2(y_prime)
+
+        x = self.conv_res(y_prime)
+        upsample_size = torch.Size([_s*self.scale for _s in y_prime.shape[-2:]])
+        x = F.upsample(x, size=upsample_size, mode='nearest')
+        z_prime = z + x
+
+        return y_prime, z_prime
 
 
 class frrn(nn.Module):
@@ -150,113 +303,3 @@ class frrn(nn.Module):
         x = self.classif_conv(x)
 
         return x
-
-
-def bootstrapped_cross_entropy2d(input, target, K, weight=None, size_average=True):
-    batch_size = input.size()[0]
-
-    def _bootstrap_xentropy_single(input, target, K, weight=None, size_average=True):
-        n, c, h, w = input.size()
-        log_p = F.log_softmax(input, dim=1)
-        log_p = log_p.transpose(1, 2).transpose(2, 3).contiguous().view(-1, c)
-        log_p = log_p[target.view(n * h * w, 1).repeat(1, c) >= 0]
-        log_p = log_p.view(-1, c)
-
-        mask = target >= 0
-        target = target[mask]
-        loss = F.nll_loss(log_p, target, weight=weight, ignore_index=250,
-                          reduce=False, size_average=False)
-        topk_loss, _ = loss.topk(K)
-        reduced_topk_loss = topk_loss.sum() / K
-
-        return reduced_topk_loss
-
-    loss = 0.0
-    # Bootstrap from each image not entire batch
-    for i in range(batch_size):
-        loss += _bootstrap_xentropy_single(input=torch.unsqueeze(input[i], 0),
-                                           target=torch.unsqueeze(target[i], 0),
-                                           K=K,
-                                           weight=weight,
-                                           size_average=size_average)
-
-
-    return loss / float(batch_size)
-
-
-class conv2DBatchNorm(nn.Module):
-    def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True, dilation=1):
-        super(conv2DBatchNorm, self).__init__()
-
-        if dilation > 1:
-            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size, padding=padding, stride=stride, bias=bias, dilation=dilation)
-
-        else:
-            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size,  padding=padding, stride=stride, bias=bias, dilation=1)
-
-
-        self.cb_unit = nn.Sequential(conv_mod, nn.BatchNorm2d(int(n_filters)),)
-
-    def forward(self, inputs):
-        outputs = self.cb_unit(inputs)
-        return outputs
-
-class conv2DBatchNormRelu(nn.Module):
-    def __init__(self, in_channels, n_filters, k_size,  stride, padding, bias=True, dilation=1):
-        super(conv2DBatchNormRelu, self).__init__()
-
-        if dilation > 1:
-            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size, padding=padding, stride=stride, bias=bias, dilation=dilation)
-
-        else:
-            conv_mod = nn.Conv2d(int(in_channels), int(n_filters), kernel_size=k_size, padding=padding, stride=stride, bias=bias, dilation=1)
-
-        self.cbr_unit = nn.Sequential(conv_mod, nn.BatchNorm2d(int(n_filters)), nn.ReLU(inplace=True),)
-
-    def forward(self, inputs):
-        outputs = self.cbr_unit(inputs)
-        return outputs
-
-
-class FRRU(nn.Module):
-    """
-    Full Resolution Residual Unit for FRRN
-    """
-    def __init__(self, prev_channels, out_channels, scale):
-        super(FRRU, self).__init__()
-        self.scale = scale
-        self.prev_channels = prev_channels
-        self.out_channels = out_channels
-
-        self.conv1 = conv2DBatchNormRelu(prev_channels + 32, out_channels, k_size=3, stride=1, padding=1)
-        self.conv2 = conv2DBatchNormRelu(out_channels, out_channels, k_size=3, stride=1, padding=1)
-        self.conv_res = nn.Conv2d(out_channels, 32, kernel_size=1, stride=1, padding=0)
-
-    def forward(self, y, z):
-        x = torch.cat([y, nn.MaxPool2d(self.scale, self.scale)(z)], dim=1)
-        y_prime = self.conv1(x)
-        y_prime = self.conv2(y_prime)
-
-        x = self.conv_res(y_prime)
-        upsample_size = torch.Size([_s*self.scale for _s in y_prime.shape[-2:]])
-        x = F.upsample(x, size=upsample_size, mode='nearest')
-        z_prime = z + x
-
-        return y_prime, z_prime
-
-
-class RU(nn.Module):
-    """
-    Residual Unit for FRRN
-    """
-    def __init__(self, channels, kernel_size=3, strides=1):
-        super(RU, self).__init__()
-
-        self.conv1 = conv2DBatchNormRelu(channels, channels, k_size=kernel_size, stride=strides, padding=1)
-        self.conv2 = conv2DBatchNorm(channels, channels, k_size=kernel_size, stride=strides, padding=1)
-
-    def forward(self, x):
-        incoming = x
-        x = self.conv1(x)
-        x = self.conv2(x)
-        return x + incoming

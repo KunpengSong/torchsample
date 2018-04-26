@@ -1,9 +1,7 @@
-# Source: https://github.com/doodledood/carvana-image-masking-challenge/blob/master/models.py
+# Source: https://github.com/doodledood/carvana-image-masking-challenge/models (MIT)
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.nn.utils import weight_norm
 
 
 class ConvBNReluStack(nn.Module):
@@ -16,8 +14,8 @@ class ConvBNReluStack(nn.Module):
         self.conv = nn.Conv2d(in_dim, out_dim, kernel_size, stride=stride, padding=padding)
         # nn.init.xavier_normal(self.conv.weight.data)
 
-        self.bn = nn.InstanceNorm2d(out_dim)
-        self.activation = nn.LeakyReLU(0.2)
+        self.bn = nn.BatchNorm2d(out_dim)
+        self.activation = nn.PReLU()  # nn.LeakyReLU(0.2)
 
     def forward(self, inputs_):
         x = self.conv(inputs_)
@@ -28,18 +26,28 @@ class ConvBNReluStack(nn.Module):
 
 
 class UNetDownStack(nn.Module):
-    def __init__(self, input_dim, filters, kernel_size=3, pool=True):
+    def __init__(self, input_dim, filters, pool=True):
         super(UNetDownStack, self).__init__()
 
-        self.stack0 = ConvBNReluStack(input_dim, filters, 1, stride=1, padding=0)
-        self.stack1 = ConvBNReluStack(filters, filters // 2, kernel_size, stride=1, padding=1)
-        self.stack2 = ConvBNReluStack(filters // 2, filters, kernel_size, stride=1, padding=1)
+        self.stack1 = ConvBNReluStack(input_dim, filters, 1, stride=1, padding=0)
+        self.stack3 = ConvBNReluStack(input_dim, filters, 3, stride=1, padding=1)
+        self.stack5 = ConvBNReluStack(input_dim, filters, 5, stride=1, padding=2)
+        self.stack_pool = nn.AvgPool2d(3, stride=1, padding=1)
+        self.reducer = ConvBNReluStack(filters * 3 + input_dim, filters, kernel_size=1, stride=1, padding=0)
+
+        # self.pool = ConvBNReluStack(filters, filters, kernel_size, stride=2, padding=1) if pool else None
         self.pool = nn.MaxPool2d(2, stride=2) if pool else None
+        # ConvBNReluStack(filters, filters, kernel_size, stride=2, padding=1) if pool else None
+        # nn.MaxPool2d(2, stride=2) if pool else None
 
     def forward(self, inputs_):
-        x = self.stack0(inputs_)
-        x1 = self.stack1(x)
-        x = x + self.stack2(x1)
+        x1 = self.stack1(inputs_)
+        x3 = self.stack3(inputs_)
+        x5 = self.stack5(inputs_)
+        x_pool = self.stack_pool(inputs_)
+
+        x = torch.cat([x1, x3, x5, x_pool], dim=1)
+        x = self.reducer(x)
 
         if self.pool:
             return x, self.pool(x)
@@ -52,21 +60,25 @@ class UNetUpStack(nn.Module):
         super(UNetUpStack, self).__init__()
 
         self.upsample = nn.Upsample(scale_factor=2)
-        self.stack0 = ConvBNReluStack(input_dim, filters, 1, stride=1, padding=0)
-        self.stack1 = ConvBNReluStack(filters, filters // 2, kernel_size, stride=1, padding=1)
-        self.stack2 = ConvBNReluStack(filters // 2, filters, kernel_size, stride=1, padding=1)
-        self.stack3 = ConvBNReluStack(filters, filters, kernel_size, stride=1, padding=1)
+        self.stack1 = ConvBNReluStack(input_dim, filters, 1, stride=1, padding=0)
+        self.stack3 = ConvBNReluStack(input_dim, filters, 3, stride=1, padding=1)
+        self.stack5 = ConvBNReluStack(input_dim, filters, 5, stride=1, padding=2)
+        self.stack_pool = nn.AvgPool2d(3, stride=1, padding=1)
+        self.reducer = ConvBNReluStack(filters * 3 + input_dim, filters, kernel_size=1, stride=1, padding=0)
 
     def forward(self, inputs_, down):
         x = self.upsample(inputs_)
         x = torch.cat([x, down], dim=1)
 
-        y0 = self.stack0(x)
-        y = self.stack1(y0)
-        y = self.stack2(y)
-        y = y0 + self.stack3(y)
+        x1 = self.stack1(x)
+        x3 = self.stack3(x)
+        x5 = self.stack5(x)
+        x_pool = self.stack_pool(x)
 
-        return y
+        x = torch.cat([x1, x3, x5, x_pool], dim=1)
+        x = self.reducer(x)
+
+        return x
 
 
 class UNet_stack(nn.Module):
@@ -83,19 +95,19 @@ class UNet_stack(nn.Module):
     def __init__(self, input_size, filters, kernel_size=3, max_stacks=6):
         super(UNet_stack, self).__init__()
 
-        self.n_stacks = max(self.get_n_stacks(input_size), max_stacks)
+        self.n_stacks = min(self.get_n_stacks(input_size), max_stacks)
 
         # dynamically create stacks
         self.down1 = UNetDownStack(3, filters, kernel_size)
         prev_filters = filters
         for i in range(2, self.n_stacks + 1):
             n = i
-            layer = UNetDownStack(prev_filters, prev_filters * 2, kernel_size)
+            layer = UNetDownStack(prev_filters, prev_filters * 2)
             layer_name = 'down' + str(n)
             setattr(self, layer_name, layer)
             prev_filters *= 2
 
-        self.center = UNetDownStack(prev_filters, prev_filters * 2, kernel_size, pool=False)
+        self.center = UNetDownStack(prev_filters, prev_filters * 2, pool=False)
 
         prev_filters = prev_filters * 3
         for i in range(self.n_stacks):
@@ -190,41 +202,3 @@ class UNet960(nn.Module):
         x = self.classify(up1)
 
         return torch.squeeze(x, dim=1)
-
-
-class ConvolutionalAutoEncoder(nn.Module):
-    def __init__(self, filters=16):
-        super(ConvolutionalAutoEncoder, self).__init__()
-        self.main = nn.Sequential(
-            nn.Conv2d(3, filters, 3, stride=2, padding=1),
-            nn.BatchNorm2d(filters),
-            nn.ReLU(True),
-            nn.Conv2d(filters, filters * 2, 3, stride=2, padding=1),
-            nn.BatchNorm2d(filters * 2),
-            nn.ReLU(True),
-            nn.Conv2d(filters * 2, filters * 4, 3, stride=2, padding=1),
-            nn.BatchNorm2d(filters * 4),
-            nn.ReLU(True),
-            nn.Conv2d(filters * 4, filters * 8, 3, stride=2, padding=1),
-            nn.BatchNorm2d(filters * 8),
-            nn.ReLU(True),
-            nn.Upsample(scale_factor=2),
-            nn.Conv2d(filters * 8, filters * 4, 3, padding=1),
-            nn.BatchNorm2d(filters * 4),
-            nn.ReLU(True),
-            nn.Upsample(scale_factor=2),
-            nn.Conv2d(filters * 4, filters * 2, 3, padding=1),
-            nn.BatchNorm2d(filters * 2),
-            nn.ReLU(True),
-            nn.Upsample(scale_factor=2),
-            nn.Conv2d(filters * 2, filters, 3, padding=1),
-            nn.BatchNorm2d(filters),
-            nn.ReLU(True),
-            nn.Upsample(scale_factor=2),
-            nn.Conv2d(filters, 1, 3, padding=1)
-        )
-
-    def forward(self, input_):
-        # print(input_.size())
-        output = self.main(input_)
-        return torch.squeeze(output, dim=1)
