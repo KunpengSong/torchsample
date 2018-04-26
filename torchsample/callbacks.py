@@ -26,10 +26,12 @@ def _get_current_time():
     time_s = time.time()
     return time_s, datetime.datetime.fromtimestamp(time_s).strftime("%B %d, %Y - %I:%M%p")
 
+
 class CallbackContainer(object):
     """
     Container holding a list of callbacks.
     """
+
     def __init__(self, callbacks=None, queue_length=10):
         self.initial_epoch = -1
         self.final_epoch = -1
@@ -165,8 +167,8 @@ class TQDM(Callback):
         try:
             self.progbar = tqdm(total=self.train_logs['num_batches'],
                                 unit=' batches')
-            self.progbar.set_description('Epoch %i/%i' % 
-                            (epoch+1, self.train_logs['num_epoch']))
+            self.progbar.set_description('Epoch %i/%i' %
+                                         (epoch + 1, self.train_logs['num_epoch']))
         except:
             pass
 
@@ -176,7 +178,7 @@ class TQDM(Callback):
             if k.endswith('metric'):
                 log_data[k.split('_metric')[0]] = '%.02f' % v
             else:
-                 log_data[k] = v
+                log_data[k] = v
         log_data['learn_rates'] = self.trainer.history.lrs
         self.progbar.set_postfix(log_data)
         self.progbar.update()
@@ -201,6 +203,7 @@ class History(Callback):
     This callback is automatically applied to
     every SuperModule.
     """
+
     def __init__(self, trainer):
         super(History, self).__init__()
         self.samples_seen = 0.
@@ -219,7 +222,7 @@ class History(Callback):
             self.epoch_metrics['reg_loss'] = []
 
     def on_epoch_begin(self, epoch, logs=None):
-        if hasattr(self.trainer._optimizer, '_optimizer'):        # accounts for meta-optimizers like YellowFin
+        if hasattr(self.trainer._optimizer, '_optimizer'):  # accounts for meta-optimizers like YellowFin
             self.lrs = [p['lr'] for p in self.trainer._optimizer._optimizer.param_groups]
         else:
             self.lrs = [p['lr'] for p in self.trainer._optimizer.param_groups]
@@ -233,12 +236,12 @@ class History(Callback):
     def on_epoch_end(self, epoch, logs=None):
         if logs:
             self.epoch_metrics['loss'].append(logs['loss'])
-        if logs.get('val_loss'):       # if it exists
+        if logs.get('val_loss'):  # if it exists
             self.epoch_metrics['val_loss'].append(logs['val_loss'])
 
     def on_batch_end(self, batch, logs=None):
         for k in self.batch_metrics:
-            self.batch_metrics[k] = (self.samples_seen*self.batch_metrics[k] + logs[k]*self.batch_size) / (self.samples_seen+self.batch_size)
+            self.batch_metrics[k] = (self.samples_seen * self.batch_metrics[k] + logs[k] * self.batch_size) / (self.samples_seen + self.batch_size)
         self.samples_seen += self.batch_size
 
     def __getitem__(self, name):
@@ -270,10 +273,10 @@ class SimpleModelCheckpoint(Callback):
     """
 
     def __init__(self,
-                 directory, 
-                 filename='ckpt.pth.tar', 
-                 monitor='val_loss', 
-                 save_best_only=False, 
+                 directory,
+                 filename='ckpt.pth.tar',
+                 monitor='val_loss',
+                 save_best_only=False,
                  save_weights_only=True,
                  max_save=-1,
                  verbose=0):
@@ -321,24 +324,24 @@ class SimpleModelCheckpoint(Callback):
     def save_checkpoint(self, epoch, file, is_best=False):
         th.save({
             'epoch': epoch + 1,
-             #'arch': args.arch,
+            # 'arch': args.arch,
             'state_dict': self.trainer.model.state_dict(),
-            #'best_prec1': best_prec1,
-            'optimizer' : self.trainer._optimizer.state_dict(),
-            #'loss':{},
-                #            #'regularizers':{},
-                #            #'constraints':{},
-                #            #'initializers':{},
-                #            #'metrics':{},
-                #            #'val_loss':{}
-            }, file)
+            # 'best_prec1': best_prec1,
+            'optimizer': self.trainer._optimizer.state_dict(),
+            # 'loss':{},
+            #            #'regularizers':{},
+            #            #'constraints':{},
+            #            #'initializers':{},
+            #            #'metrics':{},
+            #            #'val_loss':{}
+        }, file)
         if is_best:
             shutil.copyfile(file, 'model_best.pth.tar')
 
     def on_epoch_end(self, epoch, logs=None):
 
-        file = self.file.format(epoch='%03i'%(epoch+1),
-                                loss='%0.4f'%logs[self.monitor])
+        file = self.file.format(epoch='%03i' % (epoch + 1),
+                                loss='%0.4f' % logs[self.monitor])
         if self.save_best_only:
             current_loss = logs.get(self.monitor)
             if current_loss is None:
@@ -346,11 +349,11 @@ class SimpleModelCheckpoint(Callback):
             else:
                 if current_loss < self.best_loss:
                     if self.verbose > 0:
-                        print('\nEpoch %i: improved from %0.4f to %0.4f saving model to %s' % 
-                              (epoch+1, self.best_loss, current_loss, file))
+                        print('\nEpoch %i: improved from %0.4f to %0.4f saving model to %s' %
+                              (epoch + 1, self.best_loss, current_loss, file))
                     self.best_loss = current_loss
-                    #if self.save_weights_only:
-                    #else:
+                    # if self.save_weights_only:
+                    # else:
                     self.save_checkpoint(epoch, file)
                     if self.max_save > 0:
                         if len(self.old_files) == self.max_save:
@@ -362,7 +365,7 @@ class SimpleModelCheckpoint(Callback):
                         self.old_files.append(file)
         else:
             if self.verbose > 0:
-                print('\nEpoch %i: saving model to %s' % (epoch+1, file))
+                print('\nEpoch %i: saving model to %s' % (epoch + 1, file))
             self.save_checkpoint(epoch, file)
             if self.max_save > 0:
                 if len(self.old_files) == self.max_save:
@@ -379,7 +382,7 @@ class EarlyStopping(Callback):
     Early Stopping to terminate training early under certain conditions
     """
 
-    def __init__(self, 
+    def __init__(self,
                  monitor='val_loss',
                  min_delta=0,
                  patience=5):
@@ -427,8 +430,8 @@ class EarlyStopping(Callback):
 
     def on_train_end(self, logs):
         if self.stopped_epoch > 0:
-            print('\nTerminated Training for Early Stopping at Epoch %04i' % 
-                (self.stopped_epoch))
+            print('\nTerminated Training for Early Stopping at Epoch %04i' %
+                  (self.stopped_epoch))
 
 
 class LRScheduler(Callback):
@@ -469,7 +472,7 @@ class LRScheduler(Callback):
                     return learn_rate
             # epoch_bound is in units of "cumulative percent of epochs"
             else:
-                if epoch <= epoch_bound*logs['num_epoch']:
+                if epoch <= epoch_bound * logs['num_epoch']:
                     return learn_rate
         warnings.warn('Check the keys in the schedule dict.. Returning last value')
         return learn_rate
@@ -491,11 +494,11 @@ class ReduceLROnPlateau(Callback):
     """
 
     def __init__(self,
-                 monitor='val_loss', 
-                 factor=0.1, 
+                 monitor='val_loss',
+                 factor=0.1,
                  patience=10,
-                 epsilon=0, 
-                 cooldown=0, 
+                 epsilon=0,
+                 cooldown=0,
                  min_lr=0,
                  verbose=0):
         """
@@ -553,7 +556,7 @@ class ReduceLROnPlateau(Callback):
             pass
         else:
             # if in cooldown phase
-            if self.cooldown_counter > 0: 
+            if self.cooldown_counter > 0:
                 self.cooldown_counter -= 1
                 self.wait = 0
             # if loss improved, grab new loss and reset wait counter
@@ -569,8 +572,8 @@ class ReduceLROnPlateau(Callback):
                             new_lr = old_lr * self.factor
                             new_lr = max(new_lr, self.min_lr)
                             if self.verbose > 0:
-                                print('\nEpoch %05d: reducing lr from %0.3f to %0.3f' % 
-                                    (epoch, old_lr, new_lr))
+                                print('\nEpoch %05d: reducing lr from %0.3f to %0.3f' %
+                                      (epoch, old_lr, new_lr))
                             p['lr'] = new_lr
                             self.cooldown_counter = self.cooldown
                             self.wait = 0
@@ -582,9 +585,9 @@ class CSVLogger(Callback):
     Logs epoch-level metrics to a CSV file
     """
 
-    def __init__(self, 
-                 file, 
-                 separator=',', 
+    def __init__(self,
+                 file,
+                 separator=',',
                  append=False):
         """
         Logs epoch-level metrics to a CSV file
@@ -633,8 +636,8 @@ class CSVLogger(Callback):
                 delimiter = self.sep
 
             self.writer = csv.DictWriter(self.csv_file,
-                    fieldnames=['epoch'] + [k for k in self.keys if k not in RK], 
-                    dialect=CustomDialect)
+                                         fieldnames=['epoch'] + [k for k in self.keys if k not in RK],
+                                         dialect=CustomDialect)
             if self.append_header:
                 self.writer.writeheader()
 
@@ -653,8 +656,8 @@ class ExperimentLogger(Callback):
     def __init__(self,
                  directory,
                  filename='Experiment_Logger.csv',
-                 save_prefix='Model_', 
-                 separator=',', 
+                 save_prefix='Model_',
+                 separator=',',
                  append=True):
 
         self.directory = directory
@@ -684,10 +687,10 @@ class ExperimentLogger(Callback):
                     # if header exists, DONT append header again
                 with open(self.file) as f:
                     self.append_header = not bool(len(f.readline()))
-                
+
         model_idx = num_lines
-        REJECT_KEYS={'has_validation_data'}
-        MODEL_NAME = self.save_prefix + str(model_idx) # figure out how to get model name
+        REJECT_KEYS = {'has_validation_data'}
+        MODEL_NAME = self.save_prefix + str(model_idx)  # figure out how to get model name
         self.row_dict = OrderedDict({'model': MODEL_NAME})
         self.keys = sorted(logs.keys())
         for k in self.keys:
@@ -699,8 +702,8 @@ class ExperimentLogger(Callback):
 
         with open(self.file, open_type) as csv_file:
             writer = csv.DictWriter(csv_file,
-                fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS], 
-                dialect=CustomDialect)
+                                    fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS],
+                                    dialect=CustomDialect)
             if self.append_header:
                 writer.writeheader()
 
@@ -708,20 +711,21 @@ class ExperimentLogger(Callback):
             csv_file.flush()
 
     def on_train_end(self, logs=None):
-        REJECT_KEYS={'has_validation_data'}
+        REJECT_KEYS = {'has_validation_data'}
         row_dict = self.row_dict
 
         class CustomDialect(csv.excel):
             delimiter = self.sep
+
         self.keys = self.keys
         temp_file = NamedTemporaryFile(delete=False, mode='w')
         with open(self.file, 'r') as csv_file, temp_file:
             reader = csv.DictReader(csv_file,
-                fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS], 
-                dialect=CustomDialect)
+                                    fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS],
+                                    dialect=CustomDialect)
             writer = csv.DictWriter(temp_file,
-                fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS], 
-                dialect=CustomDialect)
+                                    fieldnames=['model'] + [k for k in self.keys if k not in REJECT_KEYS],
+                                    dialect=CustomDialect)
             for row_idx, row in enumerate(reader):
                 if row_idx == 0:
                     # re-write header with on_train_end's metrics
@@ -730,13 +734,14 @@ class ExperimentLogger(Callback):
                     writer.writerow(row_dict)
                 else:
                     writer.writerow(row)
-        shutil.move(temp_file.name, self.file)   
+        shutil.move(temp_file.name, self.file)
 
 
 class LambdaCallback(Callback):
     """
     Callback for creating simple, custom callbacks on-the-fly.
     """
+
     def __init__(self,
                  on_epoch_begin=None,
                  on_epoch_end=None,
@@ -792,7 +797,8 @@ class ModelCheckpoint(Callback):
          - plus any additional key/value pairs produced by custom_func
     """
 
-    def __init__(self, run_id, monitored_log_key, save_dir, addl_k_v=dict(), epoch_log_keys=[], save_interval=5, save_best_only=False, max_saves=5, custom_func=None, do_minimize=True, verbose=False):
+    def __init__(self, run_id, monitored_log_key, save_dir, addl_k_v=dict(), epoch_log_keys=[], save_interval=5, save_best_only=False, max_saves=5,
+                 custom_func=None, do_minimize=True, verbose=False):
         """
         Model Checkpoint to save model weights during training. 'Best' is determined by minimizing the value found under monitored_log_key in the logs
 
@@ -837,9 +843,9 @@ class ModelCheckpoint(Callback):
         self.save_best_only = save_best_only
         self.max_saves = max_saves
         self.custom_func = custom_func
-        self.custom_func_dict = dict()      # this is expected to be filled by the custom_func
+        self.custom_func_dict = dict()  # this is expected to be filled by the custom_func
         self.verbose = verbose
-        self.monitored_log_key = monitored_log_key   # 'e.g. dice_coeff'
+        self.monitored_log_key = monitored_log_key  # 'e.g. dice_coeff'
         self.do_minimize = do_minimize
         self.last_saved_ep = 0
         self.last_epoch_logs = None
@@ -881,20 +887,19 @@ class ModelCheckpoint(Callback):
                         self.best_loss = current_loss
                         self.best_epoch = epoch
 
-
                     save_dict = {
-                        'run_id' : self.run_id,
+                        'run_id': self.run_id,
                         'epoch': epoch + 1,
                         'state_dict': self.trainer.model.state_dict(),
-                        'loss_type' : self.monitored_log_key,
+                        'loss_type': self.monitored_log_key,
                         'loss_val': current_loss,
-                        'best_epoch' : self.best_epoch + 1
+                        'best_epoch': self.best_epoch + 1
                     }
                     # add values from other dictionaries
                     save_dict.update(self.addl_k_v)
                     save_dict.update(self.custom_func_dict)
                     for key in self.epoch_log_keys:
-                        save_dict[key] = logs.get(key)      # this is not guaranteed to be found so may return 'None'
+                        save_dict[key] = logs.get(key)  # this is not guaranteed to be found so may return 'None'
 
                     save_checkpoint(save_dict, is_best=(self.best_epoch == epoch), save_path=self.save_dir, filename=checkpt_name)
                     self.last_saved_ep = epoch
@@ -954,11 +959,11 @@ def generate_statsfile_name(run_id, save_dir):
 
 def generate_checkpoint_name(run_id, kv_dict, epoch, is_best):
     model_name = kv_dict.get('model_name', 'model')
-    optimizer_name = kv_dict.get('optimizer','o')
+    optimizer_name = kv_dict.get('optimizer', 'o')
     if is_best:
         return str(run_id) + "_" + model_name + "_" + optimizer_name + "_ep_best.pth.tar"
     else:
-        return str(run_id) + "_" + model_name + "_" + optimizer_name + "_ep_" + str(epoch+1) + ".pth.tar"
+        return str(run_id) + "_" + model_name + "_" + optimizer_name + "_ep_" + str(epoch + 1) + ".pth.tar"
 
 
 def save_checkpoint(state, is_best=False, save_path=".", filename=None):

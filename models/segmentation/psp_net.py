@@ -7,7 +7,6 @@ import torch.nn.functional as F
 from torch import nn
 from torchvision import models
 
-from .layer import Conv2dDeformable
 from ..model_locations import model_urls
 from .fcn_utils import initialize_weights
 from .config import res101_path, res152_path
