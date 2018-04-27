@@ -160,7 +160,7 @@ class FolderDataset(UsefulDataset):
 
         # load samples into memory
         if self.class_mode == 'image':  # images get special treatment because we have to transform the mask into class values
-            input_sample = self.default_loader(input_sample, color_space='rgb')
+            input_sample = self.default_loader(input_sample)
             # if we're dealing with image masks, we need to change the underlying pixels
             if self.target_index_map:
                 target_sample = np.array(target_sample)  # convert to np
