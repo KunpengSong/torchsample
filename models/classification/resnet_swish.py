@@ -1,11 +1,23 @@
 import torch.nn as nn
+import torch.nn.functional as F
 import math
-
-from torchsample.functions.swish import Swish
-
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152']
+
+class Swish(nn.Module):
+
+    def __init__(self, inplace=False):
+        super().__init__()
+
+        self.inplace = True
+
+    def forward(self, x):
+        if self.inplace:
+            x.mul_(F.sigmoid(x))
+            return x
+        else:
+            return x * F.sigmoid(x)
 
 
 def conv3x3(in_planes, out_planes, stride=1):
