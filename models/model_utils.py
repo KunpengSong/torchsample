@@ -76,13 +76,10 @@ def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
     elif model_name == 'Unet':                                          # standard unet
         net = UNet(num_classes=num_classes)
     elif model_name == 'UNet256':                                       # Unet for 256px square imgs
-        assert input_size == 256
         net = UNet256(in_shape=(3,256,256))
     elif model_name == 'UNet512':                                       # Unet for 512px square imgs
-        assert input_size == 512
         net = UNet512(in_shape=(3, 512, 512))
     elif model_name == 'UNet1024':                                      # Unet for 1024px square imgs
-        assert input_size == 1024
         net = UNet1024(in_shape=(3, 1024, 1024))
     elif model_name == 'UNet960':                                       # Another Unet specifically with 960px resolution
         net = UNet960(filters=12)

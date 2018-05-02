@@ -322,8 +322,8 @@ class ModuleTrainer(object):
                     if shuffle:
                         inputs, targets = fit_helper.shuffle_arrays(inputs, targets)
 
-                    batch_logs = {}
                     for batch_idx in range(num_batches):
+                        batch_logs = {}
                         callback_container.on_batch_begin(batch_idx, batch_logs)
 
                         input_batch, target_batch = fit_helper.grab_batch(batch_idx, batch_size, inputs, targets)
@@ -431,8 +431,6 @@ class ModuleTrainer(object):
                 for epoch_idx in range(initial_epoch,num_epoch):
                     epoch_logs = {}
                     callback_container.on_epoch_begin(epoch_idx, epoch_logs)
-
-                    batch_logs = {}
                     loader_iter = iter(loader)
                     for batch_idx in range(num_batches):
 

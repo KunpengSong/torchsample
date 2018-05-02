@@ -10,6 +10,7 @@ rgb_image_loader = lambda path: Image.open(path).convert('RGB')   # a loader for
 bw_image_loader = lambda path: Image.open(path).convert('L')      # a loader for images that require B/W color space
 identity_x = lambda x: x
 
+
 class FolderDataset(UsefulDataset):
     def __init__(self,
                  root,
@@ -159,16 +160,12 @@ class FolderDataset(UsefulDataset):
         ## END DELETEME
 
         # load samples into memory
-        if self.class_mode == 'image':  # images get special treatment because we have to transform the mask into class values
-            input_sample = self.default_loader(input_sample)
-            # if we're dealing with image masks, we need to change the underlying pixels
-            if self.target_index_map:
-                target_sample = np.array(target_sample)  # convert to np
-                for k, v in self.target_index_map.items():
-                    target_sample[target_sample == k] = v  # replace pixels with class values
-                target_sample = Image.fromarray(target_sample.astype(np.float32))  # convert back to image
-        else:
-            input_sample = self.default_loader(input_sample)  # do generic data read
+        input_sample = self.default_loader(input_sample)
+        if self.class_mode == 'image' and self.target_index_map is not None:   # if we're dealing with image masks, we need to change the underlying pixels
+            target_sample = np.array(target_sample)  # convert to np
+            for k, v in self.target_index_map.items():
+                target_sample[target_sample == k] = v  # replace pixels with class values
+            target_sample = Image.fromarray(target_sample.astype(np.float32))  # convert back to image
 
         # apply transforms
         if self.apply_co_transform_first and self.co_transform is not None:
