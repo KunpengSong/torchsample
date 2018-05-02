@@ -113,11 +113,8 @@ class FolderDataset(UsefulDataset):
             default_loader = pil_loader
         self.default_loader = default_loader
 
-        if target_loader is not None:          # separate loading for targets (e.g. for black/white masks)
-            self.target_loader = target_loader
-        else:
-            self.target_loader = default_loader
-
+        # separate loading for targets (e.g. for black/white masks)
+        self.target_loader = target_loader
 
         root = os.path.expanduser(root)
 
@@ -149,7 +146,8 @@ class FolderDataset(UsefulDataset):
         # get paths
         input_sample, target_sample = self.data[index]
 
-        target_sample = self.target_loader(target_sample)
+        if self.target_loader is not None:
+            target_sample = self.target_loader(target_sample)
 
         ## DELETEME
         # if len(self.classes) == 1 and self.class_mode == 'image':  # this is a binary segmentation map
