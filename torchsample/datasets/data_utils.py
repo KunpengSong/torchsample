@@ -35,6 +35,16 @@ def pil_loader(path, color_space=''):
         exit(2)
 
 
+def pil_loader_rgb(path):
+    with open(path, 'rb', 0) as f:
+        return Image.open(f).convert('RGB')
+
+
+def pil_loader_bw(path):
+    with open(path, 'rb', 0) as f:
+        return Image.open(f).convert('L')
+
+
 def npy_loader(path, color_space=None):     # color space is unused here
     return np.load(path)
 

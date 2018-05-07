@@ -433,10 +433,13 @@ class ModuleTrainer(object):
                     callback_container.on_epoch_begin(epoch_idx, epoch_logs)
                     loader_iter = iter(loader)
                     for batch_idx in range(num_batches):
-
+                        # if batch_idx == 5000 or batch_idx == 10000:
+                        #     pdb.set_trace()
+                        batch_logs = {}
                         callback_container.on_batch_begin(batch_idx, batch_logs)
 
                         input_batch, target_batch = fit_helper.grab_batch_from_loader(loader_iter)
+
                         if self._has_preconditions:
                             precond_logs = self._conditions_container(CondType.PRE, epoch_num=epoch_idx, batch_num=batch_idx, net=self.model, input_batch=input_batch, target_batch=target_batch)
                             batch_logs.update(precond_logs)
