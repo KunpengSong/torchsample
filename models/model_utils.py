@@ -88,7 +88,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
     elif model_name == 'Unet_res':                                      # residual unet
         net = UNetRes(num_class=num_classes)
     elif model_name == 'UNet_stack':                                    # Stacked Unet variation with resnet connections
-        net = UNet_stack(input_size=input_size, filters=12)
+        net = UNet_stack(input_size=(input_size, input_size), filters=12)
     else:
         raise Exception('Combination of type: {} and model_name: {} is not valid'.format(type, model_name))
 
