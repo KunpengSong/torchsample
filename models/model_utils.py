@@ -27,19 +27,13 @@ def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
         net = DeepLabv3(num_classes=num_classes, pretrained=True)
     elif model_name == 'deeplabv3_Plus':  # Deeplab V3!
         net = DeepLabv3_plus(num_classes=num_classes, pretrained=True)
-    elif model_name == 'DRN_C_42':
-        net = drn_c_42(pretrained=True, num_classes=num_classes)
-    elif model_name == 'DRN_C_58':
-        net = drn_c_58(pretrained=True, num_classes=num_classes)
-    elif model_name == 'DRN_D_56':
-        net = drn_d_56(pretrained=True, num_classes=num_classes)
-    elif model_name == 'DRN_D_107':
-        net = drn_d_107(pretrained=True, num_classes=num_classes)
-    elif model_name == 'FPN':                                     # FPN
+    elif 'DRN_' in model_name:
+        net = DRNSeg(model_name=model_name, classes=num_classes)
+    elif model_name == 'FPN':                                           # FPN
         net = FPN101()
-    elif model_name == 'FRRN_A':                                     # FRRN
+    elif model_name == 'FRRN_A':                                        # FRRN
         net = frrn(n_classes=num_classes, model_type='A')
-    elif model_name == 'FRRN_B':                                     # FRRN
+    elif model_name == 'FRRN_B':                                        # FRRN
         net = frrn(n_classes=num_classes, model_type='B')
     elif model_name == 'FusionNet':                                     # FusionNet
         net = FusionNet(num_classes=num_classes)
@@ -110,8 +104,9 @@ def get_supported_models(type):
                 'deeplabv3_Plus',
                 'DRN_C_42',
                 'DRN_C_58',
-                'DRN_D_56',
-                'DRN_D_107',
+                'DRN_D_38',
+                'DRN_D_54',
+                'DRN_D_105',
                 'FPN',
                 'FRRN_A',
                 'FRRN_B',

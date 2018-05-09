@@ -3,7 +3,7 @@ from .carvana_linknet import LinkNet34
 from .deeplab_v2_res import DeepLabv2_ASPP, DeepLabv2_FOV
 from .deeplab_v3 import DeepLabv3
 from .deeplab_v3_plus import DeepLabv3_plus
-from .drn import drn_c_26, drn_c_42, drn_c_58, drn_d_22, drn_d_24, drn_d_38, drn_d_40, drn_d_54, drn_d_56, drn_d_105, drn_d_107
+from .drn_seg import DRNSeg
 from .duc_hdc import ResNetDUC, ResNetDUCHDC
 from .enet import ENet
 from .fcn8s import FCN8s
