@@ -928,6 +928,7 @@ class ModelCheckpoint(Callback):
             save_dict = {
                 'run_id': self.run_id,
                 'epoch': final_epoch + 1,
+                'state_dict': self.trainer.model.state_dict(),
                 'metric_type': self.monitored_log_key,
                 'loss_or_gain': current_loss,
                 'best_epoch': self.best_epoch
