@@ -8,7 +8,7 @@ class DRNSeg(nn.Module):
         super(DRNSeg, self).__init__()
 
         if model_name == 'DRN_C_42':
-            model = drn_c_42(pretrained=pretrained, classes=1000)
+            model = drn_c_42(pretrained=pretrained, num_classes=1000)
         elif model_name == 'DRN_C_58':
             model = drn_c_58(pretrained=pretrained, num_classes=1000)
         elif model_name == 'DRN_D_38':
