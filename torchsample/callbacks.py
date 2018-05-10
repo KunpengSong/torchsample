@@ -891,8 +891,8 @@ class ModelCheckpoint(Callback):
                         'run_id': self.run_id,
                         'epoch': epoch + 1,
                         'state_dict': self.trainer.model.state_dict(),
-                        'loss_type': self.monitored_log_key,
-                        'loss_val': current_loss,
+                        'metric_type': self.monitored_log_key,
+                        'metric_value': current_loss,
                         'best_epoch': self.best_epoch + 1
                     }
                     # add values from other dictionaries
@@ -930,7 +930,7 @@ class ModelCheckpoint(Callback):
                 'epoch': final_epoch + 1,
                 'state_dict': self.trainer.model.state_dict(),
                 'metric_type': self.monitored_log_key,
-                'loss_or_gain': current_loss,
+                'metric_value': current_loss,
                 'best_epoch': self.best_epoch
             }
             # add values from other dictionaries
