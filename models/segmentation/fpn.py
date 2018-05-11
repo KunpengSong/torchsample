@@ -115,7 +115,7 @@ class FPN(nn.Module):
         p4 = self.smooth1(p4)
         p3 = self.smooth2(p3)
         p2 = self.smooth3(p2)
-        return p2, p3, p4, p5
+        return p2 #, p3, p4, p5
 
 
 def FPN101():
