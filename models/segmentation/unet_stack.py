@@ -146,7 +146,7 @@ class UNet_stack(nn.Module):
 
         x = self.classify(prev)
 
-        return torch.squeeze(x, dim=1)
+        return x
 
 
 class UNet960(nn.Module):
@@ -201,4 +201,4 @@ class UNet960(nn.Module):
 
         x = self.classify(up1)
 
-        return torch.squeeze(x, dim=1)
+        return x
