@@ -98,7 +98,7 @@ class UNet_stack(nn.Module):
         self.n_stacks = min(self.get_n_stacks(input_size), max_stacks)
 
         # dynamically create stacks
-        self.down1 = UNetDownStack(3, filters, kernel_size)
+        self.down1 = UNetDownStack(3, filters)
         prev_filters = filters
         for i in range(2, self.n_stacks + 1):
             n = i
@@ -154,19 +154,19 @@ class UNet960(nn.Module):
         super(UNet960, self).__init__()
 
         # 960
-        self.down1 = UNetDownStack(3, filters, kernel_size)
+        self.down1 = UNetDownStack(3, filters)
         # 480
-        self.down2 = UNetDownStack(filters, filters * 2, kernel_size)
+        self.down2 = UNetDownStack(filters, filters * 2)
         # 240
-        self.down3 = UNetDownStack(filters * 2, filters * 4, kernel_size)
+        self.down3 = UNetDownStack(filters * 2, filters * 4)
         # 120
-        self.down4 = UNetDownStack(filters * 4, filters * 8, kernel_size)
+        self.down4 = UNetDownStack(filters * 4, filters * 8)
         # 60
-        self.down5 = UNetDownStack(filters * 8, filters * 16, kernel_size)
+        self.down5 = UNetDownStack(filters * 8, filters * 16)
         # 30
-        self.down6 = UNetDownStack(filters * 16, filters * 32, kernel_size)
+        self.down6 = UNetDownStack(filters * 16, filters * 32)
         # 15
-        self.center = UNetDownStack(filters * 32, filters * 64, kernel_size, pool=False)
+        self.center = UNetDownStack(filters * 32, filters * 64, pool=False)
         # 15
         self.up6 = UNetUpStack(filters * 96, filters * 32, kernel_size)
         # 30
