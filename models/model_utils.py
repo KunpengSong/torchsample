@@ -1,7 +1,7 @@
 from .classification import *
 from .segmentation import *
 
-def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
+def get_model(type, model_name, num_classes, input_size, pretrained=True, from_checkpoint=None):
     '''
     :param type: str
         one of {'classification', 'segmentation'}
@@ -11,7 +11,9 @@ def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
         number of classes to segment
     :param input_size: (int,int)
         what size of input the network will accept e.g. (256, 256), (512, 512)
-    :param pretrained_path: str
+    :param pretrained: bool
+        whether to load the default pretrained version of the model
+    :param from_checkpoint: str
         path to a pretrained network to load weights from [NOTE: currently unsupported]
     :return:
     '''
@@ -19,70 +21,100 @@ def get_model(type, model_name, num_classes, input_size, pretrained_path=None):
 
     if model_name == 'Enet':                                            # standard enet
         net = ENet(num_classes=num_classes)
+        if pretrained:
+            print("WARN: Enet does not have a pretrained model! Empty model as been created instead.")
     elif model_name == 'deeplabv2_ASPP':                                # Deeplab Atrous Convolutions
-        net = DeepLabv2_ASPP(num_classes=num_classes, pretrained=True)
+        net = DeepLabv2_ASPP(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'deeplabv2_FOV':                                 # Deeplab FOV
-        net = DeepLabv2_FOV(num_classes=num_classes, pretrained=True)
+        net = DeepLabv2_FOV(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'deeplabv3':                                     # Deeplab V3!
-        net = DeepLabv3(num_classes=num_classes, pretrained=True)
+        net = DeepLabv3(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'deeplabv3_Plus':  # Deeplab V3!
-        net = DeepLabv3_plus(num_classes=num_classes, pretrained=True)
+        net = DeepLabv3_plus(num_classes=num_classes, pretrained=pretrained)
     elif 'DRN_' in model_name:
-        net = DRNSeg(model_name=model_name, classes=num_classes)
+        net = DRNSeg(model_name=model_name, classes=num_classes, pretrained=pretrained)
     elif model_name == 'FPN':                                           # FPN
         net = FPN101()
+        if pretrained:
+            print("FPN101 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'FRRN_A':                                        # FRRN
         net = frrn(n_classes=num_classes, model_type='A')
+        if pretrained:
+            print("FRRN_A Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'FRRN_B':                                        # FRRN
         net = frrn(n_classes=num_classes, model_type='B')
+        if pretrained:
+            print("FRRN_B Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'FusionNet':                                     # FusionNet
         net = FusionNet(num_classes=num_classes)
+        if pretrained:
+            print("FusionNet Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'GCN':                                           # GCN Resnet
-        net = GCN(num_classes=num_classes)
+        net = GCN(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'GCN_VisDa':                                     # Another GCN Implementation
-        net = GCN_VisDa(num_classes=num_classes, input_size=input_size)
+        net = GCN_VisDa(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
     elif model_name == 'GCN_Densenet':                                     # Another GCN Implementation
-        net = GCN_DENSENET(num_classes=num_classes, input_size=input_size)
+        net = GCN_DENSENET(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
     elif model_name == 'GCN_PSP':                                     # Another GCN Implementation
-        net = GCN_PSP(num_classes=num_classes, input_size=input_size)
+        net = GCN_PSP(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
     elif model_name == 'GCN_NASNetA':                                     # Another GCN Implementation
-        net = GCN_NASNET(num_classes=num_classes, input_size=input_size)
+        net = GCN_NASNET(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
     elif model_name == 'GCN_Resnext':                                     # Another GCN Implementation
-        net = GCN_RESNEXT(num_classes=num_classes, input_size=input_size)
+        net = GCN_RESNEXT(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
     elif model_name == 'Linknet':                                       # Linknet34
-        net = LinkNet34(num_classes=num_classes)
+        net = LinkNet34(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'PSPNet':                                          # standard pspnet
-        net = PSPNet(num_classes=num_classes, model='resnet152')
+        net = PSPNet(num_classes=num_classes, model='resnet152', pretrained=pretrained)
     elif model_name == 'Resnet_DUC':
-        net = ResNetDUC(num_classes=num_classes, pretrained=True)
+        net = ResNetDUC(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_DUC_HDC':
-        net = ResNetDUCHDC(num_classes=num_classes, pretrained=True)
+        net = ResNetDUCHDC(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_GCN':                                    # GCN Resnet 2
-        net = ResnetGCN(num_classes=num_classes)
+        net = ResnetGCN(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Retina_FPN':
         net = RetinaFPN101()
+        if pretrained:
+            print("RetinaFPN101 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'Segnet':                                          # standard segnet
-        net = SegNet(num_classes=num_classes, pretrained=True)
+        net = SegNet(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Tiramisu67':                                     # Tiramisu
         net = FCDenseNet67(n_classes=num_classes)
+        if pretrained:
+            print("Tiramisu67 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'Tiramisu103':                                   # Tiramisu
         net = FCDenseNet103(n_classes=num_classes)
+        if pretrained:
+            print("Tiramisu103 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'Unet':                                          # standard unet
         net = UNet(num_classes=num_classes)
+        if pretrained:
+            print("UNet Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'UNet256':                                       # Unet for 256px square imgs
         net = UNet256(in_shape=(3,256,256))
+        if pretrained:
+            print("UNet256 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'UNet512':                                       # Unet for 512px square imgs
         net = UNet512(in_shape=(3, 512, 512))
+        if pretrained:
+            print("UNet512 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'UNet1024':                                      # Unet for 1024px square imgs
         net = UNet1024(in_shape=(3, 1024, 1024))
+        if pretrained:
+            print("UNet1024 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'UNet960':                                       # Another Unet specifically with 960px resolution
         net = UNet960(filters=12)
+        if pretrained:
+            print("UNet960 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'unet_dilated':                                  # dilated unet
         net = uNetDilated(num_classes=num_classes)
     elif model_name == 'Unet_res':                                      # residual unet
         net = UNetRes(num_class=num_classes)
+        if pretrained:
+            print("UNet_res Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'UNet_stack':                                    # Stacked Unet variation with resnet connections
         net = UNet_stack(input_size=(input_size, input_size), filters=12)
+        if pretrained:
+            print("UNet_stack Does not have a pretrained model! Empty model has been created instead.")
     else:
         raise Exception('Combination of type: {} and model_name: {} is not valid'.format(type, model_name))
 

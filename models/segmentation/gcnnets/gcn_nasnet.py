@@ -72,14 +72,15 @@ class _LearnedBilinearDeconvModule(nn.Module):
 
 
 class GCN_NASNET(nn.Module):
-    def __init__(self, num_classes, input_size, k=7):
+    def __init__(self, num_classes, input_size, k=7, pretrained=True):
         super(GCN_NASNET, self).__init__()
 
         self.K = k
         self.input_size = input_size
 
         model = NASNetALarge(num_classes=1001)
-        model.load_state_dict(torch.utils.model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/nasnetalarge-a1897284.pth'))
+        if pretrained:
+            model.load_state_dict(torch.utils.model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/nasnetalarge-a1897284.pth'))
         self.nasnet = model
 
         self.gcm1 = _GlobalConvModule(4032, num_classes, (self.K, self.K))

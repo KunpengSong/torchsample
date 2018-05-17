@@ -56,10 +56,10 @@ class BoundaryRefine(nn.Module):
         return x.expand_as(convs)+convs
 
 class ResnetGCN(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, pretrained=True):
         super(ResnetGCN, self).__init__()
 
-        resent = models.resnet101(pretrained=True)
+        resent = models.resnet101(pretrained=pretrained)
         self.layer0 = nn.Sequential(resent.conv1, resent.bn1, resent.relu, resent.maxpool)
         self.layer1 = resent.layer1
         self.layer2 = resent.layer2

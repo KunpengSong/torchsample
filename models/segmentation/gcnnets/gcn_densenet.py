@@ -44,13 +44,13 @@ class _BoundaryRefineModule(nn.Module):
 
 
 class GCN_DENSENET(nn.Module):
-    def __init__(self, num_classes, input_size, k=7):
+    def __init__(self, num_classes, input_size, k=7, pretrained=True):
         super(GCN_DENSENET, self).__init__()
 
         self.K = k
         self.input_size = input_size
 
-        densenet = models.densenet161(pretrained=True)
+        densenet = models.densenet161(pretrained=pretrained)
 
         self.layer0 = nn.Sequential(
             densenet.features.conv0,
