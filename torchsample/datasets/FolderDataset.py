@@ -146,36 +146,45 @@ class FolderDataset(UsefulDataset):
         # get paths
         input_sample, target_sample = self.data[index]
 
-        if self.target_loader is not None:
-            target_sample = self.target_loader(target_sample)
+        in_base = input_sample
+        out_base = target_sample
 
-        ## DELETEME
-        # if len(self.classes) == 1 and self.class_mode == 'image':  # this is a binary segmentation map
-        #     target_sample = self.default_loader(target_sample, color_space='L')
-        # else:
-        #     if self.class_mode == 'image':
-        #         target_sample = self.default_loader(target_sample)
-        ## END DELETEME
+        try:
+            if self.target_loader is not None:
+                target_sample = self.target_loader(target_sample)
 
-        # load samples into memory
-        input_sample = self.default_loader(input_sample)
-        if self.class_mode == 'image' and self.target_index_map is not None:   # if we're dealing with image masks, we need to change the underlying pixels
-            target_sample = np.array(target_sample)  # convert to np
-            for k, v in self.target_index_map.items():
-                target_sample[target_sample == k] = v  # replace pixels with class values
-            target_sample = Image.fromarray(target_sample.astype(np.float32))  # convert back to image
+            ## DELETEME
+            # if len(self.classes) == 1 and self.class_mode == 'image':  # this is a binary segmentation map
+            #     target_sample = self.default_loader(target_sample, color_space='L')
+            # else:
+            #     if self.class_mode == 'image':
+            #         target_sample = self.default_loader(target_sample)
+            ## END DELETEME
 
-        # apply transforms
-        if self.apply_co_transform_first and self.co_transform is not None:
-            input_sample, target_sample = self.co_transform(input_sample, target_sample)
-        if self.transform is not None:
-            input_sample = self.transform(input_sample)
-        if self.target_transform is not None:
-            target_sample = self.target_transform(target_sample)
-        if not self.apply_co_transform_first and self.co_transform is not None:
-            input_sample, target_sample = self.co_transform(input_sample, target_sample)
+            # load samples into memory
+            input_sample = self.default_loader(input_sample)
+            if self.class_mode == 'image' and self.target_index_map is not None:   # if we're dealing with image masks, we need to change the underlying pixels
+                target_sample = np.array(target_sample)  # convert to np
+                for k, v in self.target_index_map.items():
+                    target_sample[target_sample == k] = v  # replace pixels with class values
+                target_sample = Image.fromarray(target_sample.astype(np.float32))  # convert back to image
 
-        return input_sample, target_sample
+            # apply transforms
+            if self.apply_co_transform_first and self.co_transform is not None:
+                input_sample, target_sample = self.co_transform(input_sample, target_sample)
+            if self.transform is not None:
+                input_sample = self.transform(input_sample)
+            if self.target_transform is not None:
+                target_sample = self.target_transform(target_sample)
+            if not self.apply_co_transform_first and self.co_transform is not None:
+                input_sample, target_sample = self.co_transform(input_sample, target_sample)
+
+            return input_sample, target_sample
+        except Exception as e:
+            print('########## ERROR ########')
+            print(str(e))
+            print('=========================')
+            print("ERROR: Exception occurred while processing dataset with input {} and output {}".format(str(in_base), str(out_base)))
 
     def __len__(self):
         return len(self.data)
