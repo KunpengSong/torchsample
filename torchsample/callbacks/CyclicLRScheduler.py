@@ -8,6 +8,7 @@
 from torch.optim.optimizer import Optimizer
 import numpy as np
 from . import Callback
+from ..misc import trun_n_d
 
 widegap_scale_fn = lambda x: 1/(5**(x*0.0001))
 
@@ -66,7 +67,8 @@ class CyclicLRScheduler(Callback):
             cycle number or cycle iterations (training
             iterations since start of cycle).
             Default: 'cycle'
-        last_batch_iteration (int): The index of the last batch. Default: -1
+        verbose (bool): Whether to produce some output during initialization
+            Default: True
 
     Example:
         >>> optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
@@ -83,7 +85,7 @@ class CyclicLRScheduler(Callback):
 
     def __init__(self, optimizer, base_lr=1e-3, max_lr=6e-3,
                  step_size=2000, mode='triangular', gamma=1.,
-                 scale_fn=None, scale_mode='cycle'):
+                 scale_fn=None, scale_mode='cycle', verbose=True):
 
         if not isinstance(optimizer, Optimizer):
             raise TypeError('{} is not an Optimizer'.format(type(optimizer).__name__))
@@ -104,6 +106,13 @@ class CyclicLRScheduler(Callback):
             self.max_lrs = [max_lr] * len(optimizer.param_groups)
 
         self.step_size = step_size
+
+        if verbose:
+            print('CyclicLRScheduler params:')
+            print('\tstep_size: {}'.format(step_size))
+            print('\tmode: {}'.format(mode))
+            print('\tbase_lr: {}'.format(base_lr))
+            print('\tmax_lr: {}'.format(base_lr))
 
         if mode not in ['triangular', 'triangular2', 'exp_range'] and scale_fn is None:
             raise ValueError('mode is invalid and scale_fn is None')
@@ -126,20 +135,24 @@ class CyclicLRScheduler(Callback):
             self.scale_mode = scale_mode
 
         self.last_batch_iteration = 0
+        self.epoch_count = 0
 
         self.optimizer_name = optimizer.__class__.__name__.lower()
 
     def on_batch_end(self, batch, logs=None):
         if 'yellowfin' in self.optimizer_name:
-            computed_lr = self.optimizer._optimizer.param_groups[0]['lr']
+            computed_lr = [self.optimizer._optimizer.param_groups[0]['lr']]  # this is because trainer history expects a list
         else:
-            computed_lr = self.get_lr()
+            computed_lr = self.get_lr()                 # returns a list
             self.last_batch_iteration = self.last_batch_iteration + 1               # global iteration counter
             for param_group, lr in zip(self.optimizer.param_groups, computed_lr):
                 param_group['lr'] = lr
 
         if self.trainer.history is not None:
-            self.trainer.history.lrs = [computed_lr]        # because history converts lr(s) into a list even it's just a single one
+            for i,lr in enumerate(computed_lr):
+                computed_lr[i] = trun_n_d(lr.item(), 5)         # .item() is a numpy way of obtaining a float
+
+            self.trainer.history.lrs = computed_lr
 
     def _triangular_scale_fn(self, x):
         return 1.

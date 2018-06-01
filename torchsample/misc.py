@@ -13,6 +13,14 @@ IMG_EXTENSIONS = [
     '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP',
 ]
 
+def trun_n_d(n,d):
+    '''
+    Truncate float (n) to (d) decimal places
+    :param n: float to truncate
+    :param d: how many decimal places to truncate to
+    :return:
+    '''
+    return int(n*10**d)/10**d
 
 def is_iterable(x):
     return isinstance(x, (tuple, list))
