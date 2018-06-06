@@ -112,7 +112,7 @@ class CyclicLRScheduler(Callback):
             print('\tstep_size: {}'.format(step_size))
             print('\tmode: {}'.format(mode))
             print('\tbase_lr: {}'.format(base_lr))
-            print('\tmax_lr: {}'.format(base_lr))
+            print('\tmax_lr: {}'.format(max_lr))
 
         if mode not in ['triangular', 'triangular2', 'exp_range'] and scale_fn is None:
             raise ValueError('mode is invalid and scale_fn is None')
