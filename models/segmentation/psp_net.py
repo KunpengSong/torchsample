@@ -9,7 +9,7 @@ from torchvision import models
 
 from ..model_locations import model_urls
 from .fcn_utils import initialize_weights
-from .config import res101_path, res152_path
+from .config import res50_path, res101_path, res152_path
 
 
 # just a try, not recommend to use
@@ -80,8 +80,10 @@ class PSPNet(nn.Module):
 
         if model == 'resnet152':
             resnet = models.resnet152()
-        else:
+        elif model == 'resnet101':
             resnet = models.resnet101()
+        elif model == 'resnet50':
+            resnet = models.resnet50()
 
         if pretrained:
             if model == 'resnet152':
@@ -89,6 +91,11 @@ class PSPNet(nn.Module):
                     state_dict = torch.load(res152_path)
                 else:
                     state_dict = torch.utils.model_zoo.load_url(model_urls['resnet152'])
+            elif model == 'resnet50':
+                if os.path.exists(res50_path):
+                    state_dict = torch.load(res50_path)
+                else:
+                    state_dict = torch.utils.model_zoo.load_url(model_urls['resnet50'])
             else:
                 if os.path.exists(res101_path):
                     state_dict = torch.load(res101_path)

@@ -9,15 +9,14 @@ from .enet import ENet
 from .fcn8s import FCN8s
 from .fcn16s import FCN16VGG
 from .fcn32s import FCN32VGG
-from .fpn import FPN101
 from .frrn import frrn
 from .fusionnet import FusionNet
 from .gcn import GCN
 from .gcnnets import *
 from .psp_net import PSPNet
 from .resnet_gcn import ResnetGCN
-from .retina_fpn import RetinaFPN101
 from .seg_net import SegNet
+from .testnets import *
 from .tiramisu import FCDenseNet57, FCDenseNet67, FCDenseNet103
 from .u_net import UNet
 from .unet_dilated import uNetDilated

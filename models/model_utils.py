@@ -33,10 +33,6 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
         net = DeepLabv3_plus(num_classes=num_classes, pretrained=pretrained)
     elif 'DRN_' in model_name:
         net = DRNSeg(model_name=model_name, classes=num_classes, pretrained=pretrained)
-    elif model_name == 'FPN':                                           # FPN
-        net = FPN101()
-        if pretrained:
-            print("FPN101 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'FRRN_A':                                        # FRRN
         net = frrn(n_classes=num_classes, model_type='A')
         if pretrained:
@@ -64,19 +60,21 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
     elif model_name == 'Linknet':                                       # Linknet34
         net = LinkNet34(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'PSPNet':                                          # standard pspnet
-        net = PSPNet(num_classes=num_classes, model='resnet152', pretrained=pretrained)
+        net = PSPNet(num_classes=num_classes, use_aux=False, model='resnet101', pretrained=pretrained)
+    elif model_name == 'TEST_PSPNet':
+        net = TEST_PSPNet(n_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_DUC':
         net = ResNetDUC(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_DUC_HDC':
         net = ResNetDUCHDC(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_GCN':                                    # GCN Resnet 2
         net = ResnetGCN(num_classes=num_classes, pretrained=pretrained)
-    elif model_name == 'Retina_FPN':
-        net = RetinaFPN101()
-        if pretrained:
-            print("RetinaFPN101 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'Segnet':                                          # standard segnet
         net = SegNet(num_classes=num_classes, pretrained=pretrained)
+    elif model_name == 'TEST_DLV2':
+        net = TEST_DLV2(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24])
+    elif model_name == 'TEST_DLV3':
+        net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18])
     elif model_name == 'Tiramisu67':                                     # Tiramisu
         net = FCDenseNet67(n_classes=num_classes)
         if pretrained:
@@ -139,7 +137,6 @@ def get_supported_models(type):
                 'DRN_D_38',
                 'DRN_D_54',
                 'DRN_D_105',
-                'FPN',
                 'FRRN_A',
                 'FRRN_B',
                 'FusionNet',
@@ -154,7 +151,6 @@ def get_supported_models(type):
                 'Resnet_DUC',
                 'Resnet_DUC_HDC',
                 'Resnet_GCN',
-                'Retina_FPN',
                 'Segnet',
                 'Tiramisu67',
                 'Tiramisu103',

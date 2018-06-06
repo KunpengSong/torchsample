@@ -3,9 +3,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.utils.model_zoo as model_zoo
 import torchvision.models as models
-import numpy as np
 import math
 
 model_url = 'https://download.pytorch.org/models/resnet101-5d3b4d8f.pth'

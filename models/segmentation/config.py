@@ -3,6 +3,7 @@ import os
 # here (https://github.com/pytorch/vision/tree/master/torchvision/models) to find the download link of pretrained models
 
 root = '/models/pytorch'
+res50_path = os.path.join(root, 'resnet50-19c8e357.pth')
 res101_path = os.path.join(root, 'resnet101-5d3b4d8f.pth')
 res152_path = os.path.join(root, 'resnet152-b121ed2d.pth')
 inception_v3_path = os.path.join(root, 'inception_v3_google-1a9a5a14.pth')
