@@ -1,6 +1,7 @@
 
 import torch as th
 import math
+from .utils import th_random_choice
 
 class Sampler(object):
     """Base class for all Samplers.
@@ -91,7 +92,6 @@ class MultiSampler(Sampler):
         self.shuffle = shuffle
 
     def gen_sample_array(self):
-        from torchsample.utils import th_random_choice
         n_repeats = self.desired_samples / self.data_samples
         cat_list = []
         for i in range(math.floor(n_repeats)):

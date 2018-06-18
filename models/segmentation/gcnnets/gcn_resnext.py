@@ -1,7 +1,7 @@
 # Source: https://github.com/flixpar/VisDa/tree/master/models
 
 
-from torchsample.models.classification.resnext import resnext101_64x4d
+from .. import resnext101_64x4d
 from math import floor
 
 import numpy as np

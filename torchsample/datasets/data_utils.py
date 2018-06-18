@@ -1,23 +1,20 @@
-
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
-
-import random
-
+import fnmatch
 import os
 import os.path
+import random
 import warnings
-import fnmatch
 
 import numpy as np
-
-from torchsample.torchsample.misc import IMG_EXTENSIONS
 
 try:
     from PIL import Image
 except:
     warnings.warn('Cant import PIL.. Cant load PIL images')
+
+IMG_EXTENSIONS = [
+    '.jpg', '.JPG', '.jpeg', '.JPEG',
+    '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP',
+]
 
 
 def pil_loader(path, color_space=''):

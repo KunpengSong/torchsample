@@ -1,15 +1,16 @@
-# High-Level Training, Data Augmentation, and Utilities for Pytorch
+# Wick - High-Level Training framework for Pytorch
 
-This is a highly extended port of the excellent [Torchsample](https://github.com/ncullen93/torchsample) library originally published by @ncullen93.
+This framework is based in large part on the excellent [Torchsample](https://github.com/ncullen93/torchsample) library originally published by @ncullen93.
 
 
-This package aims to provide a *batteries included* framework for training neural networks. Among other things it includes:
-- State of the art normalization, activation functions and optimizers (not available in the standard Pytorch library)
+Wick aims to provide a *batteries included* framework for training neural networks. Among other things it includes:
+- State of the art normalization, activation, loss functions and optimizers not available in the standard Pytorch library.
 - A high-level module for training with callbacks, constraints, metrics, conditions and regularizers.
 - Dozens of popular object classification and semantic segmentation models.
-- Comprehensive data loading, augmentation, transforms, and sampling
-- Utility tensor and variable functions
+- Comprehensive data loading, augmentation, transforms, and sampling capability.
+- Utility tensor functions
 - Useful meters
+- Basic GridSearch (exhaustive and random)
 
 ## ModuleTrainer
 The `ModuleTrainer` class provides a high-level training interface which abstracts
@@ -56,14 +57,20 @@ You also have access to the standard evaluation and prediction functions:
 loss = model.evaluate(x_train, y_train)
 y_pred = model.predict(x_train)
 ```
-Torchsample provides a wide range of <b>callbacks</b>, generally mimicking the interface
+Wick provides a wide range of <b>callbacks</b>, generally mimicking the interface
 found in `Keras`:
 
-- `EarlyStopping`
-- `SimpleModelCheckpoint`
-- `LearningRateScheduler`
-- `ReduceLROnPlateau`
-- `CSVLogger`
+- `CSVLogger` - Logs epoch-level metrics to a CSV file
+- [`CyclicLRScheduler`](https://github.com/bckenstler/CLR) - Cycles through min-max learning rate
+- `EarlyStopping` - Provides ability to stop training based on supplied criteria
+- `ExperimentLogger`
+- `History` - Keeps history of metrics etc. during the learning process
+- `LRScheduler` - Simple learning rate scheduler based on function or supplied schedule
+- `ReduceLROnPlateau` - Reduces learning rate (LR) when a plateau has been reached
+- `ModelCheckpoint` - Comprehensive model saver
+- `SimpleModelCheckpoint` - Simple model saver
+
+
 
 ```python
 from torchsample.callbacks import EarlyStopping
@@ -72,7 +79,7 @@ callbacks = [EarlyStopping(monitor='val_loss', patience=5)]
 model.set_callbacks(callbacks)
 ```
 
-Torchsample also provides <b>regularizers</b>:
+Wick also provides <b>regularizers</b>:
 
 - `L1Regularizer`
 - `L2Regularizer`
@@ -185,7 +192,7 @@ We provide the following datasets which provide general structure and iterators 
 - `tnt.TransformDataset`
 
 ## Image Classification Models (most are pretrained!)
-- All standard models from Pytorch (VGG,
+- All standard models from Pytorch (ResNet, VGG)
 - BatchNorm Inception
 - Dual-Path Networks
 - Inception v4
@@ -207,15 +214,14 @@ We provide the following datasets which provide general structure and iterators 
 5. GCN ([Large Kernel Matters](https://arxiv.org/pdf/1703.02719))
 6. DUC, HDC ([understanding convolution for semantic segmentation](https://arxiv.org/pdf/1702.08502.pdf))
 7. Tiramisu ([The One Hundred Layers Tiramisu: Fully Convolutional DenseNets for Semantic Segmentation](https://arxiv.org/pdf/1611.09326))
-8. Feature Pyramid Networks + Retina FPN ([Feature Pyramid Networks for Object Detection](https://arxiv.org/abs/1612.03144))
-9. Deeplab v2 ([DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs](https://arxiv.org/abs/1606.00915))
-10. Deeplab v3 ([Rethinking Atrous Convolution for Semantic Image Segmentation](https://arxiv.org/abs/1706.05587))
-11. RefineNet ([RefineNet](https://arxiv.org/abs/1611.06612))
-12. FusionNet ([FusionNet in Tensorflow by Hyungjoo Andrew Cho](https://github.com/NySunShine/fusion-net))
-13. ENet ([ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation](https://arxiv.org/abs/1606.02147))
-14. LinkNet ([Link-Net](https://codeac29.github.io/projects/linknet/))
-15. FRRN ([Full Resolution Residual Networks for Semantic Segmentation in Street Scenes](https://arxiv.org/abs/1611.08323))
-16. Additional variations of many of the above
+8. Deeplab v2 ([DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs](https://arxiv.org/abs/1606.00915))
+9. Deeplab v3 ([Rethinking Atrous Convolution for Semantic Image Segmentation](https://arxiv.org/abs/1706.05587))
+10. RefineNet ([RefineNet](https://arxiv.org/abs/1611.06612))
+11. FusionNet ([FusionNet in Tensorflow by Hyungjoo Andrew Cho](https://github.com/NySunShine/fusion-net))
+12. ENet ([ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation](https://arxiv.org/abs/1606.02147))
+13. LinkNet ([Link-Net](https://codeac29.github.io/projects/linknet/))
+14. FRRN ([Full Resolution Residual Networks for Semantic Segmentation in Street Scenes](https://arxiv.org/abs/1611.08323))
+15. Additional variations of many of the above
 
 ## Acknowledgements and References
 Thank you to the following people and contributors:
@@ -225,7 +231,8 @@ Thank you to the following people and contributors:
 - @deallynomore
 - @recastrodiaz
 
-Thank you to the following projects from which I shamelessly collated code and models
+Thank you to the following projects from which we gently borrowed code and models
 - [PyTorchNet](https://github.com/pytorch/tnt)
 - [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)
 - [pspnet-pytorch[(https://github.com/Lextal/pspnet-pytorch)
+- Many others (typically documented in the code)

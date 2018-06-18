@@ -1,3 +1,2 @@
 
-from .affine import *
-from .selu import *
+from . import *

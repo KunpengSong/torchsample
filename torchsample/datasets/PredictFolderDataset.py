@@ -1,8 +1,4 @@
-import numpy as np
-import os
-
 from .FolderDataset import FolderDataset, identity_x
-from .data_utils import npy_loader, pil_loader, _finds_inputs_and_targets
 
 class PredictFolderDataset(FolderDataset):
     def __init__(self, root, input_regex='*', input_transform=None, input_loader=identity_x, target_loader=None,  exclusion_file=None):

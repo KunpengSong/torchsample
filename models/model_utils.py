@@ -63,6 +63,8 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
         net = PSPNet(num_classes=num_classes, use_aux=False, model='resnet101', pretrained=pretrained)
     elif model_name == 'TEST_PSPNet':
         net = TEST_PSPNet(n_classes=num_classes, pretrained=pretrained)
+    elif model_name == 'TEST_PSPNet2':
+        net = TEST_PSPNet2(num_classes=num_classes)
     elif model_name == 'Resnet_DUC':
         net = ResNetDUC(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'Resnet_DUC_HDC':
@@ -73,8 +75,16 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
         net = SegNet(num_classes=num_classes, pretrained=pretrained)
     elif model_name == 'TEST_DLV2':
         net = TEST_DLV2(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24])
+    elif model_name == 'TEST_Ms_DLV2':
+        net = TEST_Ms_DLV2(num_classes=num_classes)
     elif model_name == 'TEST_DLV3':
         net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18])
+    elif model_name == 'TEST_TIRAMISU':
+        net = TEST_FCDensenet(out_channels=num_classes)
+    elif model_name == 'Tiramisu57':  # Tiramisu
+        net = FCDenseNet57(n_classes=num_classes)
+        if pretrained:
+            print("Tiramisu67 Does not have a pretrained model! Empty model has been created instead.")
     elif model_name == 'Tiramisu67':                                     # Tiramisu
         net = FCDenseNet67(n_classes=num_classes)
         if pretrained:
