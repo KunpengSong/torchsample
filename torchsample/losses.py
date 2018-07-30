@@ -6,11 +6,11 @@
 #           https://github.com/DingKe/pytorch_workplace (MIT)
 
 from __future__ import print_function, division
+
+import numpy as np
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 import torch.nn.functional as F
-import numpy as np
 
 VOID_LABEL = 255
 N_CLASSES = 1
@@ -31,7 +31,7 @@ def crossentropyloss(logits, label):
     logits = logits.contiguous().view(-1, C)
     mask2d = mask.unsqueeze(1).expand(mask.size(0), C).contiguous().view(-1)
     logits = logits[mask2d].view(-1, C)
-    loss = F.cross_entropy(logits, Variable(target))
+    loss = F.cross_entropy(logits, target)
     return loss
 
 
@@ -58,7 +58,7 @@ def binaryXloss(logits, label):
     target = label.contiguous().view(-1)[mask]
     logits = logits.contiguous().view(-1)[mask]
     # loss = F.binary_cross_entropy(logits, Variable(target.float()))
-    loss = StableBCELoss()(logits, Variable(target.float()))
+    loss = StableBCELoss()(logits, target.float())
     return loss
 
 
@@ -69,7 +69,7 @@ def naive_single(logit, label):
     if num_preds == 0:
         # only void pixels, the gradients should be 0
         return logit.sum() * 0.
-    target = Variable(label.contiguous().view(-1)[mask].float())
+    target = label.contiguous().view(-1)[mask].float()
     logit = logit.contiguous().view(-1)[mask]
     prob = F.sigmoid(logit)
     intersect = target * prob
@@ -88,7 +88,7 @@ def hingeloss(logits, label):
     target = label.contiguous().view(-1)[mask]
     target = 2. * target.float() - 1.  # [target == 0] = -1
     logits = logits.contiguous().view(-1)[mask]
-    hinge = 1. / num_preds * F.relu(1. - logits * Variable(target)).sum()
+    hinge = 1. / num_preds * F.relu(1. - logits * target).sum()
     return hinge
 
 
@@ -245,13 +245,13 @@ def lovasz_binary(margins, label, prox=False, max_steps=20, debug={}):
     # 1d vector inputs
     # Workaround: can't sort Variable bug
     # prox: False or lambda regularization value
-    _, perm = torch.sort(margins.data, dim=0, descending=True)
+    _, perm = torch.sort(margins.detach(), dim=0, descending=True)
     margins_sorted = margins[perm]
     grad = gamma_fast(label, perm)
-    loss = torch.dot(F.relu(margins_sorted), Variable(grad))
+    loss = torch.dot(F.relu(margins_sorted), grad)
     if prox is not False:
-        xp, gam = find_proximal(margins_sorted.data, grad, prox, max_steps=max_steps, eps=1e-6, debug=debug)
-        hook = margins_sorted.register_hook(lambda grad: Variable(margins_sorted.data - xp))
+        xp, gam = find_proximal(margins_sorted.detach(), grad, prox, max_steps=max_steps, eps=1e-6, debug=debug)
+        hook = margins_sorted.register_hook(lambda grad: (margins_sorted.detach() - xp))
         return loss, hook, gam
     else:
         return loss
@@ -267,7 +267,7 @@ def lovasz_single(logit, label, prox=False, max_steps=20, debug={}):
     target = label.contiguous().view(-1)[mask]
     signs = 2. * target.float() - 1.
     logit = logit.contiguous().view(-1)[mask]
-    margins = (1. - logit * Variable(signs))
+    margins = (1. - logit * signs)
     loss = lovasz_binary(margins, target, prox, max_steps, debug=debug)
     return loss
 
@@ -504,10 +504,6 @@ def one_hot(index, classes):
     index = index.view(*view)
     ones = 1.
 
-    if isinstance(index, Variable):
-        ones = Variable(torch.Tensor(index.size()).fill_(1))
-        mask = Variable(mask, volatile=index.volatile)
-
     return mask.scatter_(1, index, ones)
 
 
@@ -558,15 +554,15 @@ class BinaryFocalLoss3(nn.Module):
 # ==== Additional Losses === #
 # Source: https://github.com/atlab/attorch/blob/master/attorch/losses.py
 # License: MIT
-from torch.nn.modules.loss import _assert_no_grad
 class PoissonLoss(nn.Module):
     def __init__(self, bias=1e-12):
         super().__init__()
         self.bias = bias
 
     def forward(self, output, target):
-        _assert_no_grad(target)
-        return (output - target * torch.log(output + self.bias)).mean()
+        # _assert_no_grad(target)
+        with torch.no_grad:         # Pytorch 0.4.0 replacement (should be ok to use like this)
+            return (output - target * torch.log(output + self.bias)).mean()
 
 
 class PoissonLoss3d(nn.Module):
@@ -575,9 +571,10 @@ class PoissonLoss3d(nn.Module):
         self.bias = bias
 
     def forward(self, output, target):
-        _assert_no_grad(target)
-        lag = target.size(1) - output.size(1)
-        return (output - target[:, lag:, :] * torch.log(output + self.bias)).mean()
+        # _assert_no_grad(target)
+        with torch.no_grad:  # Pytorch 0.4.0 replacement (should be ok to use like this)
+            lag = target.size(1) - output.size(1)
+            return (output - target[:, lag:, :] * torch.log(output + self.bias)).mean()
 
 class L1Loss3d(nn.Module):
     def __init__(self, bias=1e-12):
@@ -585,9 +582,10 @@ class L1Loss3d(nn.Module):
         self.bias = bias
 
     def forward(self, output, target):
-        _assert_no_grad(target)
-        lag = target.size(1) - output.size(1)
-        return (output - target[:, lag:, :]).abs().mean()
+        # _assert_no_grad(target)
+        with torch.no_grad:  # Pytorch 0.4.0 replacement (should be ok to use like this)
+            lag = target.size(1) - output.size(1)
+            return (output - target[:, lag:, :]).abs().mean()
 
 
 class MSE3D(nn.Module):
@@ -595,9 +593,10 @@ class MSE3D(nn.Module):
         super().__init__()
 
     def forward(self, output, target):
-        _assert_no_grad(target)
-        lag = target.size(1) - output.size(1)
-        return (output - target[:, lag:, :]).pow(2).mean()
+        # _assert_no_grad(target)
+        with torch.no_grad:  # Pytorch 0.4.0 replacement (should be ok to use like this)
+            lag = target.size(1) - output.size(1)
+            return (output - target[:, lag:, :]).pow(2).mean()
 
 
 # ==== Custom ==== #
@@ -630,7 +629,7 @@ def multi_class_dice_loss(output, target, weights=None, ignore_index=None):
     loss = 0.
 
     output = output.exp()
-    encoded_target = output.data.clone().zero_()
+    encoded_target = output.detach().clone().zero_()
     if ignore_index is not None:
         mask = target == ignore_index
         target = target.clone()
@@ -640,10 +639,9 @@ def multi_class_dice_loss(output, target, weights=None, ignore_index=None):
         encoded_target[mask] = 0
     else:
         encoded_target.scatter_(1, target.unsqueeze(1), 1)
-    encoded_target = Variable(encoded_target)
 
     if weights is None:
-        weights = Variable(torch.ones(output.size(1)).type_as(output.data))
+        weights = torch.ones(output.size(1)).type_as(output.detach())
 
     intersection = output * encoded_target
     numerator = 2 * intersection.sum(3).sum(2).sum(0) + smooth

@@ -1,11 +1,8 @@
 # Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/nasnet.py
-# Requires pytorch 0.3.0!
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
-from torch.autograd import Variable
 
 pretrained_settings = {
     'nasnetalarge': {
@@ -625,12 +622,3 @@ def nasnetalarge(num_classes=1001, pretrained='imagenet'):
         model = NASNetALarge(num_classes=num_classes)
     return model
 
-
-
-if __name__ == "__main__":
-
-    model = NasNetALarge()
-
-    input = Variable(torch.randn(2,3,331,331))
-    output = model(input)
-    print(output.size())

@@ -22,7 +22,7 @@ class Eve(Optimizer):
         :return: loss
         """
         loss = closure()
-        _loss = loss.data[0]  # float
+        _loss = loss.item()  # float
 
         for group in self.param_groups:
 

@@ -8,8 +8,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from torch.autograd import Variable
-
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -78,11 +76,11 @@ class FPN(nn.Module):
         '''Upsample and add two feature maps.
 
         Args:
-          x: (Variable) top feature map to be upsampled.
-          y: (Variable) lateral feature map.
+          x: (Tensor) top feature map to be upsampled.
+          y: (Tensor) lateral feature map.
 
         Returns:
-          (Variable) added feature map.
+          (Tensor) added feature map.
 
         Note in PyTorch, when input size is odd, the upsampled feature map
         with `F.upsample(..., scale_factor=2, mode='nearest')`
@@ -125,7 +123,7 @@ def FPN101():
 
 def test():
     net = FPN101()
-    fms = net(Variable(torch.randn(1,3,600,900)))
+    fms = net(torch.randn(1,3,600,900))
     for fm in fms:
         print(fm.size())
 

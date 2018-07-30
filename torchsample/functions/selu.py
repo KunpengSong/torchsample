@@ -9,7 +9,6 @@ Created on Sun Jun 11 14:46:31 2017
 import torch
 import numpy as np
 import torch.nn as nn
-from torch.autograd import Variable
 from torch.nn import functional as F
 
 
@@ -43,7 +42,7 @@ class alpha_drop(nn.Module):
         else:
             random_tensor = self.keep_prob + torch.rand(x.size())
 
-            binary_tensor = Variable(torch.floor(random_tensor))
+            binary_tensor = torch.floor(random_tensor)
 
             if torch.cuda.is_available():
                 binary_tensor = binary_tensor.cuda()

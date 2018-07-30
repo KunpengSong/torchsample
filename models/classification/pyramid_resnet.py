@@ -3,7 +3,6 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 def make_conv_bn_relu(in_channels, out_channels, kernel_size=3, stride=1, padding=1, groups=1):
@@ -187,10 +186,10 @@ if __name__ == '__main__':
     if 1:
         net = pyresnet34(in_shape=in_shape, num_classes=num_classes).cuda().train()
 
-        x = Variable(inputs)
+        x = inputs
         logits, probs = net.forward(x.cuda())
 
-        loss = nn.MultiLabelSoftMarginLoss()(logits, Variable(labels.cuda()))
+        loss = nn.MultiLabelSoftMarginLoss()(logits, labels.cuda())
         loss.backward()
 
         print(type(net))

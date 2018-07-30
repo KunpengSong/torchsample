@@ -138,9 +138,6 @@ Finally, torchsample provides a few utility functions not commonly found:
 - `th_corrcoef` (mimics np.corrcoef)
 - `th_affine2d` and `th_affine3d` (affine transforms on torch.Tensors)
 
-### Variable Functions
-- `F_affine2d` and `F_affine3d`
-- `F_map_coordinates2d` and `F_map_coordinates3d`
 
 ## Data Augmentation and Datasets
 The torchsample package provides a ton of good data augmentation and transformation
@@ -159,8 +156,8 @@ These transforms work directly on torch tensors
 - `RandomCrop()` 
 - `SpecialCrop()` 
 - `Pad()` 
-- `RandomFlip()` 
-- `ToTensor()` 
+- `RandomFlip()`
+- `ToTensor()`
 
 ### Affine Transforms
 ![Original](https://github.com/ncullen93/torchsample/blob/master/examples/imgs/orig1.png "Original") ![Transformed](https://github.com/ncullen93/torchsample/blob/master/examples/imgs/tform1.png "Transformed")

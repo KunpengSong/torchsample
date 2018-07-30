@@ -6,8 +6,6 @@ Tests for torchsample/transforms/image_transforms.py
 import torch as th
 
 from torchsample.transforms import (ToTensor,
-                                    ToVariable,
-                                    ToCuda,
                                     ToFile,
                                     ChannelsLast, HWC,
                                     ChannelsFirst, CHW,
@@ -78,19 +76,6 @@ def ToTensor_setup():
 
     return tforms
 
-def ToVariable_setup():
-    tforms = {}
-
-    tforms['tovariable'] = ToVariable()
-
-    return tforms
-
-def ToCuda_setup():
-    tforms = {}
-
-    tforms['tocuda'] = ToCuda()
-
-    return tforms
 
 def ToFile_setup():
     tforms = {}
@@ -265,8 +250,6 @@ def test_image_transforms_runtime(verbose=1):
     ### MAKE TRANSFORMS ###
     tforms = {}
     tforms.update(ToTensor_setup())
-    tforms.update(ToVariable_setup())
-    tforms.update(ToCuda_setup())
     #tforms.update(ToFile_setup())
     tforms.update(ChannelsLast_setup())
     tforms.update(ChannelsFirst_setup())

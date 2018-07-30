@@ -1,7 +1,6 @@
 # Source: https://pastebin.com/31J3JD7r
 
 import torch
-from torch.autograd import Variable
 from torch.nn.modules import Module
 from torch.nn.parameter import Parameter
 
@@ -64,8 +63,8 @@ class BatchReNorm1d(Module):
             self.d = torch.clamp((mean.data - self.running_mean) / torch.sqrt(self.running_var),
                                  -self.dmax, self.dmax)
 
-            r = Variable(self.r, requires_grad=False).expand_as(input)
-            d = Variable(self.d, requires_grad=False).expand_as(input)
+            r = self.r.expand_as(input)
+            d = self.d.expand_as(input)
 
             input_normalized = (input - mean.expand_as(input)) * invstd.expand_as(input)
 
@@ -83,8 +82,8 @@ class BatchReNorm1d(Module):
             return output
 
         else:
-            mean = Variable(self.running_mean).expand_as(input)
-            invstd = 1. / torch.sqrt(Variable(self.running_var).expand_as(input) + self.eps)
+            mean = self.running_mean.expand_as(input)
+            invstd = 1. / torch.sqrt(self.running_var.expand_as(input) + self.eps)
 
             input_normalized = (input - mean.expand_as(input)) * invstd.expand_as(input)
 

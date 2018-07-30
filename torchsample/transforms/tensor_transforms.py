@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 import torch as th
-from torch.autograd import Variable
+
 
 class Compose(object):
     """
@@ -57,41 +57,6 @@ class ToTensor(object):
         outputs = []
         for idx, _input in enumerate(inputs):
             _input = th.from_numpy(_input)
-            outputs.append(_input)
-        return outputs if idx >= 1 else outputs[0]
-
-
-class ToVariable(object):
-    """
-    Converts a torch.Tensor to autograd.Variable
-    """
-    def __call__(self, *inputs):
-        outputs = []
-        for idx, _input in enumerate(inputs):
-            _input = Variable(_input)
-            outputs.append(_input)
-        return outputs if idx >= 1 else outputs[0]
-
-
-class ToCuda(object):
-    """
-    Moves an autograd.Variable to the GPU
-    """
-    def __init__(self, device=0):
-        """
-        Moves an autograd.Variable to the GPU
-
-        Arguments
-        ---------
-        device : integer
-            which GPU device to put the input(s) on
-        """
-        self.device = device
-
-    def __call__(self, *inputs):
-        outputs = []
-        for idx, _input in enumerate(inputs):
-            _input = _input.cuda(self.device)
             outputs.append(_input)
         return outputs if idx >= 1 else outputs[0]
 
@@ -184,6 +149,7 @@ class ChannelsLast(object):
 HWC = ChannelsLast
 DHWC = ChannelsLast
 
+
 class ChannelsFirst(object):
     """
     Transposes a tensor so that the channel dim is first.
@@ -218,6 +184,7 @@ class ChannelsFirst(object):
 
 CHW = ChannelsFirst
 CDHW = ChannelsFirst
+
 
 class TypeCast(object):
     """
@@ -307,6 +274,7 @@ class AddChannel(object):
 
 ExpandAxis = AddChannel
 Unsqueeze = AddChannel
+
 
 class Transpose(object):
 
