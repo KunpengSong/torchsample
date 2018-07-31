@@ -18,7 +18,6 @@ Thanks to Anastasiia (https://github.com/DagnyT) for the great help, support and
 import torch
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
-from torch.autograd import Variable
 
 pretrained_settings = {
     'nasnetamobile': {
@@ -655,7 +654,7 @@ def nasnetamobile(num_classes=1001, pretrained='imagenet'):
 if __name__ == "__main__":
 
     model = NASNetAMobile()
-    input = Variable(torch.randn(2, 3, 224, 224))
+    input = torch.randn(2, 3, 224, 224)
     output = model(input)
 
     print(output.size())

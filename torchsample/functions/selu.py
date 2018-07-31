@@ -55,6 +55,6 @@ class alpha_drop(nn.Module):
 # Selu = selu()
 # dropout_selu = alpha_drop(0.05)
 # x = torch.normal(torch.rand(1000, 3, 3, 224), 1)
-# w = Selu(Variable(x))
+# w = Selu(x)
 # y = dropout_selu(w)
 

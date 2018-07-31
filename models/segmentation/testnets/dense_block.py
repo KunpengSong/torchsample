@@ -43,7 +43,7 @@ class DenseBlock(RichRepr, Module):
 
     def forward(self, block_input):
         layer_input = block_input
-        layer_output = torch.autograd.Variable(torch.FloatTensor())  # empty
+        layer_output = torch.FloatTensor()  # empty
 
         all_outputs = [block_input] if self.concat_input else []
         for layer in self._modules.values():

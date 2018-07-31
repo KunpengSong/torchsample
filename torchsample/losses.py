@@ -24,7 +24,7 @@ def crossentropyloss(logits, label):
         return logits.sum() * 0.
     # if nonvoid == mask.numel():
     #     # no void pixel, use builtin
-    #     return F.cross_entropy(logits, Variable(label))
+    #     return F.cross_entropy(logits, label)
     target = label.view(-1)[mask]
     C = logits.size(1)
     logits = logits.permute(0, 2, 3, 1)  # B, H, W, C
@@ -54,10 +54,10 @@ def binaryXloss(logits, label):
         return logits.sum() * 0.
     # if nonvoid == mask.numel():
     #     # no void pixel, use builtin
-    #     return F.cross_entropy(logits, Variable(label))
+    #     return F.cross_entropy(logits, label)
     target = label.contiguous().view(-1)[mask]
     logits = logits.contiguous().view(-1)[mask]
-    # loss = F.binary_cross_entropy(logits, Variable(target.float()))
+    # loss = F.binary_cross_entropy(logits, target.float())
     loss = StableBCELoss()(logits, target.float())
     return loss
 
@@ -482,7 +482,8 @@ class BCEDicePenalizeBorderLoss(nn.Module):
         a = F.avg_pool2d(labels, kernel_size=self.kernel_size, padding=self.kernel_size // 2, stride=1)
         ind = a.ge(0.01) * a.le(0.99)
         ind = ind.float()
-        weights = torch.autograd.Variable(torch.tensor.torch.ones(a.size())).cuda()
+        weights = torch.tensor.torch.ones(a.size())
+        # weights = torch.tensor.torch.ones(a.size()).cuda()    # <-- old code had .cuda() in it
 
         w0 = weights.sum()
         weights = weights + ind * 2
@@ -621,7 +622,7 @@ class BCEWithLogitsViewLoss(nn.BCEWithLogitsLoss):
 # Source: https://discuss.pytorch.org/t/one-hot-encoding-with-autograd-dice-loss/9781/5
 # For calculating dice loss on images where multiple classes are present at the same time
 def multi_class_dice_loss(output, target, weights=None, ignore_index=None):
-    # output : NxCxHxW Variable of float tensor
+    # output : NxCxHxW float tensor
     # target :  NxHxW long tensor
     # weights : C float tensor
     # ignore_index : int value to ignore from loss
