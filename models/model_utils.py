@@ -335,8 +335,8 @@ def diff_states(dict_canonical, dict_subset):
             
 def load_checkpoint(model, checkpoint_path, use_gpu):
     '''
-    Loads weights from a checkpoint onto a model
-    :param model: the model object (note: a
+    Loads weights from a checkpoint into memory. If model is not None then the weights are loaded into the model.
+    :param model: the model object (Note: this can be set to None if you just want the checkpoint data)
     :param checkpoint_path: str
         path to a pretrained network to load weights from
     :param use_gpu: bool
@@ -370,9 +370,10 @@ def load_checkpoint(model, checkpoint_path, use_gpu):
             for k, v in pretrained_state.items():
                 name = k[7:]  # remove `module.`
                 new_state_dict[name] = v
-            pretrained_state = new_state_dict
+            checkpoint['state_dict'] = new_state_dict
 
         # finally load the model weights
-        print('INFO: => Attempting to load checkpoint data onto model.')
-        model.load_state_dict(pretrained_state)
+        if model:
+            print('INFO: => Attempting to load checkpoint data onto model.')
+            model.load_state_dict(checkpoint['state_dict'])
     return checkpoint
