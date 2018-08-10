@@ -19,7 +19,7 @@ and more.
 
 Example:
 ```python
-from torchsample.modules import ModuleTrainer
+from wick.modules import ModuleTrainer
 
 # Define your model EXACTLY as normal
 class Network(nn.Module):
@@ -73,7 +73,7 @@ found in `Keras`:
 
 
 ```python
-from torchsample.callbacks import EarlyStopping
+from wick.callbacks import EarlyStopping
 
 callbacks = [EarlyStopping(monitor='val_loss', patience=5)]
 model.set_callbacks(callbacks)
@@ -97,8 +97,8 @@ epoch frequency, or they can be implicit (soft) constraints similar to regulariz
 where the the constraint deviation is added as a penalty to the total model loss.
 
 ```python
-from torchsample.constraints import MaxNorm, NonNeg
-from torchsample.regularizers import L1Regularizer
+from wick.constraints import MaxNorm, NonNeg
+from wick.regularizers import L1Regularizer
 
 # hard constraint applied every 5 batches
 hard_constraint = MaxNorm(value=2., frequency=5, unit='batch', module_filter='*fc*')
@@ -115,7 +115,7 @@ You can also fit directly on a `torch.utils.data.DataLoader` and can have
 a validation set as well :
 
 ```python
-from torchsample import TensorDataset
+from wick import TensorDataset
 from torch.utils.data import DataLoader
 
 train_dataset = TensorDataset(x_train, y_train)
@@ -128,7 +128,7 @@ trainer.fit_loader(loader, val_loader=val_loader, num_epoch=100)
 ```
 
 ## Utility Functions
-Finally, torchsample provides a few utility functions not commonly found:
+Finally, Wick provides a few utility functions not commonly found:
 
 ### Tensor Functions
 - `th_iterproduct` (mimics itertools.product)
@@ -140,7 +140,7 @@ Finally, torchsample provides a few utility functions not commonly found:
 
 
 ## Data Augmentation and Datasets
-The torchsample package provides a ton of good data augmentation and transformation
+The wick package provides a ton of good data augmentation and transformation
 tools which can be applied during data loading. The package also provides the flexible
 `TensorDataset` and `FolderDataset` classes to handle most dataset needs.
 
@@ -231,5 +231,5 @@ Thank you to the following people and contributors:
 Thank you to the following projects from which we gently borrowed code and models
 - [PyTorchNet](https://github.com/pytorch/tnt)
 - [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)
-- [pspnet-pytorch[(https://github.com/Lextal/pspnet-pytorch)
+- [pspnet-pytorch](https://github.com/Lextal/pspnet-pytorch)
 - Many others (typically documented in the code)

@@ -1,4 +1,4 @@
-# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/senet.py
+# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/senet.py (License: BSD-3-Clause)
 # Pretrained: Yes
 
 """

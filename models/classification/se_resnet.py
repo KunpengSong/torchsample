@@ -1,6 +1,8 @@
 # Source: https://github.com/moskomule/senet.pytorch (License: MIT)
 # Pretrained: Only 100 ep (may not be very accurate)
 
+import math
+
 import torch.nn as nn
 from torchvision.models import ResNet
 from .se_module import SELayer
@@ -188,10 +190,10 @@ class CifarSEResNet(nn.Module):
     def initialize(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal(m.weight)
+                nn.init.kaiming_normal_(m.weight)
             elif isinstance(m, nn.BatchNorm2d):
-                nn.init.constant(m.weight, 1)
-                nn.init.constant(m.bias, 0)
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
 
     def _make_layer(self, block, planes, blocks, stride, reduction):
         strides = [stride] + [1] * (blocks - 1)

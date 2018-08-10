@@ -158,12 +158,12 @@ class PyResNet(nn.Module):
         return logit, prob
 
 
-def pyresnet18(**kwargs):
+def pyresnet18(pretrained=None, **kwargs):
     model = PyResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     return model
 
 
-def pyresnet34(**kwargs):
+def pyresnet34(pretrained=None, **kwargs):
     model = PyResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
     return model
 

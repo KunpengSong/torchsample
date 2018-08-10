@@ -1,4 +1,4 @@
-# Source: https://raw.githubusercontent.com/Cadene/pretrained-models.pytorch/master/pretrainedmodels/models/resnext.py
+# Source: https://raw.githubusercontent.com/Cadene/pretrained-models.pytorch/master/pretrainedmodels/models/resnext.py (License: BSD-3-Clause)
 # Pretrained: Yes
 
 import os

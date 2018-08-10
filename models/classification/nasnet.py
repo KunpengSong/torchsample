@@ -1,4 +1,4 @@
-# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/nasnet.py
+# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/nasnet.py (License: BSD-3-Clause)
 
 import torch
 import torch.nn as nn

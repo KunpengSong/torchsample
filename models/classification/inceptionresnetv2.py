@@ -1,4 +1,4 @@
-# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/inceptionresnetv2.py
+# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/inceptionresnetv2.py (License: BSD-3-Clause)
 # Pretrained: Yes
 
 import torch

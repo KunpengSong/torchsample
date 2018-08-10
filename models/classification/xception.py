@@ -1,4 +1,4 @@
-# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/inceptionresnetv2.py
+# Source: https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/xception.py (License: BSD-3-Clause)
 # Pretrained: Yes
 
 """
@@ -24,12 +24,9 @@ normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5],
 
 The resize parameter of the validation transform should be 333, and make sure to center crop at 299x299
 """
-import math
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
-from torch.nn import init
 
 __all__ = ['xception']
 
@@ -125,7 +122,6 @@ class Xception(nn.Module):
             num_classes: number of classes
         """
         super(Xception, self).__init__()
-        self.num_classes = num_classes
 
         self.conv1 = nn.Conv2d(3, 32, 3,2, 0, bias=False)
         self.bn1 = nn.BatchNorm2d(32)

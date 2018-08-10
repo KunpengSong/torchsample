@@ -236,7 +236,7 @@ class InceptionResV2(nn.Module):
         )
         self.avg_pool = nn.AvgPool2d(8, count_include_pad=False)
         self.dropout = nn.Dropout2d(p=0.8)
-        self.fc = nn.Linear(2144, num_classes)
+        self.last_linear = nn.Linear(2144, num_classes)
 
     def forward(self, x):
         x = self.stem(x)
@@ -248,5 +248,5 @@ class InceptionResV2(nn.Module):
         x = self.avg_pool(x)
         x = self.dropout(x)
         x = x.view(x.size(0), -1)
-        x = self.fc(x)
+        x = self.last_linear(x)
         return x
