@@ -15,7 +15,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
     :param num_classes: int
         number of classes to initialize with (this will replace the last classification layer or set the number of segmented classes)
     :param input_size: (int,int)
-        what size of input the network will accept e.g. (256, 256), (512, 512)
+        Segmentation-only param. What size of input the network will accept e.g. (256, 256), (512, 512)
     :param pretrained: bool
         whether to load the default pretrained version of the model
         NOTE! NOTE! For classification, the lowercase model names are the pretrained variants while the Uppercase model names are not.
@@ -27,7 +27,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
         raise ValueError('The supplied model name: {} was not found in the list of acceptable model names.'
                          ' Use get_supported_models() to obtain a list of supported models.')
 
-    print("INFO: Loading Model:   --   " + model_name + "  with number of classes: " + str(num_classes) + ' and input size: ' + str(input_size))
+    print("INFO: Loading Model:   --   " + model_name + "  with number of classes: " + str(num_classes))
     
     if type == 'classification':
 
