@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch
 import os
 
-def get_model(type, model_name, num_classes, input_size, pretrained=True, from_checkpoint=None, use_gpu=False):
+def get_model(type, model_name, num_classes, input_size, pretrained=True):
     '''
     :param type: str
         one of {'classification', 'segmentation'}
@@ -21,17 +21,14 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
         NOTE! NOTE! For classification, the lowercase model names are the pretrained variants while the Uppercase model names are not.
         It is IN ERROR to specify an Uppercase model name variant with pretrained=True but one can specify a lowercase model variant with pretrained=False
         (default: True)
-    :param from_checkpoint: str
-        path to a pretrained network to load weights from (default: None)
-    :param use_gpu: bool
-        whether this model will be loaded onto gpu or cpu (default: False)
-    :return:
+    :return model
     '''
     if model_name not in get_supported_models(type):
         raise ValueError('The supplied model name: {} was not found in the list of acceptable model names.'
                          ' Use get_supported_models() to obtain a list of supported models.')
 
     print("INFO: Loading Model:   --   " + model_name + "  with number of classes: " + str(num_classes) + ' and input size: ' + str(input_size))
+    
     if type == 'classification':
 
         # 1. Load model (pretrained or vanilla)
@@ -43,8 +40,6 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
         else:
             if pretrained:
                 print('INFO: Loading a pretrained model: {}'.format(model_name))
-                if from_checkpoint:
-                    raise ValueError('Both \'use_pretrained\' as well as resuming from checkpoint flags are set. We do not need a pretrained model if loading from checkpoint.')
                 if 'dpn' in model_name:
                     model = classification.__dict__[model_name](pretrained=True)  # find a model included in the wick classification package
                 elif 'inception' in model_name or 'nasnet' in model_name or 'polynet' in model_name or 'resnext' in model_name\
@@ -86,40 +81,6 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True, from_c
             old_fc = getattr(model, fc_name)
             new_fc = nn.Linear(old_fc.in_features, num_classes)
             setattr(model, fc_name, new_fc)
-
-        # 3. Are we loading from a checkpoint?  If so, we need some custom logic.
-        if from_checkpoint:
-            # load data directly from a checkpoint
-            if os.path.isfile(from_checkpoint):
-                if use_gpu:
-                    print("=> resuming model on GPU from checkpoint '{}'".format(from_checkpoint))
-                    checkpoint = torch.load(from_checkpoint)
-                else:
-                    print("=> resuming model on CPU from checkpoint '{}'".format(from_checkpoint))
-                    checkpoint = torch.load(from_checkpoint, map_location=lambda storage, loc: storage)
-
-                pretrained_state = checkpoint['state_dict']
-                if not checkpoint.get('modelname') == model_name:
-                    print("ERROR: checkpoint model name: ", checkpoint.get('modelname'), " does NOT match the model name in program parameters: ", model_name)
-                    exit()
-                print("=> loaded checkpoint '{}' (epoch {})".format(from_checkpoint, checkpoint.get('epoch')))
-            else:
-                print("=> no checkpoint found at '{}'.   Exiting!!".format(from_checkpoint))
-                exit()
-
-            if checkpoint.get('proc_type') == 'multi_gpu' or checkpoint.get('proc_type') == 'multi-gpu':
-                # handle the case where the training was done on multiple GPUs but the testing is being performed on a CPU or single GPU
-                print("INFO: Converting pretrained model from multi-GPU configuration to a single GPU/CPU configuration before resuming")
-                # create new OrderedDict that does not contain `module.`
-                from collections import OrderedDict
-                new_state_dict = OrderedDict()
-                for k, v in pretrained_state.items():
-                    name = k[7:] # remove `module.`
-                    new_state_dict[name] = v
-                pretrained_state = new_state_dict
-
-            # finally load the model weights
-            model.load_state_dict(pretrained_state)
 
         return model
 
@@ -368,3 +329,47 @@ def diff_states(dict_canonical, dict_subset):
         assert hasattr(v2, 'size')
         if v1.size() != v2.size():
             yield (name, v1)
+            
+def load_checkpoint(model, checkpoint_path, use_gpu):
+    '''
+    Loads weights from a checkpoint onto a model
+    :param model: the model object (note: a
+    :param checkpoint_path: str
+        path to a pretrained network to load weights from
+    :param use_gpu: bool
+        whether this model will be loaded onto gpu or cpu
+    :return: checkpoint
+    '''
+    checkpoint = None
+    if checkpoint_path:
+        # load data directly from a checkpoint
+        if os.path.isfile(checkpoint_path):
+            if use_gpu:
+                print("=> resuming model on GPU from checkpoint '{}'".format(checkpoint_path))
+                checkpoint = torch.load(checkpoint_path)
+            else:
+                print("=> resuming model on CPU from checkpoint '{}'".format(checkpoint_path))
+                checkpoint = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)
+
+            pretrained_state = checkpoint['state_dict']
+            print("INFO: => loaded checkpoint '{}' (epoch {})".format(checkpoint_path, checkpoint.get('epoch')))
+            print('INFO: => checkpoint model name: ', checkpoint.get('modelname'), ' Make sure the checkpoint model name matches your model!!!')
+        else:
+            print("INFO: => no checkpoint found at '{}'.   Exiting!!".format(checkpoint_path))
+            exit()
+
+        if checkpoint.get('proc_type') == 'multi_gpu' or checkpoint.get('proc_type') == 'multi-gpu':
+            # handle the case where the training was done on multiple GPUs but the testing is being performed on a CPU or single GPU
+            print("INFO: Converting pretrained model from multi-GPU configuration to a single GPU/CPU configuration before resuming")
+            # create new OrderedDict that does not contain `module.`
+            from collections import OrderedDict
+            new_state_dict = OrderedDict()
+            for k, v in pretrained_state.items():
+                name = k[7:]  # remove `module.`
+                new_state_dict[name] = v
+            pretrained_state = new_state_dict
+
+        # finally load the model weights
+        print('INFO: => Attempting to load checkpoint data onto model.')
+        model.load_state_dict(pretrained_state)
+    return checkpoint
