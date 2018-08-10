@@ -1,4 +1,4 @@
-import models.classification as classification
+from . import classification
 from .segmentation import *
 from torchvision import models as torch_models
 from torchvision.models.inception import InceptionAux
@@ -36,7 +36,10 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
         if model_name in torch_models.__dict__:
             print('INFO: Loading a pretrained?: {}   model: {}'.format(pretrained, model_name))
             model = torch_models.__dict__[model_name](pretrained=pretrained)  # find a model included in the torchvision package
-            fc_name = 'fc'  # the name of the last layer to be replaced in torchvision models
+            if 'densenet' in model_name:    # apparently densenet is special..
+                fc_name = 'classifier'  # the name of the last layer to be replaced in torchvision models
+            else:
+                fc_name = 'fc'  # the name of the last layer to be replaced in torchvision models
         else:
             if pretrained:
                 print('INFO: Loading a pretrained model: {}'.format(model_name))
@@ -72,7 +75,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
                 nn.Linear(4096, num_classes)
             )
             model.classifier = classifier
-        elif 'inception3' in model_name.tolower() or 'inception_v3' in model_name.tolower():
+        elif 'inception3' in model_name.lower() or 'inception_v3' in model_name.lower():
             # Two FC layers if aux_logits are enabled
             if getattr(model, 'aux_logits', False):
                 model.AuxLogits = InceptionAux(768, num_classes)
