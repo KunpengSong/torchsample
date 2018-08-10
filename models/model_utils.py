@@ -355,9 +355,9 @@ def _get_untrained_model(model_name, num_classes):
 def diff_states(dict_canonical, dict_subset):
     names1, names2 = (list(dict_canonical.keys()), list(dict_subset.keys()))
 
-    #Sanity check that param names overlap
-    #Note that params are not necessarily in the same order
-    #for every pretrained model
+    # Sanity check that param names overlap
+    # Note that params are not necessarily in the same order
+    # for every pretrained model
     not_in_1 = [n for n in names1 if n not in names2]
     not_in_2 = [n for n in names2 if n not in names1]
     assert len(not_in_1) == 0
