@@ -3,8 +3,8 @@ import os
 import os.path
 import argparse
 
-from functions.meanstd import get_dataset_mean_std
-from datasets.FolderDataset import FolderDataset, rgb_image_loader
+from .functions.meanstd import get_dataset_mean_std
+from .datasets.FolderDataset import FolderDataset, rgb_image_loader
 
 opt = dict()
 parser = argparse.ArgumentParser()

@@ -238,7 +238,7 @@ class HingeLossMetric(Metric):
         N = y_pred.size(0) * y_pred.size(2) * y_pred.size(3)
         if not self.run_on_val_only or (is_val and self.run_on_val_only):
             # self.hinge.update(hingeloss(y_pred, y_true.data).data[0], N)    # changed after pytorch 0.4
-            self.hinge.update(hingeloss(y_pred, y_true).item(), N)
+            self.hinge.update(hingeloss(y_pred, y_true), N)
             return self.hinge.avg
         else:
             return -1337.0

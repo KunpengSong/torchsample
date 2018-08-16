@@ -81,14 +81,14 @@ def naive_single(logit, label):
 # WARN: Only applicable to Binary Segmentation!
 def hingeloss(logits, label):
     mask = (label.view(-1) != 255)
-    num_preds = mask.long().sum()
+    num_preds = mask.long().sum().item()
     if num_preds == 0:
         # only void pixels, the gradients should be 0
-        return logits.sum() * 0.
+        return logits.sum().item() * 0.
     target = label.contiguous().view(-1)[mask]
     target = 2. * target.float() - 1.  # [target == 0] = -1
     logits = logits.contiguous().view(-1)[mask]
-    hinge = 1. / num_preds * F.relu(1. - logits * target).sum()
+    hinge = 1. / num_preds * F.relu(1. - logits * target).sum().item()
     return hinge
 
 
