@@ -343,6 +343,21 @@ def load_checkpoint(model, checkpoint_path, use_gpu):
         whether this model will be loaded onto gpu or cpu
     :return: checkpoint
     '''
+
+    # Handle incompatibility between pytorch0.4 and pytorch0.4.x
+    # Source: https://discuss.pytorch.org/t/question-about-rebuild-tensor-v2/14560/2
+    import torch._utils
+    try:
+        torch._utils._rebuild_tensor_v2
+    except AttributeError:
+        def _rebuild_tensor_v2(storage, storage_offset, size, stride, requires_grad, backward_hooks):
+            tensor = torch._utils._rebuild_tensor(storage, storage_offset, size, stride)
+            tensor.requires_grad = requires_grad
+            tensor._backward_hooks = backward_hooks
+            return tensor
+
+        torch._utils._rebuild_tensor_v2 = _rebuild_tensor_v2
+
     checkpoint = None
     if checkpoint_path:
         # load data directly from a checkpoint
