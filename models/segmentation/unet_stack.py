@@ -2,6 +2,7 @@
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class ConvBNReluStack(nn.Module):
@@ -59,7 +60,7 @@ class UNetUpStack(nn.Module):
     def __init__(self, input_dim, filters, kernel_size=3):
         super(UNetUpStack, self).__init__()
 
-        self.upsample = nn.Upsample(scale_factor=2)
+        self.scale_factor = 2
         self.stack1 = ConvBNReluStack(input_dim, filters, 1, stride=1, padding=0)
         self.stack3 = ConvBNReluStack(input_dim, filters, 3, stride=1, padding=1)
         self.stack5 = ConvBNReluStack(input_dim, filters, 5, stride=1, padding=2)
@@ -67,7 +68,7 @@ class UNetUpStack(nn.Module):
         self.reducer = ConvBNReluStack(filters * 3 + input_dim, filters, kernel_size=1, stride=1, padding=0)
 
     def forward(self, inputs_, down):
-        x = self.upsample(inputs_)
+        x = F.interpolate(inputs_, scale_factor=self.scale_factor)
         x = torch.cat([x, down], dim=1)
 
         x1 = self.stack1(x)

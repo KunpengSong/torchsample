@@ -482,15 +482,15 @@ class BCEDicePenalizeBorderLoss(nn.Module):
         a = F.avg_pool2d(labels, kernel_size=self.kernel_size, padding=self.kernel_size // 2, stride=1)
         ind = a.ge(0.01) * a.le(0.99)
         ind = ind.float()
-        weights = torch.tensor.torch.ones(a.size())
+        weights = torch.ones(a.size())
         # weights = torch.tensor.torch.ones(a.size()).cuda()    # <-- old code had .cuda() in it
 
         w0 = weights.sum()
-        weights = weights + ind * 2
+        weights = weights + ind.cpu() * 2
         w1 = weights.sum()
         weights = weights / w1 * w0
 
-        loss = self.bce(logits, labels, weights) + self.dice(logits, labels, weights)
+        loss = self.bce(logits.cpu(), labels.cpu(), weights) + self.dice(logits.cpu(), labels.cpu(), weights)
 
         return loss
 
