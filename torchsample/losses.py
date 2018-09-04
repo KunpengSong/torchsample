@@ -71,7 +71,7 @@ def naive_single(logit, label):
         return logit.sum() * 0.
     target = label.contiguous().view(-1)[mask].float()
     logit = logit.contiguous().view(-1)[mask]
-    prob = F.sigmoid(logit)
+    prob = torch.sigmoid(logit)
     intersect = target * prob
     union = target + prob - intersect
     loss = (1. - intersect / union).sum()
@@ -313,7 +313,7 @@ class WeightedSoftDiceLoss(torch.nn.Module):
         super(WeightedSoftDiceLoss, self).__init__()
 
     def forward(self, logits, labels, weights):
-        probs = F.sigmoid(logits)
+        probs = torch.sigmoid(logits)
         num   = labels.size(0)
         w     = (weights).view(num,-1)
         w2    = w*w
@@ -352,7 +352,7 @@ class BCELoss2d(nn.Module):
         self.bce_loss = nn.BCELoss(weight, size_average)
 
     def forward(self, logits, targets):
-        probs = F.sigmoid(logits)
+        probs = torch.sigmoid(logits)
         probs_flat = probs.view(-1)
         targets_flat = targets.view(-1)
         return self.bce_loss(probs_flat, targets_flat)
@@ -365,7 +365,7 @@ class SoftDiceLoss(nn.Module):
     def forward(self, logits, targets):
         #print('logits: {}, targets: {}'.format(logits.size(), targets.size()))
         num = targets.size(0)
-        probs = F.sigmoid(logits)
+        probs = torch.sigmoid(logits)
         m1 = probs.view(num, -1)
         m2 = targets.view(num, -1)
         intersection = (m1 * m2)
@@ -384,7 +384,7 @@ class FocalLoss(nn.Module):
 
     def forward(self, logits, targets):
         targets = targets.view(-1)
-        probs = F.sigmoid(logits).view(-1)
+        probs = torch.sigmoid(logits).view(-1)
 
         losses = -(targets * torch.pow((1. - probs), self.l) * torch.log(probs + self.eps) + \
                    (1. - targets) * torch.pow(probs, self.l) * torch.log(1. - probs + self.eps))
@@ -399,7 +399,7 @@ class ThresholdedL1Loss(nn.Module):
 
     def forward(self, logits, targets):
         targets = targets.view(-1)
-        probs = F.sigmoid(logits).view(-1)
+        probs = torch.sigmoid(logits).view(-1)
         probs = (probs > 0.5).float()
 
         losses = torch.abs(targets - probs)
@@ -459,7 +459,7 @@ class WeightedSoftDiceLoss(nn.Module):
         super(WeightedSoftDiceLoss, self).__init__()
 
     def forward(self, logits, labels, weights):
-        probs = F.sigmoid(logits)
+        probs = torch.sigmoid(logits)
         num   = labels.size(0)
         w     = (weights).view(num,-1)
         w2    = w*w

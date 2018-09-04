@@ -2,8 +2,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
-import torch as th
-import torch.nn.functional as F
+import torch
 from .utils import th_matrixcorr
 from .meters.averagemeter import AverageMeter
 from .callbacks import Callback
@@ -131,9 +130,9 @@ class ProjectionCorrelation(Metric):
         """
         y_pred should be two projections
         """
-        # covar_mat = th.abs(th_matrixcorr(y_pred[0].data, y_pred[1].data))       # changed after pytorch 0.4
-        covar_mat = th.abs(th_matrixcorr(y_pred[0].detach(), y_pred[1].detach()))
-        self.corr_sum += th.trace(covar_mat)
+        # covar_mat = torch.abs(th_matrixcorr(y_pred[0].data, y_pred[1].data))       # changed after pytorch 0.4
+        covar_mat = torch.abs(th_matrixcorr(y_pred[0].detach(), y_pred[1].detach()))
+        self.corr_sum += torch.trace(covar_mat)
         self.total_count += covar_mat.size(0)
         return self.corr_sum / self.total_count
 
@@ -154,10 +153,10 @@ class ProjectionAntiCorrelation(Metric):
         """
         y_pred should be two projections
         """
-        # covar_mat = th.abs(th_matrixcorr(y_pred[0].data, y_pred[1].data))
-        covar_mat = th.abs(th_matrixcorr(y_pred[0].detach(), y_pred[1].detach()))       # changed after pytorch 0.4
-        upper_sum = th.sum(th.triu(covar_mat,1))
-        lower_sum = th.sum(th.tril(covar_mat,-1))
+        # covar_mat = torch.abs(th_matrixcorr(y_pred[0].data, y_pred[1].data))
+        covar_mat = torch.abs(th_matrixcorr(y_pred[0].detach(), y_pred[1].detach()))       # changed after pytorch 0.4
+        upper_sum = torch.sum(torch.triu(covar_mat,1))
+        lower_sum = torch.sum(torch.tril(covar_mat,-1))
         self.anticorr_sum += upper_sum
         self.anticorr_sum += lower_sum
         self.total_count += covar_mat.size(0)*(covar_mat.size(1) - 1)
@@ -185,7 +184,7 @@ class DiceCoefficientMetric(Metric):
         N = y_pred.size(0) * y_pred.size(2) * y_pred.size(3)
         if not self.run_on_val_only or (is_val and self.run_on_val_only):
             if self.is_binary:      # need to transpose into 0-1 range
-                y_pred = F.sigmoid(y_pred)
+                y_pred = torch.sigmoid(y_pred)
             # self.dices.update(dice_coeff(y_pred, y_true).data[0], N)
             self.dices.update(dice_coeff(y_pred, y_true).item(), N)     # changed after pytorch 0.4
             return self.dices.avg

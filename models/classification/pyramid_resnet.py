@@ -154,7 +154,7 @@ class PyResNet(nn.Module):
 
 
         logit = x
-        prob  = F.sigmoid(logit)
+        prob  = torch.sigmoid(logit)
         return logit, prob
 
 
