@@ -110,9 +110,9 @@ class ResnetGCN(nn.Module):
         enc3 = self.br1024(self.gcn1024(layer3))
         enc4 = self.br2048(self.gcn2048(layer4)) ## 8x10x1
 
-        dec1 = self.br1(F.upsample(enc4, size=enc3.size()[2:], mode='bilinear')+ enc3)
-        dec2 = self.br2(F.upsample(dec1, enc2.size()[2:], mode='bilinear') + enc2)
-        dec3 = self.br3(F.upsample(dec2, enc1.size()[2:], mode='bilinear') + enc1)
+        dec1 = self.br1(F.interpolate(enc4, size=enc3.size()[2:], mode='bilinear')+ enc3)
+        dec2 = self.br2(F.interpolate(dec1, enc2.size()[2:], mode='bilinear') + enc2)
+        dec3 = self.br3(F.interpolate(dec2, enc1.size()[2:], mode='bilinear') + enc1)
         dec4 = self.br4(self.deconv1(dec3))
 
         score_map = self.br5(self.deconv2(dec4))

@@ -151,7 +151,7 @@ class DeepLabv2_ASPP(nn.Module):
         x4 = self.aspp4(x)
 
         x = x1 + x2 + x3 + x4
-        x = F.upsample(x, scale_factor=8, mode='bilinear')
+        x = F.interpolate(x, scale_factor=8, mode='bilinear')
 
         return x
 
@@ -167,6 +167,6 @@ class DeepLabv2_FOV(nn.Module):
     def forward(self, x):
         x = self.resnet_features(x)
         x = self.atrous(x)
-        x = F.upsample(x, scale_factor=8, mode='bilinear')
+        x = F.interpolate(x, scale_factor=8, mode='bilinear')
 
         return x

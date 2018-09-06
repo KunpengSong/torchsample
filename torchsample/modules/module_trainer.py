@@ -428,7 +428,7 @@ class ModuleTrainer(object):
                                                'has_metrics': self._has_metrics})
 
             try:
-                for epoch_idx in range(initial_epoch,num_epoch):
+                for epoch_idx in range(initial_epoch, num_epoch):
                     epoch_logs = {}
                     callback_container.on_epoch_begin(epoch_idx, epoch_logs)
                     loader_iter = iter(loader)
@@ -609,8 +609,8 @@ class ModuleTrainer(object):
                     cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
                     eval_logs.update(cond_logs)
 
-                eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.item()*batch_size) / (samples_seen+batch_size)
-                samples_seen += batch_size
+                eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.item()*len(input_batch)) / (samples_seen+len(input_batch))
+                samples_seen += len(input_batch)
 
                 if self._has_metrics:
                     metrics_logs = metric_container(input_batch, output_batch, target_batch, is_val=True)
@@ -665,8 +665,8 @@ class ModuleTrainer(object):
                     cond_logs = conditions_container(CondType.POST, epoch_num=None, batch_num=batch_idx, net=self.model, input_batch=input_batch, output_batch=output_batch, target_batch=target_batch)
                     eval_logs.update(cond_logs)
 
-                samples_seen += batch_size
-                eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.item()*batch_size) / (samples_seen+batch_size)
+                samples_seen += len(input_batch)
+                eval_logs['val_loss'] = (samples_seen*eval_logs['val_loss'] + loss.item()*len(input_batch)) / (samples_seen+len(input_batch))
 
                 if self._has_metrics:
                     metrics_logs = metric_container(input_batch, output_batch, target_batch, is_val=True)

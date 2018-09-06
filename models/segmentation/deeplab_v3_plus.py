@@ -176,16 +176,16 @@ class DeepLabv3_plus(nn.Module):
         x3 = self.aspp3(x)
         x4 = self.aspp4(x)
         x5 = self.image_pool(x)
-        x5 = F.upsample(x5, size=x4.size()[2:], mode='nearest')
+        x5 = F.interpolate(x5, size=x4.size()[2:], mode='nearest')
 
         x = torch.cat((x1, x2, x3, x4, x5), dim=1)
         x = self.fc1(x)
-        x = F.upsample(x, scale_factor=(4, 4), mode='bilinear')
+        x = F.interpolate(x, scale_factor=(4, 4), mode='bilinear')
 
         low_lebel_features = self.reduce_conv2(conv2)
 
         x = torch.cat((x, low_lebel_features), dim=1)
         x = self.last_conv(x)
-        x = F.upsample(x, scale_factor=(4, 4), mode='bilinear')
+        x = F.interpolate(x, scale_factor=(4, 4), mode='bilinear')
 
         return x

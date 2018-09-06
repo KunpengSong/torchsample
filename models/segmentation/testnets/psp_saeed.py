@@ -109,7 +109,7 @@ class PSPNet(nn.Module):
         x = self.ppm(x)
         x = self.final(x)
 
-        upsample = F.upsample_bilinear(x, input_size[2:])
+        upsample = F.interpolate(x, input_size[2:], mode='bilinear')
 
         return upsample
         # return self.activation(upsample)

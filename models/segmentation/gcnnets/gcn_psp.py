@@ -122,11 +122,11 @@ class GCN_PSP(nn.Module):
         gcfm3 = self.brm3(self.gcm3(fm2))
         gcfm4 = self.brm4(self.gcm4(fm1))
 
-        fs1 = self.brm5(F.upsample(gcfm1, fm3.size()[2:], mode='bilinear') + gcfm2)
-        fs2 = self.brm6(F.upsample(fs1, fm2.size()[2:], mode='bilinear') + gcfm3)
-        fs3 = self.brm7(F.upsample(fs2, fm1.size()[2:], mode='bilinear') + gcfm4)
-        fs4 = self.brm8(F.upsample(fs3, fm0.size()[2:], mode='bilinear'))
-        fs5 = self.brm9(F.upsample(fs4, self.input_size, mode='bilinear'))
+        fs1 = self.brm5(F.interpolate(gcfm1, fm3.size()[2:], mode='bilinear') + gcfm2)
+        fs2 = self.brm6(F.interpolate(fs1, fm2.size()[2:], mode='bilinear') + gcfm3)
+        fs3 = self.brm7(F.interpolate(fs2, fm1.size()[2:], mode='bilinear') + gcfm4)
+        fs4 = self.brm8(F.interpolate(fs3, fm0.size()[2:], mode='bilinear'))
+        fs5 = self.brm9(F.interpolate(fs4, self.input_size, mode='bilinear'))
 
         ppm = torch.cat([self.psp(fs5), fs5], 1)
         out = self.final(ppm)

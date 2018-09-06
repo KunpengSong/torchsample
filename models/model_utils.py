@@ -3,7 +3,6 @@ from .segmentation import *
 from torchvision import models as torch_models
 from torchvision.models.inception import InceptionAux
 import torch.nn as nn
-import torch
 import os
 
 def get_model(type, model_name, num_classes, input_size, pretrained=True):
@@ -130,6 +129,10 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = LinkNet34(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'PSPNet':                                          # standard pspnet
             net = PSPNet(num_classes=num_classes, use_aux=False, model='resnet101', pretrained=pretrained)
+        elif model_name == 'TEST_DLR_Resnet':
+            net = create_DLR_V3_pretrained(num_classes=num_classes, pretrained=pretrained)
+        elif model_name == 'TEST_DLX_Resnet':
+            net = create_DLX_V3_pretrained(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'TEST_PSPNet':
             net = TEST_PSPNet(n_classes=num_classes, pretrained=pretrained)
         elif model_name == 'TEST_PSPNet2':

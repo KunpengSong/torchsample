@@ -68,7 +68,7 @@ class _PyramidPoolingModule(nn.Module):
         x_size = x.size()
         out = [x]
         for f in self.features:
-            out.append(F.upsample(f(x), x_size[2:], mode='bilinear'))
+            out.append(F.interpolate(f(x), x_size[2:], mode='bilinear'))
         out = torch.cat(out, 1)
         return out
 
@@ -143,8 +143,8 @@ class PSPNet(nn.Module):
         x = self.ppm(x)
         x = self.final(x)
         if self.training and self.use_aux:
-            return F.upsample(x, x_size[2:], mode='bilinear'), F.upsample(aux, x_size[2:], mode='bilinear')
-        return F.upsample(x, x_size[2:], mode='bilinear')
+            return F.interpolate(x, x_size[2:], mode='bilinear'), F.interpolate(aux, x_size[2:], mode='bilinear')
+        return F.interpolate(x, x_size[2:], mode='bilinear')
 
 
 # just a try, not recommend to use
@@ -205,5 +205,5 @@ class PSPNetDeform(nn.Module):
         x = self.ppm(x)
         x = self.final(x)
         if self.training and self.use_aux:
-            return F.upsample(x, self.input_size, mode='bilinear'), F.upsample(aux, self.input_size, mode='bilinear')
-        return F.upsample(x, self.input_size, mode='bilinear')
+            return F.interpolate(x, self.input_size, mode='bilinear'), F.interpolate(aux, self.input_size, mode='bilinear')
+        return F.interpolate(x, self.input_size, mode='bilinear')

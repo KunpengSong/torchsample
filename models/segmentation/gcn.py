@@ -95,10 +95,10 @@ class GCN(nn.Module):
         gcfm3 = self.brm3(self.gcm3(fm2))  # 64
         gcfm4 = self.brm4(self.gcm4(fm1))  # 128
 
-        fs1 = self.brm5(F.upsample(gcfm1, fm3.size()[2:], mode='bilinear') + gcfm2)  # 32
-        fs2 = self.brm6(F.upsample(fs1, fm2.size()[2:], mode='bilinear') + gcfm3)  # 64
-        fs3 = self.brm7(F.upsample(fs2, fm1.size()[2:], mode='bilinear') + gcfm4)  # 128
-        fs4 = self.brm8(F.upsample(fs3, fm0.size()[2:], mode='bilinear'))  # 256
-        out = self.brm9(F.upsample(fs4, x_size[2:], mode='bilinear'))  # 512
+        fs1 = self.brm5(F.interpolate(gcfm1, fm3.size()[2:], mode='bilinear') + gcfm2)  # 32
+        fs2 = self.brm6(F.interpolate(fs1, fm2.size()[2:], mode='bilinear') + gcfm3)  # 64
+        fs3 = self.brm7(F.interpolate(fs2, fm1.size()[2:], mode='bilinear') + gcfm4)  # 128
+        fs4 = self.brm8(F.interpolate(fs3, fm0.size()[2:], mode='bilinear'))  # 256
+        out = self.brm9(F.interpolate(fs4, x_size[2:], mode='bilinear'))  # 512
 
         return out

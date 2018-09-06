@@ -129,7 +129,7 @@ class StackDecoder (nn.Module):
 
     def forward(self, x_big, x):
         N,C,H,W = x_big.size()
-        y = F.upsample(x, size=(H,W),mode='bilinear')
+        y = F.interpolate(x, size=(H,W),mode='bilinear')
         y = torch.cat([y,x_big],1)
         y = self.decode(y)
         return  y
@@ -160,8 +160,8 @@ class ResStackDecoder (nn.Module):
 
     def forward(self, x_big, x):
         N,C,H,W = x_big.size()
-        y = F.upsample(x, size=(H,W),mode='bilinear')
-        #y = F.upsample(x, scale_factor=2,mode='bilinear')
+        y = F.interpolate(x, size=(H,W), mode='bilinear')
+        #y = F.interpolate(x, scale_factor=2,mode='bilinear')
         y = torch.cat([y,x_big],1)
         y = self.decode(y)
         return  y

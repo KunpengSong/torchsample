@@ -45,7 +45,7 @@ class DecoderBlock(nn.Module):
 class LinkNet34(nn.Module):
     def __init__(self, num_classes, num_channels=3, pretrained=True):
         super().__init__()
-        assert num_channels == 3, "num channels not used now. to use changle first conv layer to support num channels other then 3"
+        assert num_channels == 3, "num channels not used now. to use change first conv layer to support num channels other then 3"
         filters = [64, 128, 256, 512]
         resnet = models.resnet34(pretrained=pretrained)
 

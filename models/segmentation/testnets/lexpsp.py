@@ -1,7 +1,3 @@
-import torch
-from torch import nn
-from torch.nn import functional as F
-
 from .lex_extractors import *
 
 
@@ -20,7 +16,7 @@ class PSPModule(nn.Module):
 
     def forward(self, feats):
         h, w = feats.size(2), feats.size(3)
-        priors = [F.upsample(input=stage(feats), size=(h, w), mode='bilinear') for stage in self.stages] + [feats]
+        priors = [F.interpolate(input=stage(feats), size=(h, w), mode='bilinear') for stage in self.stages] + [feats]
         bottle = self.bottleneck(torch.cat(priors, 1))
         return self.relu(bottle)
 
@@ -36,7 +32,7 @@ class PSPUpsample(nn.Module):
 
     def forward(self, x):
         h, w = 2 * x.size(2), 2 * x.size(3)
-        p = F.upsample(input=x, size=(h, w), mode='bilinear')
+        p = F.interpolate(input=x, size=(h, w), mode='bilinear')
         return self.conv(p)
 
 

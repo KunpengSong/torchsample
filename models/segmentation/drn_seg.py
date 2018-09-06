@@ -39,7 +39,7 @@ class DRNSeg(nn.Module):
         base = self.base(x)
         final = self.seg(base)
         if self.use_torch_up:
-            return F.upsample(final, x.size()[2:], mode='bilinear')
+            return F.interpolate(final, x.size()[2:], mode='bilinear')
         else:
             return self.up(final)
 
