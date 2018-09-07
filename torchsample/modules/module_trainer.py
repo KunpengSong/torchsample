@@ -298,8 +298,7 @@ class ModuleTrainer(object):
                 tmp_callbacks.append(pbar)
             if self._has_regularizers:
                 tmp_callbacks.append(RegularizerCallback(self.regularizer_container))
-                fit_loss_fn = _add_regularizer_to_loss_fn(fit_loss_fn,
-                                                          self.regularizer_container)
+                fit_loss_fn = _add_regularizer_to_loss_fn(fit_loss_fn, self.regularizer_container)
             if self._has_constraints:
                 tmp_callbacks.append(ConstraintCallback(self.constraint_container))
             if self._has_metrics:

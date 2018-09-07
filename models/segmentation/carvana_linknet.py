@@ -1,5 +1,5 @@
 # Source: https://github.com/asanakoy/kaggle_carvana_segmentation (MIT)
-# Pretrained: No
+# Pretrained: Yes
 
 """
 all credits to @nizhib

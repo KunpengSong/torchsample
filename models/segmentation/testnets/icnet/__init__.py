@@ -1,0 +1,1 @@
+from . import caffe_pb2

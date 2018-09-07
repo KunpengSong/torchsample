@@ -483,7 +483,6 @@ class BCEDicePenalizeBorderLoss(nn.Module):
         ind = a.ge(0.01) * a.le(0.99)
         ind = ind.float()
         weights = torch.ones(a.size())
-        # weights = torch.tensor.torch.ones(a.size()).cuda()    # <-- old code had .cuda() in it
 
         w0 = weights.sum()
         weights = weights + ind.cpu() * 2

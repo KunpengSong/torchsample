@@ -102,11 +102,11 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
         elif 'DRN_' in model_name:
             net = DRNSeg(model_name=model_name, classes=num_classes, pretrained=pretrained)
         elif model_name == 'FRRN_A':                                        # FRRN
-            net = frrn(n_classes=num_classes, model_type='A')
+            net = frrn(num_classes=num_classes, model_type='A')
             if pretrained:
                 print("FRRN_A Does not have a pretrained model! Empty model has been created instead.")
         elif model_name == 'FRRN_B':                                        # FRRN
-            net = frrn(n_classes=num_classes, model_type='B')
+            net = frrn(num_classes=num_classes, model_type='B')
             if pretrained:
                 print("FRRN_B Does not have a pretrained model! Empty model has been created instead.")
         elif model_name == 'FusionNet':                                     # FusionNet
