@@ -117,7 +117,7 @@ class EncHead(nn.Module):
 
 
 def get_encnet(dataset='pascal_voc', backbone='resnet50', pretrained=False,
-               root='~/.encoding/models', **kwargs):
+               root='~/.torch/models', **kwargs):
     r"""EncNet model from the paper `"Context Encoding for Semantic Segmentation"
     <https://arxiv.org/pdf/1803.08904.pdf>`_
 
@@ -152,7 +152,7 @@ def get_encnet(dataset='pascal_voc', backbone='resnet50', pretrained=False,
             get_model_file('encnet_%s_%s'%(backbone, acronyms[dataset]), root=root)))
     return model
 
-def get_encnet_resnet50_pcontext(pretrained=False, root='~/.encoding/models', **kwargs):
+def get_encnet_resnet50_pcontext(pretrained=False, root='~/.torch/models', **kwargs):
     r"""EncNet-PSP model from the paper `"Context Encoding for Semantic Segmentation"
     <https://arxiv.org/pdf/1803.08904.pdf>`_
 
@@ -171,7 +171,7 @@ def get_encnet_resnet50_pcontext(pretrained=False, root='~/.encoding/models', **
     """
     return get_encnet('pcontext', 'resnet50', pretrained, root=root, aux=True, **kwargs)
 
-def get_encnet_resnet101_pcontext(pretrained=False, root='~/.encoding/models', **kwargs):
+def get_encnet_resnet101_pcontext(pretrained=False, root='~/.torch/models', **kwargs):
     r"""EncNet-PSP model from the paper `"Context Encoding for Semantic Segmentation"
     <https://arxiv.org/pdf/1803.08904.pdf>`_
 
@@ -190,7 +190,7 @@ def get_encnet_resnet101_pcontext(pretrained=False, root='~/.encoding/models', *
     """
     return get_encnet('pcontext', 'resnet101', pretrained, root=root, aux=True, **kwargs)
 
-def get_encnet_resnet50_ade(pretrained=False, root='~/.encoding/models', **kwargs):
+def get_encnet_resnet50_ade(pretrained=False, root='~/.torch/models', **kwargs):
     r"""EncNet-PSP model from the paper `"Context Encoding for Semantic Segmentation"
     <https://arxiv.org/pdf/1803.08904.pdf>`_
 

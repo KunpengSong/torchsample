@@ -1,5 +1,6 @@
 # Source: https://github.com/BloodAxe/segmentation-networks-benchmark/tree/master/lib/models
 # Pretrained: No
+# Out of memory even on 1080TI
 
 """
 https://arxiv.org/abs/1611.05431
@@ -230,6 +231,7 @@ class LinkNext(nn.Module):
         assert num_channels == 3
         self.num_classes = num_classes
         resnext = resnext26_2x64d()
+        # resnext = resnext26_8x16d()
         filters = resnext.n_out_filters
 
         self.encoder0 = nn.Sequential(resnext.conv0, resnext.bn0, nn.ReLU())

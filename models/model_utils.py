@@ -137,6 +137,8 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = ResnetGCN(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'Segnet':                                          # standard segnet
             net = SegNet(num_classes=num_classes, pretrained=pretrained)
+        elif model_name == 'TEST_DiLinknet':
+            net = TEST_DiLinknet(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'TEST_DLR_Resnet':
             net = create_DLR_V3_pretrained(num_classes=num_classes)
         elif model_name == 'TEST_DLX_Resnet':
@@ -151,8 +153,10 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18])
         elif model_name == 'TEST_Linknext':
             net = TEST_Linknext(num_classes=num_classes)
-        elif model_name == 'TEST_TIRAMISU':
+        elif model_name == 'TEST_FCDensenet':
             net = TEST_FCDensenet(out_channels=num_classes)
+        elif model_name == 'TEST_Tiramisu57':
+            net = TEST_Tiramisu57(num_classes=num_classes)
         elif model_name == 'Tiramisu57':  # Tiramisu
             net = FCDenseNet57(n_classes=num_classes)
             if pretrained:
