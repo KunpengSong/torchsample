@@ -1,5 +1,15 @@
+# Source: https://github.com/Lextal/pspnet-pytorch
+
 from .lex_extractors import *
 
+extractor_models = {
+    'resnet18': resnet18,
+    'resnet34': resnet34,
+    'resnet50': resnet50,
+    'resnet101': resnet101,
+    'resnet152': resnet152,
+    'densenet': densenet
+}
 
 class PSPModule(nn.Module):
     def __init__(self, features, out_features=1024, sizes=(1, 2, 3, 6)):
@@ -16,7 +26,7 @@ class PSPModule(nn.Module):
 
     def forward(self, feats):
         h, w = feats.size(2), feats.size(3)
-        priors = [F.interpolate(input=stage(feats), size=(h, w), mode='bilinear') for stage in self.stages] + [feats]
+        priors = [F.upsample(input=stage(feats), size=(h, w), mode='bilinear') for stage in self.stages] + [feats]
         bottle = self.bottleneck(torch.cat(priors, 1))
         return self.relu(bottle)
 
@@ -32,15 +42,15 @@ class PSPUpsample(nn.Module):
 
     def forward(self, x):
         h, w = 2 * x.size(2), 2 * x.size(3)
-        p = F.interpolate(input=x, size=(h, w), mode='bilinear')
+        p = F.upsample(input=x, size=(h, w), mode='bilinear')
         return self.conv(p)
 
 
 class PSPNet(nn.Module):
-    def __init__(self, n_classes=18, sizes=(1, 2, 3, 6), psp_size=2048, deep_features_size=1024, backend='resnet34',
+    def __init__(self, num_classes=18, sizes=(1, 2, 3, 6), psp_size=2048, deep_features_size=1024, backend='resnet50',
                  pretrained=True):
         super().__init__()
-        self.feats = resnet50()
+        self.feats = extractor_models[backend](pretrained=pretrained)
         self.psp = PSPModule(psp_size, 1024, sizes)
         self.drop_1 = nn.Dropout2d(p=0.3)
 
@@ -49,16 +59,16 @@ class PSPNet(nn.Module):
         self.up_3 = PSPUpsample(64, 64)
 
         self.drop_2 = nn.Dropout2d(p=0.15)
-        self.final = nn.Conv2d(64, n_classes, kernel_size=1)
+        self.final = nn.Conv2d(64, num_classes, kernel_size=1)
         # self.final = nn.Sequential(
-        #     nn.Conv2d(64, n_classes, kernel_size=1),
+        #     nn.Conv2d(64, num_classes, kernel_size=1),
         #     nn.LogSoftmax()
         # )
 
         self.classifier = nn.Sequential(
             nn.Linear(deep_features_size, 256),
             nn.ReLU(),
-            nn.Linear(256, n_classes)
+            nn.Linear(256, num_classes)
         )
 
     def forward(self, x):

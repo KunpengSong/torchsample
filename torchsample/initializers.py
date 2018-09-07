@@ -207,11 +207,11 @@ class KaimingNormal(Initializer):
         classname = module.__class__.__name__
         if fnmatch(classname, self.module_filter) and hasattr(module, 'weight'):
             if self.bias_only:
-                torch.nn.init.kaiming_normal(module.bias.data, a=self.a, mode=self.mode)
+                torch.nn.init.kaiming_normal_(module.bias.data, a=self.a, mode=self.mode)
             else:
-                torch.nn.init.kaiming_normal(module.weight.data, a=self.a, mode=self.mode)
+                torch.nn.init.kaiming_normal_(module.weight.data, a=self.a, mode=self.mode)
                 if self.bias:
-                    torch.nn.init.kaiming_normal(module.bias.data, a=self.a, mode=self.mode)
+                    torch.nn.init.kaiming_normal_(module.bias.data, a=self.a, mode=self.mode)
 
 
 class Orthogonal(Initializer):

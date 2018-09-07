@@ -13,7 +13,7 @@ def initialize_weights(method='kaiming', *models):
 
             if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d) or isinstance(module, nn.Linear):
                 if method == 'kaiming':
-                    init.kaiming_normal(module.weight.data, np.sqrt(2.0))
+                    init.kaiming_normal_(module.weight.data, np.sqrt(2.0))
                 elif method == 'xavier':
                     init.xavier_normal(module.weight.data, np.sqrt(2.0))
                 elif method == 'orthogonal':

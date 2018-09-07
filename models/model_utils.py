@@ -22,7 +22,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
         (default: True)
     :return model
     '''
-    if model_name not in get_supported_models(type):
+    if model_name not in get_supported_models(type) and not model_name.startswith('TEST'):
         raise ValueError('The supplied model name: {} was not found in the list of acceptable model names.'
                          ' Use get_supported_models() to obtain a list of supported models.')
 
@@ -127,16 +127,8 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = GCN_RESNEXT(num_classes=num_classes, input_size=input_size, pretrained=pretrained)
         elif model_name == 'Linknet':                                       # Linknet34
             net = LinkNet34(num_classes=num_classes, pretrained=pretrained)
-        elif model_name == 'PSPNet':                                          # standard pspnet
-            net = PSPNet(num_classes=num_classes, use_aux=False, model='resnet101', pretrained=pretrained)
-        elif model_name == 'TEST_DLR_Resnet':
-            net = create_DLR_V3_pretrained(num_classes=num_classes, pretrained=pretrained)
-        elif model_name == 'TEST_DLX_Resnet':
-            net = create_DLX_V3_pretrained(num_classes=num_classes, pretrained=pretrained)
-        elif model_name == 'TEST_PSPNet':
-            net = TEST_PSPNet(n_classes=num_classes, pretrained=pretrained)
-        elif model_name == 'TEST_PSPNet2':
-            net = TEST_PSPNet2(num_classes=num_classes)
+        elif model_name == 'PSPNet':
+            net = PSPNet(num_classes=num_classes, pretrained=pretrained, backend='resnet101')
         elif model_name == 'Resnet_DUC':
             net = ResNetDUC(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'Resnet_DUC_HDC':
@@ -145,6 +137,12 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = ResnetGCN(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'Segnet':                                          # standard segnet
             net = SegNet(num_classes=num_classes, pretrained=pretrained)
+        elif model_name == 'TEST_DLR_Resnet':
+            net = create_DLR_V3_pretrained(num_classes=num_classes)
+        elif model_name == 'TEST_DLX_Resnet':
+            net = create_DLX_V3_pretrained(num_classes=num_classes)
+        elif model_name == 'TEST_PSPNet2':
+            net = TEST_PSPNet2(num_classes=num_classes)
         elif model_name == 'TEST_DLV2':
             net = TEST_DLV2(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24])
         elif model_name == 'TEST_Ms_DLV2':
