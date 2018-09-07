@@ -149,6 +149,8 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_Ms_DLV2(num_classes=num_classes)
         elif model_name == 'TEST_DLV3':
             net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18])
+        elif model_name == 'TEST_Linknext':
+            net = TEST_Linknext(num_classes=num_classes)
         elif model_name == 'TEST_TIRAMISU':
             net = TEST_FCDensenet(out_channels=num_classes)
         elif model_name == 'Tiramisu57':  # Tiramisu
