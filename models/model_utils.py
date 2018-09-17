@@ -138,7 +138,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
         elif model_name == 'Segnet':                                          # standard segnet
             net = SegNet(num_classes=num_classes, pretrained=pretrained)
         elif model_name == 'TEST_DiLinknet':
-            net = TEST_DiLinknet(num_classes=num_classes, pretrained=pretrained)
+            net = TEST_DiLinknet(num_classes=num_classes, pretrained=False)
         elif model_name == 'TEST_DLR_Resnet':
             net = create_DLR_V3_pretrained(num_classes=num_classes)
         elif model_name == 'TEST_DLX_Resnet':
