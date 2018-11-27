@@ -1,7 +1,3 @@
-
-from __future__ import absolute_import
-from __future__ import print_function
-
 from enum import Enum, auto
 from .misc import is_tuple_or_list
 

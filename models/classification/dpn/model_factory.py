@@ -1,10 +1,6 @@
 # Source: https://github.com/rwightman/pytorch-dpn-pretrained (License: Apache 2.0)
 # Pretrained: Yes
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import math
 from .dualpath import *
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnet101, resnet152

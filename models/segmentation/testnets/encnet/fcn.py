@@ -3,9 +3,7 @@
 # Email: zhang.hang@rutgers.edu 
 # Copyright (c) 2017
 ###########################################################################
-from __future__ import division
-import os
-import numpy as np
+
 import torch
 import torch.nn as nn
 from torch.nn.functional import upsample

@@ -5,8 +5,6 @@
 #           https://github.com/EKami/carvana-challenge (MIT)
 #           https://github.com/DingKe/pytorch_workplace (MIT)
 
-from __future__ import print_function, division
-
 import numpy as np
 import torch
 import torch.nn as nn

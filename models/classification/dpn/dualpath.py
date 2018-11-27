@@ -8,9 +8,6 @@ many ideas from another PyTorch implementation https://github.com/oyam/pytorch-D
 This implementation is compatible with the pretrained weights
 from cypw's MXNet implementation.
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import os
 import torch
@@ -21,21 +18,10 @@ from collections import OrderedDict
 
 from .adaptive_avgmax_pool import adaptive_avgmax_pool2d
 from .convert_from_mxnet import convert_from_mxnet, has_mxnet
+from models.model_locations import model_urls
 
 
 __all__ = ['DPN', 'dpn68', 'dpn68b', 'dpn92', 'dpn98', 'dpn131', 'dpn107']
-
-
-# If anyone able to provide direct link hosting, more than happy to fill these out.. -rwightman
-model_urls = {
-    'dpn68': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn68-66bebafa7.pth',
-    'dpn68b-extra': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn68b_extra-84854c156.pth',
-    'dpn92': '',
-    'dpn92-extra': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn92_extra-b040e4a9b.pth',
-    'dpn98': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn98-5b90dec4d.pth',
-    'dpn131': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn131-71dfe43e0.pth',
-    'dpn107-extra': 'http://data.lip6.fr/cadene/pretrainedmodels/dpn107_extra-1ac7121e2.pth'
-}
 
 
 def dpn68(num_classes=1000, pretrained=False, test_time_pool=True):
@@ -299,16 +285,16 @@ class DPN(nn.Module):
         self.features = nn.Sequential(blocks)
 
         # Using 1x1 conv for the FC layer to allow the extra pooling scheme
-        self.classifier = nn.Conv2d(in_chs, num_classes, kernel_size=1, bias=True)
+        self.last_linear = nn.Conv2d(in_chs, num_classes, kernel_size=1, bias=True)
 
     def forward(self, x):
         x = self.features(x)
         if not self.training and self.test_time_pool:
             x = F.avg_pool2d(x, kernel_size=7, stride=1)
-            out = self.classifier(x)
+            out = self.last_linear(x)
             # The extra test time pool should be pooling an img_size//32 - 6 size patch
             out = adaptive_avgmax_pool2d(out, pool_type='avgmax')
         else:
             x = adaptive_avgmax_pool2d(x, pool_type='avg')
-            out = self.classifier(x)
+            out = self.last_linear(x)
         return out.view(out.size(0), -1)

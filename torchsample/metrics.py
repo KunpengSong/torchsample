@@ -1,7 +1,3 @@
-
-from __future__ import absolute_import
-from __future__ import print_function
-
 import torch
 from .utils import th_matrixcorr
 from .meters.averagemeter import AverageMeter

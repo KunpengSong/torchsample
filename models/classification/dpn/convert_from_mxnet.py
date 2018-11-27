@@ -1,10 +1,6 @@
 # Source: https://github.com/rwightman/pytorch-dpn-pretrained (License: Apache 2.0)
 # Pretrained: Yes
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import argparse
 import torch

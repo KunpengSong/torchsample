@@ -1,12 +1,13 @@
 """Model store which provides pretrained models."""
-from __future__ import print_function
-__all__ = ['get_model_file', 'purge']
+
 import os
 import zipfile
 import requests
 import hashlib
 import tqdm
 import errno
+
+__all__ = ['get_model_file', 'purge']
 
 _model_sha1 = {name: checksum for checksum, name in [
     ('853f2fb07aeb2927f7696e166b215609a987fd44', 'resnet50'),
