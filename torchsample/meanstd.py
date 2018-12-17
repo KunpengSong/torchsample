@@ -38,11 +38,12 @@ def get_dataset_mean_std(dataset, img_size=256, output_div=255.0):
 
 
 if __name__ == "__main__":
-    from torchsample.datasets import FolderDataset, rgb_image_loader
+    from datasets.FolderDataset import FolderDataset
+    from datasets.data_utils import pil_loader_rgb
 
-    dataset = FolderDataset(root='/Users/Shared/test/test_mean_std', class_mode='label', default_loader=rgb_image_loader)
-    mean, std = get_dataset_mean_std(dataset, 5)
+    dataset = FolderDataset(root='/Users/alexei_samoylov/Desktop/PartPictures/grn_truth_masks_v1-v4_gimp_11-21-18/images', class_mode='label', default_loader=pil_loader_rgb)
+    mean, std = get_dataset_mean_std(dataset)
     print('----- RESULT -----')
-    print(mean)
-    print('----')
-    print (std)
+    print('mean: {}'.format(mean))
+    print('std:  {}'.format(std))
+    print ('----- DONE ------')
