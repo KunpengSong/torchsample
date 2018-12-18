@@ -37,8 +37,8 @@ class _ASPPModule(nn.Module):
             )
 
         for m in self.stages.children():
-            nn.init.normal(m.weight, mean=0, std=0.01)
-            nn.init.constant(m.bias, 0)
+            nn.init.normal_(m.weight, mean=0, std=0.01)
+            nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
         h = 0
