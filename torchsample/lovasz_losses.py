@@ -129,6 +129,14 @@ def flatten_binary_scores(scores, labels, ignore=None):
     return vscores, vlabels
 
 
+class LovaszBinaryLoss(torch.nn.modules.Module):
+    def __init__(self):
+        super(LovaszBinaryLoss, self).__init__()
+
+    def forward(self, input, target):
+        return lovasz_hinge(input, target)
+
+
 class StableBCELoss(torch.nn.modules.Module):
     def __init__(self):
         super(StableBCELoss, self).__init__()
