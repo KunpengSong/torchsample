@@ -6,6 +6,7 @@ import torch.utils.model_zoo as model_zoo
 
 
 
+
 class SeparableConv2d(nn.Module):
     def __init__(self, inplanes, planes, kernel_size=3, stride=1, padding=0, dilation=1, bias=False):
         super(SeparableConv2d, self).__init__()
@@ -229,14 +230,15 @@ class Xception(nn.Module):
                 m.bias.data.zero_()
 
     def __load_xception_pretrained(self):
-        pretrain_dict = model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/xception-b5690688.pth')
+        # pretrain_dict = model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/xception-b5690688.pth')
+        pretrain_dict = model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/xception-43020ad28.pth')
         model_dict = {}
         state_dict = self.state_dict()
 
         for k, v in pretrain_dict.items():
             if k in state_dict:
-                if 'pointwise' in k:
-                    v = v.unsqueeze(-1).unsqueeze(-1)
+                # if 'pointwise' in k:
+                #     v = v.unsqueeze(-1).unsqueeze(-1)
                 if k.startswith('block12'):
                     model_dict[k.replace('block12', 'block20')] = v
                 elif k.startswith('block11'):

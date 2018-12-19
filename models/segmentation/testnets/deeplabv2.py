@@ -14,7 +14,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .resnet import _ConvBatchNormReLU, _ResBlock
+from .msc import MSC
 
+
+def DeepLabV2_ResNet101_MSC(n_classes):
+    return MSC(
+        scale=DeepLabV2(
+            n_classes=n_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24]
+        ),
+        pyramids=[0.5, 0.75],
+)
 
 class _ASPPModule(nn.Module):
     """Atrous Spatial Pyramid Pooling"""
@@ -70,7 +79,10 @@ class DeepLabV2(nn.Sequential):
         self.add_module("aspp", _ASPPModule(2048, n_classes, pyramids))
 
     def forward(self, x):
-        return super(DeepLabV2, self).forward(x)
+        # return super(DeepLabV2, self).forward(x)
+        logits = super(DeepLabV2, self).forward(x)
+        logits = F.interpolate(logits, size=x.shape[2:], mode="bilinear", align_corners=True)
+        return logits
 
     def freeze_bn(self):
         for m in self.modules():

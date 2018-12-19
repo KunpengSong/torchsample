@@ -147,16 +147,26 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_PSPNet2(num_classes=num_classes)
         elif model_name == 'TEST_DLV2':
             net = TEST_DLV2(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24])
-        elif model_name == 'TEST_Ms_DLV2':
-            net = TEST_Ms_DLV2(num_classes=num_classes)
+        elif model_name == 'TEST_DLV3_Xception':
+            net = TEST_DLV3_Xception(n_classes=num_classes, os=8, pretrained=True, _print=False)
         elif model_name == 'TEST_DLV3':
-            net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18])
+            net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[12, 24, 36], grids=[1, 2, 4], output_stride=8)
+        elif model_name == 'TEST_LinkCeption':
+            net = TEST_LinkCeption(num_classes=num_classes)
+        elif model_name == 'TEST_LinkDensenet121':
+            net = TEST_LinkDenseNet121(num_classes=num_classes)
+        elif model_name == 'TEST_Linknet101':
+            net = TEST_Linknet101(num_classes=num_classes)
         elif model_name == 'TEST_Linknext':
             net = TEST_Linknext(num_classes=num_classes)
         elif model_name == 'TEST_FCDensenet':
             net = TEST_FCDensenet(out_channels=num_classes)
         elif model_name == 'TEST_Tiramisu57':
             net = TEST_Tiramisu57(num_classes=num_classes)
+        elif model_name == 'TEST_Unet_nested_dilated':
+            net = TEST_Unet_nested_dilated(n_classes=num_classes)
+        elif model_name == 'TEST_Unet_plus_plus':
+            net = Unet_Plus_Plus(in_channels=3, n_classes=num_classes)
         elif model_name == 'Tiramisu57':  # Tiramisu
             net = FCDenseNet57(n_classes=num_classes)
             if pretrained:

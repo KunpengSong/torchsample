@@ -313,10 +313,10 @@ class WeightedSoftDiceLoss(torch.nn.Module):
     def forward(self, logits, labels, weights):
         probs = torch.sigmoid(logits)
         num   = labels.size(0)
-        w     = (weights).view(num,-1)
+        w     = weights.view(num,-1)
         w2    = w*w
-        m1    = (probs  ).view(num,-1)
-        m2    = (labels ).view(num,-1)
+        m1    = probs.view(num,-1)
+        m2    = labels.view(num,-1)
         intersection = (m1 * m2)
         score = 2. * ((w2*intersection).sum(1)+1) / ((w2*m1).sum(1) + (w2*m2).sum(1)+1)
         score = 1 - score.sum()/num

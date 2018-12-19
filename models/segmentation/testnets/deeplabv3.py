@@ -122,30 +122,17 @@ class DeepLabV3(nn.Sequential):
             _ResBlock(n_blocks[3], 1024, 512, 2048, stride[3], dilation[3], mg=grids),
         )
         self.add_module("aspp", _ASPPModule(2048, 256, pyramids))
-        self.add_module(
-            "fc1", _ConvBatchNormReLU(256 * (len(pyramids) + 2), 256, 1, 1, 0, 1)
-        )
+        self.add_module("fc1", _ConvBatchNormReLU(256 * (len(pyramids) + 2), 256, 1, 1, 0, 1))
         self.add_module("fc2", nn.Conv2d(256, n_classes, kernel_size=1))
 
     def forward(self, x):
-        return super(DeepLabV3, self).forward(x)
+        # return super(DeepLabV3, self).forward(x)
+        logits = super(DeepLabV3, self).forward(x)
+        logits = F.interpolate(logits, size=x.shape[2:], mode="bilinear", align_corners=True)
+        return logits
 
     def freeze_bn(self):
         for m in self.named_modules():
             if isinstance(m[1], nn.BatchNorm2d):
                 m[1].eval()
 
-
-if __name__ == "__main__":
-    model = DeepLabV3(
-        n_classes=21,
-        n_blocks=[3, 4, 23, 3],
-        pyramids=[6, 12, 18],
-        grids=[1, 2, 4],
-        output_stride=16,
-    )
-    model.freeze_bn()
-    model.eval()
-    print(list(model.named_children()))
-    image = torch.randn(1, 3, 513, 513)
-    print(model(image)[0].size())

@@ -23,9 +23,7 @@ class MSC(nn.Module):
     def forward(self, x):
         # Original
         logits = self.scale(x)
-        interp = lambda l: F.interpolate(
-            l, size=logits.shape[2:], mode="bilinear", align_corners=True
-        )
+        interp = lambda l: F.interpolate(l, size=logits.shape[2:], mode="bilinear", align_corners=True)
 
         # Scaled
         logits_pyramid = []
