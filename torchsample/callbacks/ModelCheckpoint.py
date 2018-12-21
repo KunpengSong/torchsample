@@ -87,7 +87,10 @@ class ModelCheckpoint(Callback):
             self.old_files = []
 
         # mode = 'min' only supported
-        self.best_loss = math.inf
+        if do_minimize:
+            self.best_loss = math.inf
+        else:
+            self.best_loss = -89293.923
         super().__init__()
 
     def on_epoch_end(self, epoch, logs=None):
@@ -113,9 +116,10 @@ class ModelCheckpoint(Callback):
                         print('\nEpoch %i: loss metric changed from %0.4f to %0.4f saving model to %s' % (
                             epoch + 1, self.best_loss, current_loss, os.path.join(self.save_dir, checkpt_name)))
 
-                    if current_loss < self.best_loss or (not self.do_minimize and current_loss > self.best_loss):
+                    if (self.do_minimize and current_loss < self.best_loss) or (not self.do_minimize and current_loss > self.best_loss):
                         self.best_loss = current_loss
                         self.best_epoch = epoch
+                        # print('Best Loss of {} saved at epoch: {}'.format(self.best_loss, epoch + 1))
 
                     save_dict = {
                         'run_id': self.run_id,
