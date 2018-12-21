@@ -1,6 +1,7 @@
 # Source: https://github.com/snakers4/mnasnet-pytorch/blob/master/src/models/linknet.py
 
 import torch.nn as nn
+import torch.nn.functional as F
 from torchvision import models
 from .resnext import resnext101_32x4d
 from .inception_resnet import inceptionresnetv2
@@ -747,6 +748,7 @@ class LinkCeption(nn.Module):
                 # noinspection PyCallingNonCallable
 
     def forward(self, x):
+        final_shape = x.shape[2:]
 
         # Encoder
         x = self.stem1(x)
@@ -772,7 +774,9 @@ class LinkCeption(nn.Module):
         f4 = self.finalrelu2(f3)
         f5 = self.finalconv3(f4)
 
-        return f5
+        out = F.interpolate(f5, size=final_shape, mode="bilinear")
+
+        return out
 
 
 class LinkInceptionResNet(nn.Module):
