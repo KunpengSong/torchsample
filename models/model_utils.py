@@ -147,7 +147,6 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_PSPNet2(num_classes=num_classes)
         elif model_name == 'TEST_DLV2':
             net = TEST_DLV2(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[6, 12, 18, 24])
-        elif model_name == 'TEST_DLV3_Xception':
             net = TEST_DLV3_Xception(n_classes=num_classes, os=8, pretrained=True, _print=False)
         elif model_name == 'TEST_DLV3':
             net = TEST_DLV3(n_classes=num_classes, n_blocks=[3, 4, 23, 3], pyramids=[12, 24, 36], grids=[1, 2, 4], output_stride=8)
@@ -155,8 +154,12 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_LinkCeption(num_classes=num_classes)
         elif model_name == 'TEST_LinkDensenet121':
             net = TEST_LinkDenseNet121(num_classes=num_classes)
-        elif model_name == 'TEST_Linknet101':
+        elif model_name == 'TEST_Linknet50':
             net = TEST_Linknet101(num_classes=num_classes)
+        elif model_name == 'TEST_Linknet50':
+            net = TEST_Linknet101(num_classes=num_classes)
+        elif model_name == 'TEST_Linknet152':
+            net = TEST_Linknet152(num_classes=num_classes)
         elif model_name == 'TEST_Linknext':
             net = TEST_Linknext(num_classes=num_classes)
         elif model_name == 'TEST_FCDensenet':
@@ -400,8 +403,11 @@ def load_checkpoint(model, checkpoint_path, use_gpu):
             from collections import OrderedDict
             new_state_dict = OrderedDict()
             for k, v in pretrained_state.items():
-                name = k[7:]  # remove `module.`
-                new_state_dict[name] = v
+                if k.startswith('module.'):
+                    name = k[7:]  # remove `module.`
+                    new_state_dict[name] = v
+                else:
+                    new_state_dict[k] = v
             checkpoint['state_dict'] = new_state_dict
 
         # finally load the model weights
