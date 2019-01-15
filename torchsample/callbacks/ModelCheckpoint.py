@@ -152,7 +152,7 @@ class ModelCheckpoint(Callback):
         current_loss = self.last_epoch_logs[self.monitored_log_key]
 
         ## Save model if it hasn't been previously saved and it has best loss value
-        if self.last_saved_ep < final_epoch and (current_loss <= self.best_loss or (not self.do_minimize and current_loss > self.best_loss)):
+        if self.last_saved_ep < final_epoch and ((self.do_minimize and current_loss < self.best_loss) or (not self.do_minimize and current_loss > self.best_loss)):
             # Call custom function (if set) to process things like best-N results etc
             if self.custom_func is not None:
                 self.custom_func(self.addl_k_v, self.last_epoch_logs, self.custom_func_dict, False)
