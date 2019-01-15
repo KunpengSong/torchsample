@@ -156,7 +156,7 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             net = TEST_LinkDenseNet121(num_classes=num_classes)
         elif model_name == 'TEST_Linknet50':
             net = TEST_Linknet101(num_classes=num_classes)
-        elif model_name == 'TEST_Linknet50':
+        elif model_name == 'TEST_Linknet101':
             net = TEST_Linknet101(num_classes=num_classes)
         elif model_name == 'TEST_Linknet152':
             net = TEST_Linknet152(num_classes=num_classes)
