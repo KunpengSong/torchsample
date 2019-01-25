@@ -7,6 +7,7 @@ from .data_utils import npy_loader, pil_loader, _find_classes, _finds_inputs_and
 
 # convenience loaders one can use (in order not to reinvent the wheel)
 rgb_image_loader = lambda path: Image.open(path).convert('RGB')   # a loader for images that require RGB color space
+rgba_image_loader = lambda path: Image.open(path).convert('RGBA')   # a loader for images that require RGBA color space
 bw_image_loader = lambda path: Image.open(path).convert('L')      # a loader for images that require B/W color space
 identity_x = lambda x: x
 
