@@ -2,7 +2,6 @@ last_linear
 ----------
 NOTE: Some pretrained models contain '.fc' as the name of the last layer. Simply rename it to 'last_linear' before loading the weights.
 
-bninception
 inceptionresnetv2
 inceptionv4
 nasnetalarge
@@ -13,7 +12,6 @@ resnet_swish
 resnext101_x
 SENet / se_resnet50, se_resnet101, se_resnet152 etc
 WideResNet
-xception
 
 
 Conv2D (1x1 kernel)

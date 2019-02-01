@@ -6,6 +6,7 @@ torchroot = 'https://download.pytorch.org/models/'
 
 model_urls = {
     'alexnet': torchroot + 'alexnet-owt-4df8aa71.pth',
+    'bninception': cadeneroot + 'bn_inception-52deb4733.pth',
     'densenet121': cadeneroot + 'densenet121-fbdb23505.pth',
     'densenet169': cadeneroot + 'densenet169-f470b90a4.pth',
     'densenet201': cadeneroot + 'densenet201-5750cbb1e.pth',
@@ -23,6 +24,7 @@ model_urls = {
     'drn-d-38': drnroot + 'drn_d_38-eebb45f0.pth',
     'drn-d-54': drnroot + 'drn_d_54-0e0534ff.pth',
     'drn-d-105': drnroot + 'drn_d_105-12b40979.pth',
+    'fbresnet152': cadeneroot + 'fbresnet152-2e20f6b4.pth',
     'inception_v3': torchroot + 'inception_v3_google-1a9a5a14.pth',
     'inceptionv4': cadeneroot + 'inceptionv4-8e4777a0.pth',
     'bninception': cadeneroot + 'bn_inception-52deb4733.pth',

@@ -1,5 +1,6 @@
 from .dpn.dualpath import dpn68, dpn68b, dpn92, dpn98, dpn107, dpn131, DPN # dpnXX = pretrained on imagenet, DPN = not pretrained
 from .bninception import bninception, BNInception                   # bninception = pretrained on imagenet, BNInception not pretrained
+from .fbresnet import FBResNet, fbresnet152, fbresnet50, fbresnet34, fbresnet18     # only fbresnet152 pretrained
 from .inception_resv2_wide import InceptionResV2                    # InceptionResV2 not pretrained
 from .inceptionresnetv2 import inceptionresnetv2, InceptionResNetV2 # inceptionresnetv2 = pretrained on imagenet, InceptionResNetV2 not pretrained
 from .inceptionv4 import inceptionv4, InceptionV4                   # inceptionv4 = pretrained on imagenet, InceptionV4 not pretrained
