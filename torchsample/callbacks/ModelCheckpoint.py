@@ -67,7 +67,7 @@ class ModelCheckpoint(Callback):
         """
         self.run_id = run_id
         self.addl_k_v = addl_k_v
-        self.save_dir = save_dir
+        self.save_dir = os.path.expanduser(save_dir)
         self.save_interval = save_interval
         self.epoch_log_keys = epoch_log_keys
         self.save_best_only = save_best_only
@@ -135,7 +135,7 @@ class ModelCheckpoint(Callback):
                     for key in self.epoch_log_keys:
                         save_dict[key] = logs.get(key)  # this is not guaranteed to be found so may return 'None'
 
-                    save_checkpoint(save_dict, is_best=(self.best_epoch == epoch), save_path=self.save_dir, filename=checkpt_name)
+                    save_checkpoint(save_dict, is_best=(self.best_epoch == epoch), save_path1=self.save_dir, filename=checkpt_name)
                     self.last_saved_ep = epoch
 
                 if self.max_saves > 0:
@@ -173,7 +173,7 @@ class ModelCheckpoint(Callback):
             for key in self.epoch_log_keys:
                 save_dict[key] = self.last_epoch_logs[key]
 
-            save_checkpoint(save_dict, is_best=True, save_path=self.save_dir, filename=generate_checkpoint_name(self.run_id, self.addl_k_v, final_epoch, False))
+            save_checkpoint(save_dict, is_best=True, save_path1=self.save_dir, filename=generate_checkpoint_name(self.run_id, self.addl_k_v, final_epoch, False))
             self.last_saved_ep = final_epoch
 
         stats = {'run_id': self.run_id,
@@ -189,7 +189,8 @@ class ModelCheckpoint(Callback):
 
 
 def generate_statsfile_name(run_id, save_dir):
-    return os.path.join(save_dir, str(run_id) + "_stats.json")
+    save_dir1 = os.path.expanduser(save_dir)
+    return os.path.join(save_dir1, str(run_id) + "_stats.json")
 
 
 def generate_checkpoint_name(run_id, kv_dict, epoch, is_best):
@@ -204,10 +205,11 @@ def generate_checkpoint_name(run_id, kv_dict, epoch, is_best):
 def save_checkpoint(state, is_best=False, save_path=".", filename=None):
     if not filename:
         print("ERROR: No filename defined.  Checkpoint is NOT saved.")
-    if not os.path.exists(save_path): os.makedirs(save_path)
-    torch.save(state, os.path.join(save_path, filename))
+    save_path1 = os.path.expanduser(save_path)
+    if not os.path.exists(save_path1): os.makedirs(save_path1)
+    torch.save(state, os.path.join(save_path1, filename))
     if is_best:
         pos = filename.find("_ep_")
         if pos and pos > 0:
             bestname = filename[:pos] + "_best.pth.tar"
-        shutil.copyfile(os.path.join(save_path, filename), os.path.join(save_path, bestname))
+        shutil.copyfile(os.path.join(save_path1, filename), os.path.join(save_path1, bestname))

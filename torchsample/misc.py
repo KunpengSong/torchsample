@@ -67,9 +67,26 @@ def initialize_random(seed, init_cuda=True):
         torch.cuda.manual_seed_all(seed)
     ## END ##
 
+
 def check_mkdir(dir_name):
-    if not os.path.exists(dir_name):
-        os.mkdir(dir_name)
+    """
+    Delegates to mkdir_p and is kept around for legacy support
+    :param dir_name:
+    :return:
+    """
+    mkdir_p(dir_name)
+
+
+def mkdir_p(path):
+    """Equivalent of a 'mkdir -p' linux command which creates directories if they don't exist. This also correctly resolves paths with ~ in them."""
+    path1 = os.path.expanduser(path)
+    try:
+        os.makedirs(path1)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path1):
+            pass
+        else:
+            raise
 
 
 def to_categorical(y, num_classes=None, dtype='float32'):

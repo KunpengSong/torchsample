@@ -21,6 +21,8 @@ def pil_loader(path, color_space=''):
     try:
         if color_space.lower() == 'rgb':
             return Image.open(path).convert('RGB')
+        if color_space.lower() == 'rgba':
+            return Image.open(path).convert('RGBA')
         elif color_space.lower() == 'l':
             return Image.open(path).convert('L')
         elif color_space.lower() == '1' or color_space.lower() == 'binary':
@@ -99,6 +101,7 @@ def _multi_arg_pass_through(*x):
     return x
 
 def _find_classes(dir):
+    dir = os.path.expanduser(dir)
     classes = [d for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))]
     classes.sort()
     class_to_idx = {classes[i]: i for i in range(len(classes))}
@@ -156,6 +159,7 @@ def _finds_inputs_and_targets(root, class_mode, class_to_idx=None, input_regex='
     vallist_inputs = []
     vallist_targets = []
     icount = 0
+    root = os.path.expanduser(root)
     for subdir in sorted(os.listdir(root)):
         d = os.path.join(root, subdir)
         if not os.path.isdir(d):

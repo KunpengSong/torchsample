@@ -381,6 +381,7 @@ def load_checkpoint(model, checkpoint_path, use_gpu):
     checkpoint = None
     if checkpoint_path:
         # load data directly from a checkpoint
+        checkpoint_path = os.path.expanduser(checkpoint_path)
         if os.path.isfile(checkpoint_path):
             if use_gpu:
                 print("=> resuming model on GPU from checkpoint '{}'".format(checkpoint_path))
