@@ -135,7 +135,7 @@ class ModelCheckpoint(Callback):
                     for key in self.epoch_log_keys:
                         save_dict[key] = logs.get(key)  # this is not guaranteed to be found so may return 'None'
 
-                    save_checkpoint(save_dict, is_best=(self.best_epoch == epoch), save_path1=self.save_dir, filename=checkpt_name)
+                    save_checkpoint(save_dict, is_best=(self.best_epoch == epoch), save_path=self.save_dir, filename=checkpt_name)
                     self.last_saved_ep = epoch
 
                 if self.max_saves > 0:
@@ -173,7 +173,7 @@ class ModelCheckpoint(Callback):
             for key in self.epoch_log_keys:
                 save_dict[key] = self.last_epoch_logs[key]
 
-            save_checkpoint(save_dict, is_best=True, save_path1=self.save_dir, filename=generate_checkpoint_name(self.run_id, self.addl_k_v, final_epoch, False))
+            save_checkpoint(save_dict, is_best=True, save_path=self.save_dir, filename=generate_checkpoint_name(self.run_id, self.addl_k_v, final_epoch, False))
             self.last_saved_ep = final_epoch
 
         stats = {'run_id': self.run_id,
