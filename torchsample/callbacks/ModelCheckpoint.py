@@ -182,6 +182,7 @@ class ModelCheckpoint(Callback):
                  'best_loss_or_gain': self.best_loss,
                  'metric_type': self.monitored_log_key
                  }
+        stats.update(self.addl_k_v)
         stats.update(self.custom_func_dict)
         statsfile_path = generate_statsfile_name(self.run_id, self.save_dir)
         with open(statsfile_path, 'a') as statsfile:
