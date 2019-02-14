@@ -593,24 +593,17 @@ class NASNetALarge(nn.Module):
         return x
 
 
-def nasnetalarge(num_classes=1001, pretrained='imagenet'):
+def nasnetalarge(pretrained='imagenet'):
     r"""NASNetALarge model architecture from the
     `"NASNet" <https://arxiv.org/abs/1707.07012>`_ paper.
     """
+
+    # both 'imagenet'&'imagenet+background' are loaded from same parameters
+    model = NASNetALarge(num_classes=1001)
+
     if pretrained:
         settings = pretrained_settings['nasnetalarge'][pretrained]
-        assert num_classes == settings['num_classes'], \
-            "num_classes should be {}, but is {}".format(settings['num_classes'], num_classes)
-
-        # both 'imagenet'&'imagenet+background' are loaded from same parameters
-        model = NASNetALarge(num_classes=1001)
         model.load_state_dict(model_zoo.load_url(settings['url']))
-
-        if pretrained == 'imagenet':
-            new_last_linear = nn.Linear(model.last_linear.in_features, 1000)
-            new_last_linear.weight.data = model.last_linear.weight.data[1:]
-            new_last_linear.bias.data = model.last_linear.bias.data[1:]
-            model.last_linear = new_last_linear
 
         model.input_space = settings['input_space']
         model.input_size = settings['input_size']
@@ -618,7 +611,12 @@ def nasnetalarge(num_classes=1001, pretrained='imagenet'):
 
         model.mean = settings['mean']
         model.std = settings['std']
-    else:
-        model = NASNetALarge(num_classes=num_classes)
+
+    if pretrained == 'imagenet':
+        new_last_linear = nn.Linear(model.last_linear.in_features, settings['num_classes'])
+        new_last_linear.weight.data = model.last_linear.weight.data[1:]
+        new_last_linear.bias.data = model.last_linear.bias.data[1:]
+        model.last_linear = new_last_linear
+
     return model
 

@@ -494,20 +494,19 @@ class BNInception(nn.Module):
         x = self.logits(x)
         return x
 
-def bninception(num_classes=1000, pretrained='imagenet'):
+def bninception(pretrained='imagenet'):
     r"""BNInception model architecture from <https://arxiv.org/pdf/1502.03167.pdf>`_ paper.
     """
-    model = BNInception(num_classes=num_classes)
-    if pretrained is not None:
+    model = BNInception()
+    if pretrained:
         settings = pretrained_settings['bninception'][pretrained]
-        assert num_classes == settings['num_classes'], \
-            "num_classes should be {}, but is {}".format(settings['num_classes'], num_classes)
         model.load_state_dict(model_zoo.load_url(settings['url']))
         model.input_space = settings['input_space']
         model.input_size = settings['input_size']
         model.input_range = settings['input_range']
         model.mean = settings['mean']
         model.std = settings['std']
+
     return model
 
 

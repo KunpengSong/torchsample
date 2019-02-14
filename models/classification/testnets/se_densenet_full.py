@@ -1,7 +1,6 @@
 # Source: https://github.com/zhouyuangan/SE_DenseNet/blob/master/se_densenet_full.py (License: MIT)
 
 import sys
-sys.path.append("F:/car_classify_abnormal")
 
 import re
 import torch

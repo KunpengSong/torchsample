@@ -370,33 +370,29 @@ class PNASNet5Large(nn.Module):
         return x
 
 
-def pnasnet5large(num_classes=1001, pretrained='imagenet'):
+def pnasnet5large(pretrained='imagenet'):
     r"""PNASNet-5 model architecture from the
     `"Progressive Neural Architecture Search"
     <https://arxiv.org/abs/1712.00559>`_ paper.
     """
+
+    # both 'imagenet'&'imagenet+background' are loaded from same parameters
+    model = PNASNet5Large(num_classes=1001)
+
     if pretrained:
         settings = pretrained_settings['pnasnet5large'][pretrained]
-        assert num_classes == settings[
-            'num_classes'], 'num_classes should be {}, but is {}'.format(
-            settings['num_classes'], num_classes)
-
-        # both 'imagenet'&'imagenet+background' are loaded from same parameters
-        model = PNASNet5Large(num_classes=1001)
         model.load_state_dict(model_zoo.load_url(settings['url']))
 
-        if pretrained == 'imagenet':
-            new_last_linear = nn.Linear(model.last_linear.in_features, 1000)
-            new_last_linear.weight.data = model.last_linear.weight.data[1:]
-            new_last_linear.bias.data = model.last_linear.bias.data[1:]
-            model.last_linear = new_last_linear
+    if pretrained == 'imagenet':
+        new_last_linear = nn.Linear(model.last_linear.in_features, settings['num_classes'])
+        new_last_linear.weight.data = model.last_linear.weight.data[1:]
+        new_last_linear.bias.data = model.last_linear.bias.data[1:]
+        model.last_linear = new_last_linear
 
-        model.input_space = settings['input_space']
-        model.input_size = settings['input_size']
-        model.input_range = settings['input_range']
+    model.input_space = settings['input_space']
+    model.input_size = settings['input_size']
+    model.input_range = settings['input_range']
 
-        model.mean = settings['mean']
-        model.std = settings['std']
-    else:
-        model = PNASNet5Large(num_classes=num_classes)
+    model.mean = settings['mean']
+    model.std = settings['std']
     return model

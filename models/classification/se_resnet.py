@@ -1,9 +1,8 @@
 # Source: https://github.com/moskomule/senet.pytorch (License: MIT)
-# Pretrained: Only 100 ep (may not be very accurate)
-
-import math
+# Pretrained: Only SE-Resnet50 pretrained model is available
 
 import torch.nn as nn
+import torch.utils.model_zoo as model_zoo
 from torchvision.models import ResNet
 from .se_module import SELayer
 
@@ -86,7 +85,7 @@ class SEBottleneck(nn.Module):
         return out
 
 
-def se_resnet18(num_classes):
+def se_resnet18(num_classes=1_000):
     """Constructs a ResNet-18 model.
 
     Args:
@@ -97,7 +96,7 @@ def se_resnet18(num_classes):
     return model
 
 
-def se_resnet34(num_classes):
+def se_resnet34(num_classes=1_000):
     """Constructs a ResNet-34 model.
 
     Args:
@@ -108,7 +107,7 @@ def se_resnet34(num_classes):
     return model
 
 
-def se_resnet50(num_classes):
+def se_resnet50(num_classes=1_000, pretrained=False):
     """Constructs a ResNet-50 model.
 
     Args:
@@ -116,10 +115,12 @@ def se_resnet50(num_classes):
     """
     model = ResNet(SEBottleneck, [3, 4, 6, 3], num_classes=num_classes)
     model.avgpool = nn.AdaptiveAvgPool2d(1)
+    if pretrained:
+        model.load_state_dict(model_zoo.load_url("https://www.dropbox.com/s/xpq8ne7rwa4kg4c/seresnet50-60a8950a85b2b.pkl"))
     return model
 
 
-def se_resnet101(num_classes):
+def se_resnet101(num_classes=1_000):
     """Constructs a ResNet-101 model.
 
     Args:
@@ -130,7 +131,7 @@ def se_resnet101(num_classes):
     return model
 
 
-def se_resnet152(num_classes):
+def se_resnet152(num_classes=1_000):
     """Constructs a ResNet-152 model.
 
     Args:
@@ -286,3 +287,4 @@ def se_preactresnet56(**kwargs):
     """
     model = CifarSEPreActResNet(CifarSEBasicBlock, 9, **kwargs)
     return model
+

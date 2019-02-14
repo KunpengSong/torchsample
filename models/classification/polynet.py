@@ -459,23 +459,20 @@ class PolyNet(nn.Module):
         return x
 
 
-def polynet(num_classes=1000, pretrained='imagenet'):
+def polynet(pretrained='imagenet'):
     """PolyNet architecture from the paper
     'PolyNet: A Pursuit of Structural Diversity in Very Deep Networks'
     https://arxiv.org/abs/1611.05725
     """
-    if pretrained:
+    model = PolyNet(num_classes=1000)
+
+    if pretrained == 'imagenet':
         settings = pretrained_settings['polynet'][pretrained]
-        assert num_classes == settings['num_classes'], \
-            'num_classes should be {}, but is {}'.format(
-                settings['num_classes'], num_classes)
-        model = PolyNet(num_classes=num_classes)
         model.load_state_dict(model_zoo.load_url(settings['url']))
+
         model.input_space = settings['input_space']
         model.input_size = settings['input_size']
         model.input_range = settings['input_range']
         model.mean = settings['mean']
         model.std = settings['std']
-    else:
-        model = PolyNet(num_classes=num_classes)
     return model
