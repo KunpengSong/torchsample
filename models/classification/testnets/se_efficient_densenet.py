@@ -1,16 +1,21 @@
 # Source: https://github.com/zhouyuangan/SE_DenseNet/blob/master/se_densenet_full.py (License: MIT)
 
+"""This implementation is based on the DenseNet-BC implementation in torchvision
+1. using pytorch.utils.checkpoint to reduce memory comsumption
+2. add senet module
+"""
+
 import re
+from collections import OrderedDict
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.utils.checkpoint as cp
 import torch.utils.model_zoo as model_zoo
-from collections import OrderedDict
 from .se_module import SELayer
 
-
-__all__ = ['SEDenseNet', 'se_densenet121', 'se_densenet169', 'se_densenet201', 'se_densenet161']
-
+__all__ = ['DenseNet', 'densenet121', 'densenet169', 'densenet201', 'densenet161']
 
 model_urls = {
     'densenet121': 'https://download.pytorch.org/models/densenet121-a639ec97.pth',
@@ -20,15 +25,15 @@ model_urls = {
 }
 
 
-def se_densenet121(pretrained=False, is_strict=False, **kwargs):
+def densenet121(pretrained=False, is_strict=False, is_efficient=True, **kwargs):
     r"""Densenet-121 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = SEDenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 24, 16),
-                     **kwargs)
+    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 24, 16),
+                     num_classes=4096, efficient=is_efficient, **kwargs)
     if pretrained:
         # '.'s are no longer allowed in module names, but pervious _DenseLayer
         # has keys 'norm.1', 'relu.1', 'conv.1', 'norm.2', 'relu.2', 'conv.2'.
@@ -36,7 +41,7 @@ def se_densenet121(pretrained=False, is_strict=False, **kwargs):
         # to find such keys.
         pattern = re.compile(
             r'^(.*denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$')
-        state_dict = model_zoo.load_url(model_urls['densenet121'])
+        state_dict = {key: value for key, value in model_zoo.load_url(model_urls['densenet121']).items() if "classifier" not in key}
         for key in list(state_dict.keys()):
             res = pattern.match(key)
             if res:
@@ -47,15 +52,15 @@ def se_densenet121(pretrained=False, is_strict=False, **kwargs):
     return model
 
 
-def se_densenet169(pretrained=False, **kwargs):
+def densenet169(pretrained=False, is_strict=False, is_efficient=True, **kwargs):
     r"""Densenet-169 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = SEDenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 32, 32),
-                     **kwargs)
+    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 32, 32),
+                     efficient=is_efficient, **kwargs)
     if pretrained:
         # '.'s are no longer allowed in module names, but pervious _DenseLayer
         # has keys 'norm.1', 'relu.1', 'conv.1', 'norm.2', 'relu.2', 'conv.2'.
@@ -70,19 +75,19 @@ def se_densenet169(pretrained=False, **kwargs):
                 new_key = res.group(1) + res.group(2)
                 state_dict[new_key] = state_dict[key]
                 del state_dict[key]
-        model.load_state_dict(state_dict, strict=False)
+        model.load_state_dict(state_dict, strict=is_strict)
     return model
 
 
-def se_densenet201(pretrained=False, **kwargs):
+def densenet201(pretrained=False, is_strict=False, is_efficient=True, **kwargs):
     r"""Densenet-201 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = SEDenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 48, 32),
-                     **kwargs)
+    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 48, 32),
+                     efficient=is_efficient, **kwargs)
     if pretrained:
         # '.'s are no longer allowed in module names, but pervious _DenseLayer
         # has keys 'norm.1', 'relu.1', 'conv.1', 'norm.2', 'relu.2', 'conv.2'.
@@ -97,19 +102,19 @@ def se_densenet201(pretrained=False, **kwargs):
                 new_key = res.group(1) + res.group(2)
                 state_dict[new_key] = state_dict[key]
                 del state_dict[key]
-        model.load_state_dict(state_dict, strict=False)
+        model.load_state_dict(state_dict, strict=is_strict)
     return model
 
 
-def se_densenet161(pretrained=False, **kwargs):
+def densenet161(pretrained=False, is_strict=False, is_efficient=True, **kwargs):
     r"""Densenet-161 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = SEDenseNet(num_init_features=96, growth_rate=48, block_config=(6, 12, 36, 24),
-                     **kwargs)
+    model = DenseNet(num_init_features=96, growth_rate=48, block_config=(6, 12, 36, 24),
+                     efficient=is_efficient, **kwargs)
     if pretrained:
         # '.'s are no longer allowed in module names, but pervious _DenseLayer
         # has keys 'norm.1', 'relu.1', 'conv.1', 'norm.2', 'relu.2', 'conv.2'.
@@ -124,12 +129,22 @@ def se_densenet161(pretrained=False, **kwargs):
                 new_key = res.group(1) + res.group(2)
                 state_dict[new_key] = state_dict[key]
                 del state_dict[key]
-        model.load_state_dict(state_dict, strict=False)
+        model.load_state_dict(state_dict, strict=is_strict)
     return model
 
 
-class _DenseLayer(nn.Sequential):
-    def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):
+def _bn_function_factory(norm, relu, conv):
+    def bn_function(*inputs):
+        concated_features = torch.cat(inputs, 1)
+        bottleneck_output = conv(relu(norm(concated_features)))
+        return bottleneck_output
+
+    return bn_function
+
+
+class _DenseLayer(nn.Module):
+    def __init__(self, num_input_features, growth_rate, bn_size, drop_rate,
+                 efficient=False):
         super(_DenseLayer, self).__init__()
         # Add SELayer at here, like SE-PRE block in original paper illustrates
         self.add_module("selayer", SELayer(channel=num_input_features)),
@@ -137,32 +152,68 @@ class _DenseLayer(nn.Sequential):
         self.add_module('norm1', nn.BatchNorm2d(num_input_features)),
         self.add_module('relu1', nn.ReLU(inplace=True)),
         self.add_module('conv1', nn.Conv2d(num_input_features, bn_size *
-                        growth_rate, kernel_size=1, stride=1, bias=False)),
+                                           growth_rate, kernel_size=1, stride=1, bias=False)),
         self.add_module('norm2', nn.BatchNorm2d(bn_size * growth_rate)),
         self.add_module('relu2', nn.ReLU(inplace=True)),
         self.add_module('conv2', nn.Conv2d(bn_size * growth_rate, growth_rate,
-                        kernel_size=3, stride=1, padding=1, bias=False)),
+                                           kernel_size=3, stride=1, padding=1, bias=False)),
         self.drop_rate = drop_rate
+        self.efficient = efficient
 
-    def forward(self, x):
-        new_features = super(_DenseLayer, self).forward(x)
+    def forward(self, *prev_features):
+        """原有的两次BN层需要消耗的两块显存空间，
+        通过使用checkpoint，实现了只开辟一块空间用来存储中间特征
+        """
+        bn_function = _bn_function_factory(self.norm1, self.relu1, self.conv1)
+        # requires_grad is True means that model is in train status
+        # checkpoint implement shared memory storage function
+
+        if self.efficient and any(prev_feature.requires_grad for prev_feature in prev_features):
+            bottleneck_output = cp.checkpoint(bn_function, *prev_features)
+        else:
+            bottleneck_output = bn_function(*prev_features)
+
+        new_features = self.conv2(self.relu2(self.norm2(bottleneck_output)))
+
         if self.drop_rate > 0:
-            new_features = F.dropout(new_features, p=self.drop_rate, training=self.training)
-        return torch.cat([x, new_features], 1)
+            new_features = F.dropout(new_features,
+                                     p=self.drop_rate,
+                                     training=self.training
+                                     )
+        return new_features
 
 
-class _DenseBlock(nn.Sequential):
-    def __init__(self, num_layers, num_input_features, bn_size, growth_rate, drop_rate):
+class _DenseBlock(nn.Module):
+    def __init__(self,
+                 num_layers,
+                 num_input_features,
+                 bn_size,
+                 growth_rate,
+                 drop_rate,
+                 efficient=False):
         super(_DenseBlock, self).__init__()
         for i in range(num_layers):
-            layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bn_size, drop_rate)
+            layer = _DenseLayer(
+                num_input_features + i * growth_rate,
+                growth_rate=growth_rate,
+                bn_size=bn_size,
+                drop_rate=drop_rate,
+                efficient=efficient,
+            )
+
             self.add_module('denselayer%d' % (i + 1), layer)
+
+    def forward(self, init_features):
+        features = [init_features]
+        for name, layer in self.named_children():
+            new_features = layer(*features)
+            features.append(new_features)
+        return torch.cat(features, 1)
 
 
 class _Transition(nn.Sequential):
     def __init__(self, num_input_features, num_output_features):
         super(_Transition, self).__init__()
-        self.add_module("selayer", SELayer(channel=num_input_features))
         self.add_module('norm', nn.BatchNorm2d(num_input_features))
         self.add_module('relu', nn.ReLU(inplace=True))
         self.add_module('conv', nn.Conv2d(num_input_features, num_output_features,
@@ -170,24 +221,27 @@ class _Transition(nn.Sequential):
         self.add_module('pool', nn.AvgPool2d(kernel_size=2, stride=2))
 
 
-class SEDenseNet(nn.Module):
+class DenseNet(nn.Module):
     r"""Densenet-BC model class, based on
-    `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
-
+    `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`
     Args:
         growth_rate (int) - how many filters to add each layer (`k` in paper)
-        block_config (list of 4 ints) - how many layers in each pooling block
+        block_config (list of 3 or 4 ints) - how many layers in each pooling block
         num_init_features (int) - the number of filters to learn in the first convolution layer
         bn_size (int) - multiplicative factor for number of bottle neck layers
-          (i.e. bn_size * k features in the bottleneck layer)
+            (i.e. bn_size * k features in the bottleneck layer)
         drop_rate (float) - dropout rate after each dense layer
         num_classes (int) - number of classification classes
+        small_inputs (bool) - set to True if images are 32x32. Otherwise assumes images are larger.
+        efficient (bool) - set to True to use checkpointing. Much more memory efficient, but slower.
     """
 
-    def __init__(self, growth_rate=32, block_config=(6, 12, 24, 16),
-                 num_init_features=64, bn_size=4, drop_rate=0, num_classes=1000):
+    def __init__(self, growth_rate=12, block_config=(16, 16, 16), compression=0.5,
+                 num_init_features=24, bn_size=4, drop_rate=0,
+                 num_classes=4096, efficient=True):
 
-        super(SEDenseNet, self).__init__()
+        super(DenseNet, self).__init__()
+        assert 0 < compression <= 1, 'compression of densenet should be between 0 and 1'
 
         # First convolution
         self.features = nn.Sequential(OrderedDict([
@@ -197,34 +251,29 @@ class SEDenseNet(nn.Module):
             ('pool0', nn.MaxPool2d(kernel_size=3, stride=2, padding=1)),
         ]))
 
-        # Add SELayer at first convolution
-        # self.features.add_module("SELayer_0a", SELayer(channel=num_init_features))
-
         # Each denseblock
         num_features = num_init_features
-        for i, num_layers in enumerate(block_config):
-            # Add a SELayer
-            # self.features.add_module("SELayer_%da" % (i + 1), SELayer(channel=num_features))
 
+        for i, num_layers in enumerate(block_config):
             block = _DenseBlock(num_layers=num_layers, num_input_features=num_features,
-                                bn_size=bn_size, growth_rate=growth_rate, drop_rate=drop_rate)
+                                bn_size=bn_size, growth_rate=growth_rate, drop_rate=drop_rate, efficient=efficient,
+                                )
+
             self.features.add_module('denseblock%d' % (i + 1), block)
 
             num_features = num_features + num_layers * growth_rate
 
             if i != len(block_config) - 1:
                 # Add a SELayer behind each transition block
-                # self.features.add_module("SELayer_%db" % (i + 1), SELayer(channel=num_features))
+                self.features.add_module("SELayer_%da" % (i + 1), SELayer(channel=num_features))
 
-                trans = _Transition(num_input_features=num_features, num_output_features=num_features // 2)
+                trans = _Transition(num_input_features=num_features,
+                                    num_output_features=int(num_features * compression))
                 self.features.add_module('transition%d' % (i + 1), trans)
                 num_features = num_features // 2
 
         # Final batch norm
         self.features.add_module('norm5', nn.BatchNorm2d(num_features))
-
-        # Add SELayer
-        # self.features.add_module("SELayer_0b", SELayer(channel=num_features))
 
         # Linear layer
         self.classifier = nn.Linear(num_features, num_classes)
@@ -242,28 +291,24 @@ class SEDenseNet(nn.Module):
     def forward(self, x):
         features = self.features(x)
         out = F.relu(features, inplace=True)
-        out = F.avg_pool2d(out, kernel_size=7, stride=1).view(features.size(0), -1)
+        out = F.avg_pool2d(out, kernel_size=7).view(features.size(0), -1)
         out = self.classifier(out)
         return out
 
 
+if __name__ == "__main__":
+    # X = torch.Tensor(1, 3, 224, 224)
+    X = torch.zeros([1, 3, 224, 224])
+    net = densenet121(pretrained=True, is_strict=False, is_efficient=True)
+    print(net)
 
-def test_se_densenet(pretrained=False):
-    X = torch.Tensor(32, 3, 224, 224)
-
-    if pretrained:
-        model = se_densenet121(pretrained=pretrained)
-        net_state_dict = {key: value for key, value in model_zoo.load_url("https://download.pytorch.org/models/densenet121-a639ec97.pth").items()}
-        model.load_state_dict(net_state_dict, strict=False)
-
-    else:
-        model = se_densenet121(pretrained=pretrained)
-
-    print(model)
     if torch.cuda.is_available():
         X = X.cuda()
-        model = model.cuda()
-    model.eval()
+        net = net.cuda()
+
+    net.eval()
     with torch.no_grad():
-        output = model(X)
+        output = net(X)
         print(output.shape)
+
+    # print(net)

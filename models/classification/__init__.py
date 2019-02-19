@@ -1,4 +1,4 @@
-from .dpn.dualpath import dpn68, dpn68b, dpn92, dpn98, dpn107, dpn131, DPN # dpnXX = pretrained on imagenet, DPN = not pretrained
+from .dpn.dualpath import dpn68, dpn68b, dpn98, dpn107, dpn131, DPN # dpnXX = pretrained on imagenet, DPN = not pretrained
 from .bninception import bninception, BNInception                   # bninception = pretrained on imagenet, BNInception not pretrained
 from .fbresnet import FBResNet, fbresnet152, fbresnet50, fbresnet34, fbresnet18     # only fbresnet152 pretrained
 from .inception_resv2_wide import InceptionResV2                    # InceptionResV2 not pretrained
@@ -12,7 +12,7 @@ from .pyramid_resnet import pyresnet18, pyresnet34, PyResNet        # pyresnetxx
 from .resnet_swish import resnet18 as Resnet18_swish, resnet34 as Resnet34_swish, resnet50 as Resnet50_swish, resnet101 as Resnet101_swish, resnet152 as Resnet152_swish # not pretrained
 from .resnext import resnext101_32x4d, resnext101_64x4d, ResNeXt101_32x4d, ResNeXt101_64x4d  # resnextxxx = pretrained on imagenet, ResNeXt not pretrained
 from .se_inception import SEInception3                              # not pretrained
-from .se_resnet import se_resnet34 as SE_Resnet34, se_resnet50, se_resnet101 as SE_Resnet101, se_resnet152 as SE_Resnet152   # only se_resnet50 is pretrained!
+from .se_resnet import se_resnet34 as SE_Resnet34, se_resnet50 as se_resnet50_2, se_resnet101 as SE_Resnet101, se_resnet152 as SE_Resnet152   # only se_resnet50_2 is pretrained!
 from .senet import se_resnet50, se_resnet101, se_resnet152, senet154, se_resnext50_32x4d, se_resnext101_32x4d, SENet       # pretrained
 from .wide_resnet import WResNet_imagenet                           # not pretrained
 from .wide_resnet_2 import WideResNet                               # not pretrained

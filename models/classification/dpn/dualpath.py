@@ -21,21 +21,16 @@ from .convert_from_mxnet import convert_from_mxnet, has_mxnet
 
 dpnroot = 'https://s3.amazonaws.com/dpn-pytorch-weights/'
 drnroot = 'https://tigress-web.princeton.edu/~fy/drn/models/'
+cadeneroot = 'http://data.lip6.fr/cadene/pretrainedmodels/'
 
 model_urls = {
-    'dpn68': dpnroot + 'dpn68-4af7d88d2.pth',
-    'dpn68b-extra': dpnroot + 'dpn68b_extra-363ab9c19.pth',
-    'dpn92-extra': dpnroot + 'dpn92_extra-fda993c95.pth',
-    'dpn98': dpnroot + 'dpn98-722954780.pth',
-    'dpn107-extra': dpnroot + 'dpn107_extra-b7f9f4cc9.pth',
-    'dpn131': dpnroot + 'dpn131-7af84be88.pth',
-    'drn-c-26': drnroot + 'drn_c_26-ddedf421.pth',
-    'drn-c-42': drnroot + 'drn_c_42-9d336e8c.pth',
-    'drn-c-58': drnroot + 'drn_c_58-0a53a92c.pth',
-    'drn-d-22': drnroot + 'drn_d_22-4bd2f8ea.pth',
-    'drn-d-38': drnroot + 'drn_d_38-eebb45f0.pth',
-    'drn-d-54': drnroot + 'drn_d_54-0e0534ff.pth',
-    'drn-d-105': drnroot + 'drn_d_105-12b40979.pth'
+    'dpn68': cadeneroot + 'dpn68-66bebafa7.pth',
+    'dpn68b-extra': cadeneroot + 'dpn68b_extra-84854c156.pth',
+    'dpn92': '',
+    'dpn92-extra': cadeneroot + 'dpn92_extra-b040e4a9b.pth',
+    'dpn98': cadeneroot + 'dpn98-5b90dec4d.pth',
+    'dpn131': cadeneroot + 'dpn131-71dfe43e0.pth',
+    'dpn107-extra': cadeneroot + 'dpn107_extra-1ac7121e2.pth'
 }
 
 
