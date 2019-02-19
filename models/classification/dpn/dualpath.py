@@ -44,7 +44,12 @@ def dpn68(num_classes=1000, pretrained=False, test_time_pool=True):
         num_classes=num_classes, test_time_pool=test_time_pool)
     if pretrained:
         if model_urls['dpn68']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn68']))
+            state_dict = model_zoo.load_url(model_urls['dpn68'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68')
         else:
@@ -59,7 +64,12 @@ def dpn68b(num_classes=1000, pretrained=False, test_time_pool=True):
         num_classes=num_classes, test_time_pool=test_time_pool)
     if pretrained:
         if model_urls['dpn68b-extra']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn68b-extra']))
+            state_dict = model_zoo.load_url(model_urls['dpn68b-extra'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68-extra')
         else:
@@ -79,7 +89,12 @@ def dpn92(num_classes=1000, pretrained=False, test_time_pool=True, extra=True):
         if extra:
             key += '-extra'
         if model_urls[key]:
-            model.load_state_dict(model_zoo.load_url(model_urls[key]))
+            state_dict = model_zoo.load_url(model_urls['dpn92'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/' + key)
         else:
@@ -94,7 +109,12 @@ def dpn98(num_classes=1000, pretrained=False, test_time_pool=True):
         num_classes=num_classes, test_time_pool=test_time_pool)
     if pretrained:
         if model_urls['dpn98']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn98']))
+            state_dict = model_zoo.load_url(model_urls['dpn98'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn98')
         else:
@@ -109,7 +129,12 @@ def dpn131(num_classes=1000, pretrained=False, test_time_pool=True):
         num_classes=num_classes, test_time_pool=test_time_pool)
     if pretrained:
         if model_urls['dpn131']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn131']))
+            state_dict = model_zoo.load_url(model_urls['dpn131'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn131')
         else:
@@ -124,7 +149,12 @@ def dpn107(num_classes=1000, pretrained=False, test_time_pool=True):
         num_classes=num_classes, test_time_pool=test_time_pool)
     if pretrained:
         if model_urls['dpn107-extra']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn107-extra']))
+            state_dict = model_zoo.load_url(model_urls['dpn107-extra'])
+            if state_dict.get('classifier.weight') is not None:
+                state_dict['last_linear.weight'] = state_dict.pop('classifier.weight')
+            if state_dict.get('classifier.bias') is not None:
+                state_dict['last_linear.bias'] = state_dict.pop('classifier.bias')
+            model.load_state_dict(state_dict)
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn107-extra')
         else:

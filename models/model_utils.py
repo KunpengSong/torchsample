@@ -79,6 +79,11 @@ def get_model(type, model_name, num_classes, input_size, pretrained=True):
             if getattr(model, 'aux_logits', False):
                 model.AuxLogits = InceptionAux(768, num_classes)
             model.fc = nn.Linear(2048, num_classes)
+
+        elif 'dpn' in model_name.lower():
+            old_fc = getattr(model, fc_name)
+            new_fc = nn.Conv2d(old_fc.in_channels, num_classes, kernel_size=1, bias=True)
+            setattr(model, fc_name, new_fc)
         else:  # perform standard replacement of the last FC / Linear layer with a new one
             old_fc = getattr(model, fc_name)
             new_fc = nn.Linear(old_fc.in_features, num_classes)
