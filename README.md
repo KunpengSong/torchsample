@@ -1,4 +1,4 @@
-# Wick - High-Level Training framework for Pytorch
+# Wick: High-Level Training framework for Pytorch
 
 This framework is based in large part on the excellent [Torchsample](https://github.com/ncullen93/torchsample) library originally published by @ncullen93.
 
@@ -62,7 +62,7 @@ found in `Keras`:
 
 - `CSVLogger` - Logs epoch-level metrics to a CSV file
 - [`CyclicLRScheduler`](https://github.com/bckenstler/CLR) - Cycles through min-max learning rate
-- `EarlyStopping` - Provides ability to stop training based on supplied criteria
+- `EarlyStopping` - Provides ability to stop training early based on supplied criteria
 - `ExperimentLogger`
 - `History` - Keeps history of metrics etc. during the learning process
 - `LRScheduler` - Simple learning rate scheduler based on function or supplied schedule
@@ -145,60 +145,109 @@ tools which can be applied during data loading. The package also provides the fl
 `TensorDataset` and `FolderDataset` classes to handle most dataset needs.
 
 ### Torch Transforms
-These transforms work directly on torch tensors
+##### These transforms work directly on torch tensors
 
-- `Compose()` 
-- `AddChannel()`
-- `SwapDims()` 
-- `RangeNormalize()` 
-- `StdNormalize()` 
-- `Slice2D()` 
-- `RandomCrop()` 
-- `SpecialCrop()` 
-- `Pad()` 
-- `RandomFlip()`
-- `ToTensor()`
+- `AddChannel`
+- `ChannelsFirst`
+- `ChannelsLast`
+- `Compose`
+- `ExpandAxis`
+- `Pad`
+- `PadNumpy`
+- `RandomChoiceCompose`
+- `RandomCrop`
+- `RandomFlip`
+- `RandomOrder`
+- `RangeNormalize`
+- `Slice2D`
+- `SpecialCrop`
+- `StdNormalize`
+- `ToFile`
+- `ToNumpyType`
+- `ToTensor`
+- `Transpose`
+- `TypeCast`
 
-### Affine Transforms
-![Original](https://github.com/ncullen93/torchsample/blob/master/examples/imgs/orig1.png "Original") ![Transformed](https://github.com/ncullen93/torchsample/blob/master/examples/imgs/tform1.png "Transformed")
+##### Additionally, we provide image-specific manipulations directly on tensors:
 
-The following transforms perform affine (or affine-like) transforms on torch tensors. 
+- `Brightness`
+- `Contrast`
+- `Gamma`
+- `Grayscale`
+- `RandomBrightness`
+- `RandomChoiceBrightness`
+- `RandomChoiceContrast`
+- `RandomChoiceGamma`
+- `RandomChoiceSaturation`
+- `RandomContrast`
+- `RandomGamma`
+- `RandomGrayscale`
+- `RandomSaturation`
+- `Saturation`
 
-- `Rotate()` 
-- `Translate()` 
-- `Shear()` 
-- `Zoom()` 
+#####  Affine Transforms (perform affine or affine-like transforms on torch tensors)
+
+- `RandomAffine`
+- `RandomChoiceRotate`
+- `RandomChoiceShear`
+- `RandomChoiceTranslate`
+- `RandomChoiceZoom`
+- `RandomRotate`
+- `RandomShear`
+- `RandomSquareZoom`
+- `RandomTranslate`
+- `RandomZoom`
+- `Rotate`
+- `Shear`
+- `Translate`
+- `Zoom`
 
 We also provide a class for stringing multiple affine transformations together so that only one interpolation takes place:
 
-- `Affine()` 
-- `AffineCompose()` 
+- `Affine` 
+- `AffineCompose`
+
+##### Blur and Scramble transforms (for tensors)
+- `Blur`
+- `RandomChoiceBlur`
+- `RandomChoiceScramble`
+- `Scramble`
 
 ### Datasets and Sampling
-We provide the following datasets which provide general structure and iterators for sampling from and using transforms on in-memory or out-of-memory data:
+We provide the following datasets which provide general structure and iterators for sampling from and using transforms on in-memory or out-of-memory data. In particular,
+the `FolderDataset` has been designed to fit most of your dataset needs. It has extensive options for data filtering and manipulation.
 
 - `ClonedDataset`
 - `CSVDataset`
 - `FolderDataset`
 - `TensorDataset`
 - `tnt.BatchDataset`
+- `tnt.ConcatDataset`
 - `tnt.ListDataset`
 - `tnt.MultiPartitionDataset`
 - `tnt.ResampleDataset`
 - `tnt.ShuffleDataset`
+- `tnt.TensorDataset`
 - `tnt.TransformDataset`
 
-## Image Classification Models (most are pretrained!)
+## Extensive Library of Image Classification Models (most are pretrained!)
 - All standard models from Pytorch (ResNet, VGG)
 - BatchNorm Inception
 - Dual-Path Networks
+- FBResnet
+- Inception v3
 - Inception v4
 - InceptionResnet v2
 - NasNet and NasNet Mobile ([Learning Transferable Architectures for Scalable Image Recognition](https://arxiv.org/abs/1707.07012))
+- PNASNet
+- Polynet
 - Pyramid Resnet
+- Resnet
+- Resnet + Swish
 - ResNext
+- SE Net
 - SE Inception
-- WideResnet
+- Wide Resnet
 - XCeption
 
 
@@ -221,15 +270,18 @@ We provide the following datasets which provide general structure and iterators 
 15. Additional variations of many of the above
 
 ## Acknowledgements and References
-Thank you to the following people and contributors:
+##### Thank you to the following people and the projects they maintain:
 - @ncullen93
 - @cadene
-- All Keras contributors
 - @deallynomore
 - @recastrodiaz
+- @zijundeng
+- And many others! (attributions listed in the codebase as they occur)
 
-Thank you to the following projects from which we gently borrowed code and models
+##### Thank you to the following projects from which we gently borrowed code and models
 - [PyTorchNet](https://github.com/pytorch/tnt)
 - [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)
-- [pspnet-pytorch](https://github.com/Lextal/pspnet-pytorch)
-- Many others (typically documented in the code)
+- [DeepLab_pytorch](https://github.com/doiken23/DeepLab_pytorch)
+- [Pytorch for Semantic Segmentation](https://github.com/zijundeng/pytorch-semantic-segmentation)
+- [Binseg Pytorch](https://github.com/saeedizadi/binseg_pytoch)
+- And many others! (attributions listed in the codebase as they occur)
