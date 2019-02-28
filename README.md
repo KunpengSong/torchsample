@@ -65,9 +65,10 @@ found in `Keras`:
 - `EarlyStopping` - Provides ability to stop training early based on supplied criteria
 - `ExperimentLogger`
 - `History` - Keeps history of metrics etc. during the learning process
+- `LambdaCallback` - Allows you to implement your own callbacks on the fly
 - `LRScheduler` - Simple learning rate scheduler based on function or supplied schedule
-- `ReduceLROnPlateau` - Reduces learning rate (LR) when a plateau has been reached
 - `ModelCheckpoint` - Comprehensive model saver
+- `ReduceLROnPlateau` - Reduces learning rate (LR) when a plateau has been reached
 - `SimpleModelCheckpoint` - Simple model saver
 
 

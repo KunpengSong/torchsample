@@ -174,6 +174,7 @@ class FolderDataset(UsefulDataset):
             if self.apply_co_transform_first and self.co_transform is not None:
                 input_sample, target_sample = self.co_transform(input_sample, target_sample)
             if self.transform is not None:
+                # input_sample = self.transform(image=input_sample)     # needed for albumentations to work (but currently albumentations dies with multiple workers)
                 input_sample = self.transform(input_sample)
             if self.target_transform is not None:
                 target_sample = self.target_transform(target_sample)
