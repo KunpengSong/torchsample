@@ -1,6 +1,6 @@
 # Wick: High-Level Training framework for Pytorch
 
-This framework is based in large part on the excellent [Torchsample](https://github.com/ncullen93/torchsample) library originally published by @ncullen93.
+This framework is based in large part on the excellent [Torchsample](https://github.com/ncullen93/torchsample) framework originally published by @ncullen93.
 
 
 Wick aims to provide a *batteries included* framework for training neural networks. Among other things it includes:
@@ -20,6 +20,8 @@ and more.
 Example:
 ```python
 from wick.modules import ModuleTrainer
+import torch.nn as nn
+import torch.functional as F
 
 # Define your model EXACTLY as normal
 class Network(nn.Module):
@@ -63,14 +65,14 @@ found in `Keras`:
 - `CSVLogger` - Logs epoch-level metrics to a CSV file
 - [`CyclicLRScheduler`](https://github.com/bckenstler/CLR) - Cycles through min-max learning rate
 - `EarlyStopping` - Provides ability to stop training early based on supplied criteria
-- `ExperimentLogger`
 - `History` - Keeps history of metrics etc. during the learning process
 - `LambdaCallback` - Allows you to implement your own callbacks on the fly
 - `LRScheduler` - Simple learning rate scheduler based on function or supplied schedule
 - `ModelCheckpoint` - Comprehensive model saver
 - `ReduceLROnPlateau` - Reduces learning rate (LR) when a plateau has been reached
 - `SimpleModelCheckpoint` - Simple model saver
-
+- Additionally, a TensorboardLogger is incredibly easy to implement via the [TensorboardX](https://github.com/lanpa/tensorboardX)
+library but is not included here to reduce the number of dependencies
 
 
 ```python

@@ -5,17 +5,17 @@ import torch.nn.functional as F
 
 from torch.utils.data import DataLoader
 
-from torchsample.modules import ModuleTrainer
-from torchsample.callbacks import EarlyStopping, ReduceLROnPlateau
-from torchsample.regularizers import L1Regularizer, L2Regularizer
-from torchsample.constraints import UnitNorm
-from torchsample.initializers import XavierUniform
-from torchsample.metrics import CategoricalAccuracy
-from torchsample import TensorDataset
+from wick.modules import ModuleTrainer
+from wick.callbacks import EarlyStopping, ReduceLROnPlateau
+from wick.regularizers import L1Regularizer, L2Regularizer
+from wick.constraints import UnitNorm
+from wick.initializers import XavierUniform
+from wick.metrics import CategoricalAccuracy
+from wick import TensorDataset
 
 import os
 from torchvision import datasets
-ROOT = '/users/ncullen/desktop/data/mnist'
+ROOT = '/data/mnist'
 dataset = datasets.MNIST(ROOT, train=True, download=True)
 x_train, y_train = th.load(os.path.join(dataset.root, 'processed/training.pt'))
 x_test, y_test = th.load(os.path.join(dataset.root, 'processed/test.pt'))

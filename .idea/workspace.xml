@@ -1,0 +1,1581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="aaa770ac-30b0-4676-9127-dc767ecd64d7" name="Default" comment="update to readme" />
+    <ignored path=".idea/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1901576185">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="24" />
+          <entry key="project.open.time.0" value="16" />
+          <entry key="project.open.time.3" value="4" />
+          <entry key="project.open.time.4" value="6" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="27" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="Python Console" value="120" />
+          <entry key="dummy" value="7" />
+          <entry key="md" value="1604" />
+          <entry key="py" value="5048" />
+          <entry key="txt" value="1506" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Markdown" value="1602" />
+          <entry key="PLAIN_TEXT" value="1513" />
+          <entry key="Python" value="5170" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="LICENSE" value="1" />
+          <entry key="ipynb" value="1" />
+          <entry key="md" value="4" />
+          <entry key="py" value="346" />
+          <entry key="sh" value="1" />
+          <entry key="txt" value="8" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Bash" value="1" />
+          <entry key="IPNB" value="1" />
+          <entry key="Markdown" value="4" />
+          <entry key="PLAIN_TEXT" value="9" />
+          <entry key="Python" value="346" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.create.new" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileColors">
+    <fileColor scope="Non-Project Files (Material Default)" color="2E3C43" />
+    <fileColor scope="Non-Project Files (Material Darker)" color="323232" />
+    <fileColor scope="Non-Project Files (Material Lighter)" color="eae8e8" />
+    <fileColor scope="Non-Project Files (Material Palenight)" color="2f2e43" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../wick/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="394">
+                <caret line="86" column="13" selection-start-line="86" selection-start-column="13" selection-end-line="86" selection-end-column="13" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/grid_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/gridsearch.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/pipeline.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>os.wal</find>
+      <find>listdir</find>
+      <find>os.path</find>
+      <find>save_path</find>
+      <find>nasnetalarg</find>
+      <find>nasn</find>
+      <find>bninception</find>
+      <find>No transforms detected for model</find>
+      <find>polyne</find>
+      <find>AddChannel</find>
+      <find>inception</find>
+      <find>torchvision</find>
+      <find>drn-c-58</find>
+      <find>dpn98</find>
+      <find>dpn981</find>
+      <find>concat</find>
+      <find>scipy</find>
+      <find>flip</find>
+      <find>normalize</find>
+      <find>randomcrop</find>
+      <find>rotate</find>
+      <find>import cv2</find>
+      <find>inceptionv3</find>
+      <find>()`</find>
+      <find>image=</find>
+      <find>torchsample</find>
+      <find>ncullen</find>
+      <find>$PROJECT_DIR$/../../../../ncullen/desktop</find>
+      <find>ncul</find>
+      <find>import torch.functional as F</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>stop_time_s</replace>
+      <replace>._criterion</replace>
+      <replace>set_criterion</replace>
+      <replace>return outputs if idx &gt;= 1</replace>
+      <replace>device</replace>
+      <replace>DRN</replace>
+      <replace>cadeneroot + '</replace>
+      <replace>torchroot + '</replace>
+      <replace>dpnroot + '</replace>
+      <replace>lex_extractors</replace>
+      <replace>Wick</replace>
+      <replace>img_size</replace>
+      <replace>.detach()</replace>
+      <replace>item()</replace>
+      <replace>move_to_device(</replace>
+      <replace>wick</replace>
+      <replace>checkpoint_path</replace>
+      <replace>lower</replace>
+      <replace>torch.</replace>
+      <replace>.upscale</replace>
+      <replace>upscale</replace>
+      <replace>F.interpolate</replace>
+      <replace>upsample</replace>
+      <replace>`</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="achaiah" />
+        <option value="achaiah &lt;achaiah@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="pytorch0.4" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/models/segmentation/testnets/mnas_linknets/linknet.py" />
+        <option value="$PROJECT_DIR$/models/segmentation/testnets/__init__.py" />
+        <option value="$PROJECT_DIR$/models/classification/pretrained_notes.txt" />
+        <option value="$PROJECT_DIR$/models/classification/senet.py" />
+        <option value="$PROJECT_DIR$/torchsample/datasets/data_utils.py" />
+        <option value="$PROJECT_DIR$/torchsample/misc.py" />
+        <option value="$PROJECT_DIR$/models/model_locations.py" />
+        <option value="$PROJECT_DIR$/torchsample/callbacks/ModelCheckpoint.py" />
+        <option value="$PROJECT_DIR$/models/segmentation/testnets/mnas_linknets/inception4.py" />
+        <option value="$PROJECT_DIR$/models/classification/bninception.py" />
+        <option value="$PROJECT_DIR$/models/classification/inceptionresnetv2.py" />
+        <option value="$PROJECT_DIR$/models/classification/inceptionv4.py" />
+        <option value="$PROJECT_DIR$/models/classification/nasnet.py" />
+        <option value="$PROJECT_DIR$/models/classification/polynet.py" />
+        <option value="$PROJECT_DIR$/models/classification/pnasnet.py" />
+        <option value="$PROJECT_DIR$/models/classification/resnext.py" />
+        <option value="$PROJECT_DIR$/models/classification/se_inception.py" />
+        <option value="$PROJECT_DIR$/models/classification/se_resnet.py" />
+        <option value="$PROJECT_DIR$/models/classification/se_module.py" />
+        <option value="$PROJECT_DIR$/models/classification/testnets/__init__.py" />
+        <option value="$PROJECT_DIR$/models/classification/testnets/se_densenet_full.py" />
+        <option value="$PROJECT_DIR$/models/classification/testnets/se_efficient_densenet.py" />
+        <option value="$PROJECT_DIR$/models/classification/fbresnet.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/models/classification/xception.py" />
+        <option value="$PROJECT_DIR$/models/classification/__init__.py" />
+        <option value="$PROJECT_DIR$/models/classification/resnext_features/resnext101_32x4d_features.py" />
+        <option value="$PROJECT_DIR$/models/classification/resnext_features/resnext101_64x4d_features.py" />
+        <option value="$PROJECT_DIR$/models/model_utils.py" />
+        <option value="$PROJECT_DIR$/models/classification/dpn/dualpath.py" />
+        <option value="$PROJECT_DIR$/torchsample/datasets/tnt/concatdataset.py" />
+        <option value="$PROJECT_DIR$/torchsample/transforms/tensor_transforms.py" />
+        <option value="$PROJECT_DIR$/torchsample/transforms/README.md" />
+        <option value="$PROJECT_DIR$/tests/test_transforms.py" />
+        <option value="$PROJECT_DIR$/torchsample/datasets/FolderDataset.py" />
+        <option value="$PROJECT_DIR$/wick/utils.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/simple_multi_input_no_target.py" />
+        <option value="$PROJECT_DIR$/examples/mnist_example.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/simple_multi_input_multi_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/single_input_no_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/simple_multi_input_single_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/single_input_multi_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_loader_simple/single_input_multi_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_loader_simple/single_input_single_target.py" />
+        <option value="$PROJECT_DIR$/examples/mnist_loader_example.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_complex/multi_input_multi_target.py" />
+        <option value="$PROJECT_DIR$/tests/integration/fit_simple/single_input_single_target.py" />
+        <option value="$PROJECT_DIR$/wick/datasets/tnt/__init__.py" />
+        <option value="$PROJECT_DIR$/tests/test_meters.py" />
+        <option value="$PROJECT_DIR$/wick/datasets/tnt/batchdataset.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
+    <option name="width" value="2560" />
+    <option name="height" value="1417" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyPep8Inspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="wick" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wick" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wick" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wick" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wick" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wick" type="462c0819:PsiDirectoryNode" />
+              <item name="wick" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="upsample&#9;null&#9;null&#10;cuda&#9;null&#9;null&#10;move_to&#9;null&#9;null&#10;ToNum&#9;null&#9;null&#10;get_model&#9;null&#9;null&#10;modelc&#9;null&#9;null&#10;getModel&#9;null&#9;null&#10;get_1x_lr_params_NOscale&#9;null&#9;null" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models/segmentation/testnets/mnas_linknets" />
+      <recent name="$PROJECT_DIR$/torchsample" />
+      <recent name="$PROJECT_DIR$/models/segmentation/testnets" />
+      <recent name="$PROJECT_DIR$/models/segmentation/testnets/icnet" />
+      <recent name="$PROJECT_DIR$/models/segmentation" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models/segmentation/testnets/encnet" />
+      <recent name="$PROJECT_DIR$/models/segmentation/testnets/encnet/encoding" />
+      <recent name="$PROJECT_DIR$/torchsample/callbacks" />
+      <recent name="$PROJECT_DIR$/torchsample/functions" />
+      <recent name="$PROJECT_DIR$/torchsample/datasets" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python tests.Unittests in test_datasets.py">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mean_std_check" type="PythonConfigurationType" factoryName="Python">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/local/Cellar/python3/3.6.5/Frameworks/Python.framework/Versions/3.6/bin/python3" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/torchsample/functions" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/torchsample/meanstd.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mean_std_stats" type="PythonConfigurationType" factoryName="Python">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/local/Cellar/python3/3.6.5/Frameworks/Python.framework/Versions/3.6/bin/python3" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/torchsample/datasets" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/torchsample/data_stats.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_affine_transforms" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/unit/transforms" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/unit/transforms/test_affine_transforms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_image_transforms" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/unit/transforms" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/unit/transforms/test_image_transforms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_tensor_transforms" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/unit/transforms" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/unit/transforms/test_tensor_transforms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in test_datasets.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wick/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/../wick/tests/test_datasets.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in test_meters.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wick/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/../wick/tests/test_meters.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Nosetests">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Twisted Trial">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <module name="wick" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.mean_std_check" />
+      <item itemvalue="Python.mean_std_stats" />
+      <item itemvalue="Python.test_affine_transforms" />
+      <item itemvalue="Python.test_image_transforms" />
+      <item itemvalue="Python.test_tensor_transforms" />
+      <item itemvalue="Python tests.Unittests in test_datasets.py" />
+      <item itemvalue="Python tests.Unittests in test_meters.py" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Unittests in test_datasets.py" />
+        <item itemvalue="Python tests.Unittests in test_meters.py" />
+        <item itemvalue="Python.test_tensor_transforms" />
+        <item itemvalue="Python.test_image_transforms" />
+        <item itemvalue="Python.test_affine_transforms" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_MODE" value="false" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
+    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>$USER_HOME$/.subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aaa770ac-30b0-4676-9127-dc767ecd64d7" name="Default" comment="" />
+      <created>1509655488533</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1509655488533</updated>
+    </task>
+    <task id="LOCAL-00062" summary="making a number of refinements to functions and nets&#10;adding new type of loss (binary_focal_loss)">
+      <created>1528322529136</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1528322529137</updated>
+    </task>
+    <task id="LOCAL-00063" summary="small typo fix">
+      <created>1528322827710</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1528322827711</updated>
+    </task>
+    <task id="LOCAL-00064" summary="reworking some module imports and adding ability to compute mean/std of an image dataset">
+      <created>1529356265864</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1529356265864</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Additional rework based on pytorch 0.4.0 features">
+      <created>1532987076578</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1532987076578</updated>
+    </task>
+    <task id="LOCAL-00066" summary="fixing a few more items for pytorch0.4">
+      <created>1533051343160</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1533051343160</updated>
+    </task>
+    <task id="LOCAL-00067" summary="additional modifications">
+      <created>1533153481992</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1533153481993</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Adding classification model loading">
+      <created>1533915892913</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1533915892914</updated>
+    </task>
+    <task id="LOCAL-00069" summary="small change">
+      <created>1533916184729</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1533916184729</updated>
+    </task>
+    <task id="LOCAL-00070" summary="refactoring checkpoint loading">
+      <created>1533918204793</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1533918204793</updated>
+    </task>
+    <task id="LOCAL-00071" summary="small update">
+      <created>1533918573599</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1533918573599</updated>
+    </task>
+    <task id="LOCAL-00072" summary="several fixes to make imports work">
+      <created>1533920639334</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1533920639334</updated>
+    </task>
+    <task id="LOCAL-00073" summary="SMALL FIX">
+      <created>1533931893640</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1533931893640</updated>
+    </task>
+    <task id="LOCAL-00074" summary="adding IOU loss and fixing small things">
+      <created>1534279204772</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1534279204772</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Updating loss computation to play nice with pytorch 0.4">
+      <created>1534431130041</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1534431130041</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Handle incompatibility between pytorch0.4 and pytorch0.4.x">
+      <created>1535120076429</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1535120076429</updated>
+    </task>
+    <task id="LOCAL-00077" summary="fix border loss function">
+      <created>1535750101924</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1535750101925</updated>
+    </task>
+    <task id="LOCAL-00078" summary="updating sigmoid calls">
+      <created>1536078544936</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1536078544936</updated>
+    </task>
+    <task id="LOCAL-00079" summary="adding experimental nets and upgrading more things to pytorch0.4">
+      <created>1536270633397</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1536270633397</updated>
+    </task>
+    <task id="LOCAL-00080" summary="model reshuffle and upgrading more things to pytorch0.4">
+      <created>1536330454502</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1536330454502</updated>
+    </task>
+    <task id="LOCAL-00081" summary="more model reshuffling. Added icnet.">
+      <created>1536335460391</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1536335460391</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Adding Linknext">
+      <created>1536348120915</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1536348120915</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Adding more models">
+      <created>1536352756916</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1536352756916</updated>
+    </task>
+    <task id="LOCAL-00084" summary="reverting to upsample until upgrade to pytorch0.4.1 or later is done">
+      <created>1537205270566</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1537205270566</updated>
+    </task>
+    <task id="LOCAL-00085" summary="small bugfix">
+      <created>1537206623845</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1537206623845</updated>
+    </task>
+    <task id="LOCAL-00086" summary="trying again">
+      <created>1537207396915</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1537207396915</updated>
+    </task>
+    <task id="LOCAL-00087" summary="updating model definitions, pulling in fixes and new model files">
+      <created>1543346145756</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1543346145757</updated>
+    </task>
+    <task id="LOCAL-00088" summary="fixes for silly python importing errors">
+      <created>1544650814536</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1544650814536</updated>
+    </task>
+    <task id="LOCAL-00089" summary="moving meanstd out of a subdir due to python's silly import limitations">
+      <created>1545077576450</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1545077576450</updated>
+    </task>
+    <task id="LOCAL-00090" summary="adding fixes for DeepLab models">
+      <created>1545174213069</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1545174213069</updated>
+    </task>
+    <task id="LOCAL-00091" summary="Updating with many new networks, another lovasz loss and swa optimizer">
+      <created>1545255085033</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1545255085033</updated>
+    </task>
+    <task id="LOCAL-00092" summary="Adding lovasz module">
+      <created>1545257415841</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1545257415841</updated>
+    </task>
+    <task id="LOCAL-00093" summary="fixing linkception to create correct shape">
+      <created>1545423626993</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1545423626993</updated>
+    </task>
+    <task id="LOCAL-00094" summary="fixed saving of best model logic">
+      <created>1545432927925</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1545432927925</updated>
+    </task>
+    <task id="LOCAL-00095" summary="fixing logic for loading old models and/or multi-gpu models">
+      <created>1547500487648</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1547500487648</updated>
+    </task>
+    <task id="LOCAL-00096" summary="fixing typo">
+      <created>1547582062186</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1547582062186</updated>
+    </task>
+    <task id="LOCAL-00097" summary="yet another fix to best epoch saving logic (this time at the end)">
+      <created>1547582368953</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1547582368953</updated>
+    </task>
+    <task id="LOCAL-00098" summary="adding rgba profile">
+      <created>1548447006185</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1548447006186</updated>
+    </task>
+    <task id="LOCAL-00099" summary="updating with FBNet and variable resolution settings for bninception and inceptionV4">
+      <created>1549054039452</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1549054039453</updated>
+    </task>
+    <task id="LOCAL-00100" summary="fix for senet">
+      <created>1549056341970</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1549056341970</updated>
+    </task>
+    <task id="LOCAL-00101" summary="adding defensive code to account for local directory references (staring with ~)">
+      <created>1549406625273</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1549406625274</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Fixing a mistake in inceptionV4">
+      <created>1549479894100</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1549479894100</updated>
+    </task>
+    <task id="LOCAL-00103" summary="fixing refactoring error">
+      <created>1549581546878</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1549581546878</updated>
+    </task>
+    <task id="LOCAL-00104" summary="fixing omission of values when outputting json file.">
+      <created>1549662790847</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1549662790847</updated>
+    </task>
+    <task id="LOCAL-00105" summary="fixes to various nets">
+      <created>1550180869901</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1550180869901</updated>
+    </task>
+    <task id="LOCAL-00106" summary="updating models">
+      <created>1550613461950</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1550613461950</updated>
+    </task>
+    <task id="LOCAL-00107" summary="fixing dpn loading issues">
+      <created>1550615263958</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1550615263958</updated>
+    </task>
+    <task id="LOCAL-00108" summary="was missing concatdataset somehow?!">
+      <created>1550866838180</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1550866838180</updated>
+    </task>
+    <task id="LOCAL-00109" summary="updating descriptions and removing transforms that are no longer being maintained">
+      <created>1550873731898</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1550873731898</updated>
+    </task>
+    <task id="LOCAL-00110" summary="update to readme">
+      <created>1551392551072</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1551392551072</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 33m 20s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 33m 43s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 33m 49s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 34m 31s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 34m 46s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 37m 11s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_meters_py - 2019.03.07 at 16h 41m 44s.xml">
+      <configuration name="Unittests in test_meters.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_meters_py - 2019.03.07 at 16h 42m 30s.xml">
+      <configuration name="Unittests in test_meters.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 42m 48s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test_datasets_py - 2019.03.07 at 16h 43m 04s.xml">
+      <configuration name="Unittests in test_datasets.py" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1" y="23" width="2559" height="1417" extended-state="6" />
+    <layout>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.17798968" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49307775" weight="0.47581902" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946752" weight="0.30889237" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.33776093" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5007991" side_tool="true" weight="0.28627145" />
+      <window_info anchor="bottom" id="Messages" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.29445824" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49920085" weight="0.25164318" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32851636" />
+      <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
+      <window_info anchor="right" auto_hide="true" x="521" y="562" width="887" height="566" id="Documentation" order="0" sideWeight="0.5006784" side_tool="true" type="FLOATING" weight="0.13287087" />
+      <window_info anchor="right" id="Data View" order="1" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="2" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+      <window_info anchor="right" id="Structure" order="5" sideWeight="0.49932158" visible="true" weight="0.0989273" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="trying again" />
+    <MESSAGE value="updating model definitions, pulling in fixes and new model files" />
+    <MESSAGE value="fixes for silly python importing errors" />
+    <MESSAGE value="moving meanstd out of a subdir due to python's silly import limitations" />
+    <MESSAGE value="adding fixes for DeepLab models" />
+    <MESSAGE value="Updating with many new networks, another lovasz loss and swa optimizer" />
+    <MESSAGE value="Adding lovasz module" />
+    <MESSAGE value="fixing linkception to create correct shape" />
+    <MESSAGE value="fixed saving of best model logic" />
+    <MESSAGE value="fixing logic for loading old models and/or multi-gpu models" />
+    <MESSAGE value="fixing typo" />
+    <MESSAGE value="yet another fix to best epoch saving logic (this time at the end)" />
+    <MESSAGE value="adding rgba profile" />
+    <MESSAGE value="updating with FBNet and variable resolution settings for bninception and inceptionV4" />
+    <MESSAGE value="fix for senet" />
+    <MESSAGE value="adding defensive code to account for local directory references (staring with ~)" />
+    <MESSAGE value="Fixing a mistake in inceptionV4" />
+    <MESSAGE value="fixing refactoring error" />
+    <MESSAGE value="fixing omission of values when outputting json file." />
+    <MESSAGE value="fixes to various nets" />
+    <MESSAGE value="updating models" />
+    <MESSAGE value="fixing dpn loading issues" />
+    <MESSAGE value="was missing concatdataset somehow?!" />
+    <MESSAGE value="updating descriptions and removing transforms that are no longer being maintained" />
+    <MESSAGE value="update to readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="update to readme" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../wick/models/classification/pyramid_resnet.py</url>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../wick/models/classification/pnasnet.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../wick/models/segmentation/testnets/deeplabv2.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../wick/models/classification/bninception.py</url>
+          <line>3</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../wick/wick/transforms/image_transforms.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>(parser)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>parser.root_path</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt.get('root_path', &quot;HLS&quot;)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt.get('hi', &quot;HLS&quot;)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt.get('hi')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>type(opt)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt['root_path']</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt.['root_path']</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>opt.get('root_path','/Users/Shared/test/deleteme')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../wick/models/classification/dpn/model_factory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="797">
+          <caret line="70" column="65" selection-start-line="70" selection-start-column="65" selection-end-line="70" selection-end-column="65" />
+          <folding>
+            <element signature="e#103#114#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/data_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4680">
+          <caret line="195" column="63" selection-start-line="195" selection-start-column="63" selection-end-line="195" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/transforms/affine_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-293">
+          <caret line="617" column="8" selection-start-line="617" selection-start-column="8" selection-end-line="617" selection-end-column="8" />
+          <folding>
+            <element signature="e#94#105#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/transforms/distortion_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret line="48" column="22" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
+          <folding>
+            <element signature="e#72#90#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/transforms/tensor_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="439" column="24" lean-forward="true" selection-start-line="439" selection-start-column="24" selection-end-line="439" selection-end-column="24" />
+          <folding>
+            <element signature="e#1#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/tnt/transformdataset.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/classification/resnext.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1896">
+          <caret line="84" column="21" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/carvana_unet.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/carvana_linknet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" selection-start-column="10" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/deeplab_v2_res.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" lean-forward="true" selection-start-column="10" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/deeplab_v3_plus.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/drn.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/enet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" lean-forward="true" selection-start-column="10" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/fcn16s.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="68" selection-start-column="10" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/segmentation/fusionnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" lean-forward="true" selection-start-column="10" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/FolderDataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="180" column="83" lean-forward="true" selection-start-line="180" selection-start-column="83" selection-end-line="180" selection-end-column="83" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/ClonedDataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="36" column="34" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/Transforms with Pytorch and Torchsample.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="85" lean-forward="true" selection-start-line="85" selection-end-line="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/examples/mnist_loader_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="24" column="23" lean-forward="true" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_complex/multi_input_multi_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+          <folding>
+            <element signature="e#1#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_loader_simple/single_input_multi_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_loader_simple/single_input_single_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/single_input_single_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="10" column="9" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
+          <folding>
+            <element signature="e#2#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/single_input_no_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/single_input_multi_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/simple_multi_input_single_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/simple_multi_input_no_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/integration/fit_simple/simple_multi_input_multi_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/examples/mnist_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="6" column="59" lean-forward="true" selection-start-line="6" selection-start-column="59" selection-end-line="6" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/transforms/image_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1344">
+          <caret line="56" column="6" selection-start-line="56" selection-start-column="6" selection-end-line="56" selection-end-column="6" />
+          <folding>
+            <element signature="e#228#241#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/unit/transforms/test_image_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4176">
+          <caret line="174" column="24" selection-start-line="174" selection-start-column="24" selection-end-line="174" selection-end-column="24" />
+          <folding>
+            <element signature="e#56#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/unittest/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/tnt/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="82">
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/run_test.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/tnt/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/meters/meter.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/test_meters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/test_datasets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/datasets/tnt/batchdataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="33" lean-forward="true" selection-start-column="33" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/tests/unit/transforms/test_affine_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#221#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/model_locations.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/models/model_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-303">
+          <caret line="224" column="21" lean-forward="true" selection-start-line="224" selection-start-column="21" selection-end-line="224" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/callbacks/ExperimentLogger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="13" column="44" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="394">
+            <caret line="86" column="13" selection-start-line="86" selection-start-column="13" selection-end-line="86" selection-end-column="13" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/grid_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/gridsearch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/LICENSE.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wick/wick/gridsearch/pipeline.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

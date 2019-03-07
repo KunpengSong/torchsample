@@ -1,24 +1,24 @@
 """
-Tests for torchsample/transforms/image_transforms.py
+Tests for wick/transforms/image_transforms.py
 """
 
 
 import torch as th
 
-from torchsample.transforms import (ToTensor,
-                                    ToFile,
-                                    ChannelsLast, HWC,
-                                    ChannelsFirst, CHW,
-                                    TypeCast,
-                                    AddChannel,
-                                    Transpose,
-                                    RangeNormalize,
-                                    StdNormalize,
-                                    RandomCrop,
-                                    SpecialCrop,
-                                    Pad,
-                                    RandomFlip,
-                                    RandomOrder)
+from wick.transforms import (ToTensor,
+                             ToFile,
+                             ChannelsLast, HWC,
+                             ChannelsFirst, CHW,
+                             TypeCast,
+                             AddChannel,
+                             Transpose,
+                             RangeNormalize,
+                             StdNormalize,
+                             RandomCrop,
+                             SpecialCrop,
+                             Pad,
+                             RandomFlip,
+                             RandomOrder)
 
 # ----------------------------------------------------
 

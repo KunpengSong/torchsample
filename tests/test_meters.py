@@ -1,7 +1,7 @@
 import unittest
 import math
 import torch
-import torchsample.meters.meter as meter
+import wick.meters as meter
 import numpy as np
 
 

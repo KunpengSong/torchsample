@@ -1,15 +1,14 @@
  
+import os
+
 import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
-
-from torchsample.modules import ModuleTrainer
-from torchsample import regularizers as reg
-from torchsample import constraints as con
-
-import os
 from torchvision import datasets
-ROOT = '/users/ncullen/desktop/data/mnist'
+from wick import regularizers as reg
+from wick.modules import ModuleTrainer
+
+ROOT = '/data/mnist'
 dataset = datasets.MNIST(ROOT, train=True, download=True)
 x_train, y_train = th.load(os.path.join(dataset.root, 'processed/training.pt'))
 x_test, y_test = th.load(os.path.join(dataset.root, 'processed/test.pt'))

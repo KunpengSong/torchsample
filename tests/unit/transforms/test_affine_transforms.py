@@ -14,11 +14,11 @@ Transforms:
 
 import torch as th
 
-from torchsample.transforms import (RandomAffine, Affine,
-                        RandomRotate, RandomChoiceRotate, Rotate,
-                        RandomTranslate, RandomChoiceTranslate, Translate,
-                        RandomShear, RandomChoiceShear, Shear,
-                        RandomZoom, RandomChoiceZoom, Zoom)
+from wick.transforms import (RandomAffine, Affine,
+                             RandomRotate, RandomChoiceRotate, Rotate,
+                             RandomTranslate, RandomChoiceTranslate, Translate,
+                             RandomShear, RandomChoiceShear, Shear,
+                             RandomZoom, RandomChoiceZoom, Zoom)
 
 # ----------------------------------------------------
 # ----------------------------------------------------

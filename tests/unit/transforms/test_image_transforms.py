@@ -1,15 +1,15 @@
 """
-Tests for torchsample/transforms/image_transforms.py
+Tests for wick/transforms/image_transforms.py
 """
 
 
 import torch as th
 
-from torchsample.transforms import (Grayscale, RandomGrayscale,
-                    Gamma, RandomGamma, RandomChoiceGamma,
-                    Brightness, RandomBrightness, RandomChoiceBrightness,
-                    Saturation, RandomSaturation, RandomChoiceSaturation,
-                    Contrast, RandomContrast, RandomChoiceContrast)
+from wick.transforms import (Grayscale, RandomGrayscale,
+                             Gamma, RandomGamma, RandomChoiceGamma,
+                             Brightness, RandomBrightness, RandomChoiceBrightness,
+                             Saturation, RandomSaturation, RandomChoiceSaturation,
+                             Contrast, RandomContrast, RandomChoiceContrast)
 
 # ----------------------------------------------------
 # ----------------------------------------------------

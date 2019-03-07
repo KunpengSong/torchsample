@@ -34,7 +34,7 @@ def random_split_dataset(orig_dataset, splitRatio=0.8, random_seed=None):
     Randomly split the given dataset into two datasets based on the provided ratio
 
     :param orig_dataset: UsefulDataset
-        dataset to split (of type torchsample.datasets.UsefulDataset)
+        dataset to split (of type wick.datasets.UsefulDataset)
 
     :param splitRatio: float
         ratio to use when splitting the data

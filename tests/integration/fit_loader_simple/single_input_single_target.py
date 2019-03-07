@@ -4,12 +4,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from torchsample.modules import ModuleTrainer
-from torchsample.datasets.TensorDataset import TensorDataset
+from wick.modules import ModuleTrainer
+from wick.datasets.TensorDataset import TensorDataset
 
 import os
 from torchvision import datasets
-ROOT = '/users/ncullen/desktop/data/mnist'
+ROOT = '/data/mnist'
 dataset = datasets.MNIST(ROOT, train=True, download=True)
 x_train, y_train = th.load(os.path.join(dataset.root, 'processed/training.pt'))
 x_test, y_test = th.load(os.path.join(dataset.root, 'processed/test.pt'))
