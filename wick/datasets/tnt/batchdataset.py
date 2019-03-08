@@ -1,9 +1,9 @@
 import math
-import wick.datasets.tnt.dataset as dataset
+from .dataset import Dataset
 from . import transform
 
 
-class BatchDataset(dataset.Dataset):
+class BatchDataset(Dataset):
     """
     Dataset which batches the data from a given dataset.
 
